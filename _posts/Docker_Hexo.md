@@ -22,13 +22,16 @@ hexo是一个基于Node.js的静态博客程序，可以方便的生成静态网
 
 **配置ssh**
 
-- 使用hexo博客必须配置SSH，打开git bash，输入```cd ~/.ssh```，如果提示：No such file or directory 说明未配置SSH。
+- 使用hexo博客必须配置SSH，打开git bash，输入
+```
+cd ~/.ssh
+```
+如果提示：No such file or directory 说明未配置SSH。
 
 - 本地生成密钥对
-
-
-    ssh-keygen -t rsa -C "你的邮件地址"
-
+```
+ssh-keygen -t rsa -C "你的邮件地址"
+```
 注意命令中的大小写不要搞混。按提示指定保存文件夹，不设置密码。
 
 - 添加公钥到Github
@@ -38,27 +41,37 @@ hexo是一个基于Node.js的静态博客程序，可以方便的生成静态网
 
 - 测试连接情况git bash中输入命令
 
-
-    ssh -T git@github.com ，选yes，等待片刻可看到成功提示。
-
+```
+ssh -T git@github.com ，选yes，等待片刻可看到成功提示。
+```
 - 修改本地的ssh remote url，不用https协议，改用git协议
 Github仓库中获取ssh协议相应的url
 本地仓库执行命令
-
-
-    git remote set-url origin SSH对应的url，
-
+```
+git remote set-url origin SSH对应的url，
+```
 配置完后可用
-
-    git remote -v查看结果
-
-这样```git push```或```hexo d```时不再需要输入账号密码。
+```
+git remote -v查看结果
+```
+这样
+```
+git push
+```
+或
+```
+hexo d
+```
+时不再需要输入账号密码。
 
 ## 关于Docker
+
 Docker是一个基于轻量级虚拟化技术的容器，整个项目基于Go语言开发，并采用了Apache 2.0协议。Docker可以将我们的应用程序打包封装到一个容器中，该容器包含了应用程序的代码、运行环境、依赖库、配置文件等必需的资源，通过容器就可以实现方便快速并且与平台解耦的自动化部署方式，无论你部署时的环境如何，容器中的应用程序都会运行在同一种环境下。
 
 ### 利用Dockerfile构建一个包含Hexo环境的镜像 ###
+
 编写启动脚本
+
 ```
 cat << EOF > start.sh
 
