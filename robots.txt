@@ -7,4 +7,3 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 Sitemap: https://ok188.net/sitemap.xml
-Sitemap: https://ok188.net/baidusitemap.xml
