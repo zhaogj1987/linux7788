@@ -12,8 +12,8 @@ Linux系统下校时服务Chrony使用
 Chrony 应用本身已经有几年了，其是是网络时间协议的 (NTP) 的另一种实现。一直以来众多发行版里标配的都是ntpd对时服务，自rhel7/centos7 起，Chrony做为了发行版里的标配服务，不过老的ntpd服务依旧在rhel7/centos7里可以找到 。Chrony可以同时做为ntp服务的客户端和服务端。默认安装完后有两个程序chronyd和chronyc 。chronyd是一个在系统后台运行的守护进程，chronyc是用来监控chronyd性能和配置其参数程序
 ## 安装和启用
 ```
-yum install -y chrony
-cat << EOF > /etc/chrony.conf
+[root@ok188.net ~]# yum install -y chrony
+[root@ok188.net ~]# cat << EOF > /etc/chrony.conf
 # 使用上层的internet ntp服务器
 server time1.aliyun.com iburst
 server time2.aliyun.com iburst
@@ -34,10 +34,10 @@ logchange 0.5
 logdir /var/log/chrony
 EOF
 
-systemctl stop ntpd
-systemctl disable ntpd
-systemctl enable chronyd.service
-systemctl start chronyd.service
+[root@ok188.net ~]# systemctl stop ntpd
+[root@ok188.net ~]# systemctl disable ntpd
+[root@ok188.net ~]# systemctl enable chronyd.service
+[root@ok188.net ~]# systemctl start chronyd.service
 ```
 #### 配置文件解析
 如果本局域网内有对时服务开启的话，通过将上面的几条serer记录删除，增加指定局域网内的对时服务器并restart chrony服务即可。其中主要的配置参数有如下几个：

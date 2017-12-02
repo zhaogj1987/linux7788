@@ -25,14 +25,14 @@ hexo是一个基于Node.js的静态博客程序，可以方便的生成静态网
 - 使用hexo博客必须配置SSH，打开git bash，输入
 
 ```
-cd ~/.ssh
+[root@ok188.net ~]# cd ~/.ssh
 ```
 如果提示：No such file or directory 说明未配置SSH。
 
 - 本地生成密钥对
 
 ```
-ssh-keygen -t rsa -C "你的邮件地址"
+[root@ok188.net ~]# ssh-keygen -t rsa -C "你的邮件地址"
 ```
 注意命令中的大小写不要搞混。按提示指定保存文件夹，不设置密码。
 
@@ -44,29 +44,29 @@ ssh-keygen -t rsa -C "你的邮件地址"
 - 测试连接情况git bash中输入命令
 
 ```
-ssh -T git@github.com ，选yes，等待片刻可看到成功提示。
+[root@ok188.net ~]# ssh -T git@github.com ，选yes，等待片刻可看到成功提示。
 ```
 - 修改本地的ssh remote url，不用https协议，改用git协议
 Github仓库中获取ssh协议相应的url
 本地仓库执行命令
 
 ```
-git remote set-url origin SSH对应的url，
+[root@ok188.net ~]# git remote set-url origin SSH对应的url，
 ```
 配置完后可用
 
 ```
-git remote -v查看结果
+[root@ok188.net ~]# git remote -v查看结果
 ```
 这样
 
 ```
-git push
+[root@ok188.net ~]# git push
 ```
 或
 
 ```
-hexo d
+[root@ok188.net ~]# hexo d
 ```
 时不再需要输入账号密码。
 
@@ -81,28 +81,32 @@ Docker是一个基于轻量级虚拟化技术的容器，整个项目基于Go语
 编写启动脚本
 
 ```
-cat << EOF > start.sh
+[root@ok188.net ~]# cat << EOF > start_hexo.sh
 
 if [ "\$1" = 's' ] || [ "\$1" = 'server' ]; then
     set -- /usr/bin/hexo s -p 80
 fi
 
 if [ "\$1" = 'd' ] || [ "\$1" = 'deploy' ]; then
+    cd /data/ok188.net/source/
+    git add *
+    git commit -m "\`date +%y.%m.%d\`"
+    git push -u origin master
     set -- /usr/bin/hexo cl && /usr/bin/hexo d -g
 fi
 exec "\$@"
 
 EOF
 
-chmod a+x start.sh
+[root@ok188.net ~]# chmod a+x start_hexo.sh
 ```
 生成Dockerfile文件
 ```
-cat << EOF > Dockerfile
+[root@ok188.net ~]# cat << EOF > Dockerfile
 
-FROM centos:7 
+FROM centos:7
 
-ENV TZ=Asia/Shanghai LC_ALL=en_US.UTF-8 
+ENV TZ=Asia/Shanghai LC_ALL=en_US.UTF-8
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
@@ -111,7 +115,7 @@ RUN curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Cen
 && yum clean all
 
 RUN curl --silent --location https://rpm.nodesource.com/setup_8.x | bash - \\
-&& yum -y install nodejs 
+&& yum -y install nodejs
 
 WORKDIR /data/ok188.net
 
@@ -128,19 +132,17 @@ RUN git clone https://github.com/iissnan/hexo-theme-next themes/next \\
 && git config --global user.email "your email"
 
 
-COPY start.sh /data/ok188.net/start.sh
+COPY start.sh /data/ok188.net/start_hexo.sh
 
 EOF
 ```
-备注:这里面用了dumb-init来初始化容器系统，避免运行中的容器里产生僵死进程。
-
 创建Dockerfile后可通过docker build命令制作成镜像。
 ```
-docker build -t hexo-docker-centos7:v1.0 .
+[root@ok188.net ~]# docker build -t hexo-docker-centos7:v1.0 .
 ```
 ### 创建和运行容器
 ```
-docker run -d \
+[root@ok188.net ~]# docker run -d \
 -v /data/site/source/_posts:/data/ok188.net/source/_posts \
 --init=true \
 --name hexo-s \
@@ -148,19 +150,14 @@ docker run -d \
 hexo-docker-centos7:v1.0 \
 sh  /data/ok188.net/start.sh s
 ```
+这个时侯我们已经可以通过浏览器直接访问了。如果想外网也能访问。可推送到GitHub上，通过GitHub的[GitHub Pages](https://pages.github.com/)实现。
 ```
 docker run -d \
--v /root/.ssh:/root/.ssh \
+-v /root/.ssh/:/root/.ssh/ \
 -v /data/site/source/_posts:/data/ok188.net/source/_posts \
 --init=true \
---name hexo-s \
+--name hexo-d \
 --net=host \
 hexo-docker-centos7:v1.0 \
 sh  /data/ok188.net/start.sh d
 ```
-### 域名解析 ####
-
-在网站source目录下创建一个CNAME文件，填写你要解析的域名到CNAME文件中。
-前往你的DNS服务商新建一个CNAME解析。
-
-
