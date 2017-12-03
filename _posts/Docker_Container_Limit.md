@@ -8,7 +8,7 @@ tags:
 ---
 ## Docker容器资源限制测试
 
-Docker的运行时容器的本质是进程。在Linux中，通过Namespace进行资源隔离，Cgroups进行资源限制。
+Docker运行时的容器本质是进程。在Linux中，通过Namespace进行资源隔离，Cgroups进行资源限制。
 
 ### 一、Docker容器Cpu资源限制测试
 
@@ -82,13 +82,16 @@ CONTAINER     CPU %         MEM USAGE / LIMIT     MEM %      NET I/O          BL
 设置 cpu-period 为 100000，cpu-quota 为 50000，表示最多可以使用 cpu到50%。
 ```
 [root@nsj-13-58 ~]# docker run -it --cpu-period=100000 --cpu-quota=50000 --name 0.5_p_cpu centos:7 /bin/bash
-```   
+
+```
+   
 压测容器，并查看CPU占用情况：
 
 ```
 [root@ok188 ~]# docker stats 0.5_p_cpu
 CONTAINER       CPU %     MEM USAGE / LIMIT     MEM %         NET I/O             BLOCK I/O
 0.5_p_cpu       50.33%    22.12MiB / 1.932GiB   1.12%         18.3MB / 348kB      524kB / 27.7MB      
+
 ```
 
 通过以上测试可以得知，--cpu-period 结合 --cpu-quota 配置是固定的，无论宿主机系统 CPU 是闲还是繁忙，如上配置，容器最多只能使用 CPU 到 50%。
@@ -126,14 +129,14 @@ memory.memsw.limit_in_bytes
 值是被设置成我们指定的内存参数的两倍。
 
 其中代码如下：
-
+```
     // By default, MemorySwap is set to twice the size of RAM.
     // If you want to omit MemorySwap, set it to `-1'.
     if d.c.MemorySwap != -1 {
     if err := writeFile(dir, "memory.memsw.limit_in_bytes", strconv.FormatInt(d.c.Memory*2, 10)); err != nil {
     return err
     }
-
+```
 使用压测工具进行压测，当压测值是 memory + swap之和上限时，则容器中的进程会被直接 OOM kill。
 
 
