@@ -86,7 +86,6 @@ CONTAINER     CPU %         MEM USAGE / LIMIT     MEM %      NET I/O          BL
 ```
    
 压测容器，并查看CPU占用情况：
-
 ```
 [root@ok188 ~]# docker stats 0.5_p_cpu
 CONTAINER       CPU %     MEM USAGE / LIMIT     MEM %         NET I/O             BLOCK I/O
