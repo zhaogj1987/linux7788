@@ -23,7 +23,7 @@ _______________________________________
 ![image](http://www.ok188.net/images/posts/kernel_shell.jpg)
 
 从技术的角度来说，`shell`是一个使用者与系统的`交互界面(interface)`,只能让使用者通过`命令行`(`command line`)来使用系统来完成工作。
-因此，`shell`最简单的定义就是----`命令解释器`( `Command Interpreter`):
+因此，`shell`最简单的定义就是`命令解释器`( `Command Interpreter`):
 
 - 将使用者的命令翻译给kernel来处理；
 - 同时，将kernel的处理结果翻译给使用者。
@@ -57,50 +57,50 @@ _______________________________________
     (FIXME)
 
 
-大部分的Linux操作系统的预设shell都是`bash`，其原因大致如下两种：
+大部分的`Linux`操作系统的预设`shell`都是`bash`，其原因大致如下两种：
 - 自由软件
 - 功能强大
+
 `bash`是`gnu project`最成功的产品之一，自推出以来深受广大`Unix`用户的喜爱，且也逐渐成为不少组织的系统标准。
+
+<!--more-->
 
 ## shell十三问之2：shell prompt(PS1)与Carriage Return(CR)关系
 _____________________________________________________________
 
-当你成功登陆一个shell终端的文字界面之后，大部分的情形下，你会在屏幕上看到一个不断闪烁的方块或者底线(视不同的版本而别)，我们称之为`游标`(`cursor`)。
+当你成功登陆一个`shell`终端的文字界面之后，大部分的情形下，你会在屏幕上看到一个不断闪烁的方块或者底线(视不同的版本而别)，我们称之为`游标`(`cursor`)。
 `cursor`作用就是告诉你接下来你从键盘输入的按键所插入的位置，且每输入一个键，`cursor`便向右移动一个格子，如果连续输入太多的话，则自动接在下一行输入。
 
 假如你刚完成登陆，还没有输入任何按键之前，你所看到的`cursor`所在的位置的同一行的左边部分，我们称之为`提示符`(`prompt`)。
 
-`提示符`的格式或因不同的版本而各有不同，在Linux上，只需留意最接近`游标`的一个提示符号，通常是如下两者之一：
+提示符的格式或因不同的版本而各有不同，在`Linux`上，只需留意最接近`游标`的一个提示符号，通常是如下两者之一：
 
 - $: 给一般用户账号使用;
 - \#: 给root(管理员)账号使用;
 
 
-事实上，shell prompt的意思很简单：
-告诉shell使用者，您现在可以输入命令行了。
+事实上，`shell prompt`的意思很简单：
+告诉`shell`使用者，您现在可以输入命令行了。
 
-我们可以说，使用者只有在得到shell prompt才能打命令行，
-而`cursor`是指示键盘在命令行的输入位置，使用者每输入一个键，
-`cursor`就往后移动一个格，直到碰到命令行读进`CR`(`Carriage Return`, 由`Enter`键产生)字符为止。
+我们可以说，使用者只有在得到shell prompt才能打命令行，而`cursor`是指示键盘在命令行的输入位置，使用者每输入一个键，`cursor`就往后移动一个格，直到碰到命令行读进`CR`(`Carriage Return`, 由`Enter`键产生)字符为止。
  `CR`的意思也很简单：
-使用者告诉shell：老兄，你可以执行的我命令行了。
+使用者告诉`shell`：老兄，你可以执行的我命令行了。
 严格来说：
 所谓的命令行， 就是在`shell prompt`与`CR`之间所输入的文字。
 
 (**question：为何我们这里坚持使用`CR`字符而不说`Enter`按键呢？答案在后面的学习中给出**)。
 
-不同的命令可以接受的命令的格式各有不同，
-一般情况下，一个标准的命令行格式为如下所列：
+不同的命令可以接受的命令的格式各有不同，一般情况下，一个标准的命令行格式为如下所列：
 ```shell
 command-name options argument
 ```
 
-若从技术的细节上来看，shell会依据`IFS`(`Internal Field Seperator`) 将 command line所输入的文字给拆解为`字段`(`word`)。
-然后在针对特殊的字符(meta)先做处理，最后在重组整行command line。
+若从技术的细节上来看，`shell`会依据`IFS`(`Internal Field Seperator`) 将 `command line`所输入的文字给拆解为`字段`(`word`)。
+然后在针对特殊的`字符`(`meta`)先做处理，最后在重组整行`command line`。
 
 (**注意：请务必理解以上两句的意思，我们日后的学习中常回到这里思考**。)
 
-其中`IFS`是shell预设使用的字段位分隔符号，可以由一个及多个如下按键组成：
+其中`IFS`是`shell`预设使用的字段位分隔符号，可以由一个及多个如下按键组成：
 
 - 空白键(White Space)
 - 表格键(Tab)
@@ -121,10 +121,10 @@ command-name options argument
 承接上一章介绍的`command line`, 这里我们用`echo`这个命令加以进一步说明。
 
 >  **温习** 
->  标准的`command line`三个组成部分：`command_name option argument`
+>  标准的`command line`三个组成部分：`command_name` `option` `argument`
 
 
-`echo`是一个非常简单、直接的Linux命令：
+`echo`是一个非常简单、直接的`Linux`命令：
 
 ```shell 
 $echo argument
@@ -148,9 +148,8 @@ $echo
 $
 ```
 你会发现只有一个空白行，然后又回到了`shell prompt`上了。
-这是因为`echo`在预设上，在显示完argument之后，还会送出以一个换行符号
-(`new-line charactor`). 
-但是上面的command `echo`并没有任何argument，那结果就只剩一个换行符号。
+这是因为`echo`在预设上，在显示完`argument`之后，还会送出以一个换行符号(`new-line charactor`)。
+但是上面的command `echo`并没有任何`argument`，那结果就只剩一个换行符号。
 若你要取消这个换行符号， 可以利用`echo`的`-n` 选项:
 ```shell
 $echo -n
@@ -167,10 +166,8 @@ first line
 $echo -n first line
 first line $
 ```
-以上两个`echo`命令中，你会发现`argument`的部分显示在你的屏幕，
-而换行符则视 `-n` 选项的有无而别。
-很明显的，第二个`echo`由于换行符被取消了，
-接下来的`shell prompt`就接在输出结果的同一行了... ^_^。
+以上两个`echo`命令中，你会发现`argument`的部分显示在你的屏幕，而换行符则视 `-n` 选项的有无而别。
+很明显的，第二个`echo`由于换行符被取消了，接下来的`shell prompt`就接在输出结果的同一行了... ^_^。
 
 事实上，`echo`除了`-n` 选项之外，常用选项有：
 
@@ -214,7 +211,7 @@ $echo -e "\141\011\142\011\143\012\144\011\145\011\146"
 a	b	c
 d	e	f
 ```
-与例一中结果一样，只是使用ASCII八进制编码。
+与例一中结果一样，只是使用`ASCII`八进制编码。
 
 例三：
 ```shell
@@ -222,7 +219,7 @@ $echo -e "\x61\x09\x62\x09\x63\x0a\x64\x09\x65\x09\x66"
 a	b	c
 d	e	f
 ```
-与例二差不多，只是这次换用ASCII的十六进制编码。
+与例二差不多，只是这次换用`ASCII`的十六进制编码。
 
 
 例四：
@@ -251,8 +248,7 @@ $ echo $?
 >  关于变量的概念，我们留到以下的两章跟大家说明。
 
 
-好了，更多的关于`command line`的格式， 以及`echo`命令的选项，
-请您自行多加练习、运用了。
+好了，更多的关于`command line`的格式， 以及`echo`命令的选项，请您自行多加练习、运用了。
 
 
 
@@ -264,27 +260,21 @@ $ echo $?
 经过前面两章的学习，应该很清楚当你在`shell prompt`后面敲打键盘,直到按下`Enter`键的时候，你输入的文字就是`command line`了，然后`shell`才会以进程的方式执行你所交给它的命令。
 但是，你又可知道：你在`command line`中输入的每一个文字，对`shell`来说，是有类别之分的呢？
 
-简单而言，(我不敢说精确的定义，注1),
-`command line`的每一个`charactor`, 分为如下两种：
+简单而言，(我不敢说精确的定义，`注1`),`command line`的每一个`charactor`, 分为如下两种：
 
 - literal：也就是普通的纯文字，对`shell`来说没特殊功能；
 - meta: 对`shell`来说，具有特定功能的特殊保留元字符。
 
 > **Note:**
 
-> 对于`bash shell`在处理`comamnd line`的顺序说明，
-> 请参考O'Reilly出版社的**Learning the Bash Shell，2nd Edition**，
-> 第177-180页的说明，尤其是178页的流程图：Figure 7-1 ...
+> 对于`bash shell`在处理`comamnd line`的顺序说明，请参考O'Reilly出版社的**Learning the Bash Shell，2nd Edition**，第177-180页的说明，尤其是178页的流程图：Figure 7-1。
 
-
-`literal`没什么好谈的，
-像abcd、123456这些文字都是literal。(so easy? ^_^)
+`literal`没什么好谈的，像abcd、123456这些文字都是literal。(so easy? ^_^)
 但meta却常使我们困惑。(confused?)
-事实上，前两章，我们在`command line`中已碰到两个
-似乎每次都会碰到的meta：
+事实上，前两章，我们在`command line`中已碰到两个似乎每次都会碰到的meta：
 
 - `IFS`：有`space`或者`tab`或者`Enter`三者之一组成(我们常用space)
-- `CR`: 由`Enter`产生；
+- `CR`： 由`Enter`产生；
 
 `IFS`是用来拆解`command line`中每一个词(word)用的，因为`shell command line`是按词来处理的。
 而`CR`则是用来结束`command line`用的，这也是为何我们敲`Enter`键，命令就会跑的原因。
@@ -305,7 +295,7 @@ $ | 作变量或运算替换(请不要与`shell prompt`混淆)
 ... | ...
 
 
-补充：`|`是命令管道，而`||`的意思是在前一个命令执行结束时，若返回值为false，继续执行下一个命令。
+> 补充：`|`是命令管道，而`||`的意思是在前一个命令执行结束时，若返回值为false，继续执行下一个命令。
 
     
 假如我们需要在`command line`中将这些保留元字符的功能关闭的话，就需要quoting处理了。
@@ -318,25 +308,26 @@ $ | 作变量或运算替换(请不要与`shell prompt`混淆)
 
 > **Note:**
 
->  在soft quote中被豁免的具体meta清单，我不完全知道，
->  有待大家补充，或通过实践来发现并理解。
+>  在soft quote中被豁免的具体meta清单，我不完全知道，有待大家补充，或通过实践来发现并理解。
 
 
 下面的例子将有助于我们对quoting的了解：
 ```shell
-$ A=B C #空白符未被关闭，作为IFS处理
+$ A=B C #空格键未被关掉，作为 IFS 处理。
 $ C：command not found.
 $ echo $A
 
-$ A="B C" #空白符已被关掉，仅作为空白符
+$ A="B C" #空格键已被关掉，仅作为空格键处理。
 $ echo $A
 B C
 ```
 在第一个给A变量赋值时，由于空白符没有被关闭，`command line` 将被解释为：
 > A=B 然后碰到`<IFS>`，接着执行C命令
-> 在第二次给A变量赋值时，由于空白符被置于soft quote中，因此被关闭，不在作为`IFS`；
+
+在第二次给A变量赋值时，由于空白符被置于soft quote中，因此被关闭，不在作为`IFS`：
 > `A=B<space>C`
-> 事实上，空白符无论在soft quote还是在hard quote中，均被关闭。Enter键字符亦然：
+
+事实上，空白符无论在soft quote还是在hard quote中，均被关闭。Enter键字符亦然：
 
 ```shell
 $ A=`B
@@ -347,8 +338,7 @@ B
 C
 ```
 在上例中，由于`enter`被置于hard quote当中，因此不再作为`CR`字符来处理。
-这里的`enter`单纯只是一个断行符号(new-line)而已，由于`command line`并没得到`CR`字符，因此进入第二个`shell prompt`(`PS2`, 以>符号表示)，
-`command line`并不会结束，直到第三行，我们输入的`enter`并不在hard quote里面，因此没有被关闭。
+这里的`enter`单纯只是一个`断行符号`(`new-line`)而已，由于`command line`并没得到`CR`字符，因此进入第二个`shell prompt`(`PS2`, 以>符号表示)，`command line`并不会结束，直到第三行，我们输入的`enter`并不在hard quote里面，因此没有被关闭。
 此时，`command line`碰到`CR`字符，于是结束，交给shell来处理。
 
 上例的`Enter`要是被置于soft quote中的话，`CR`字符也会同样被关闭：
@@ -360,8 +350,7 @@ $ A="B
 $ echo $A
 B C
 ```
-然而，由于 `echo $A`时的变量没有置于soft quote中，
-因此，当变量替换完成后，并作命令行重组时，`enter`被解释为`IFS`，而不是new-line字符。
+然而，由于 `echo $A`时的变量没有置于soft quote中，因此，当变量替换完成后，并作命令行重组时，`enter`被解释为`IFS`，而不是new-line字符。
 
 同样的，用escape亦可关闭CR字符：
 ```shell
@@ -372,7 +361,7 @@ $ echo $A
 BC
 ```
 上例中的，第一个`enter`跟第二个`enter`均被escape字符关闭了，因此也不作为`CR`来处理，但第三个`enter`由于没有被escape，因此，作为`CR`结束`command line`。
-但由于`enter`键本身在shell meta中特殊性，在 \ escape字符后面仅仅取消其`CR`功能， 而不保留其IFS功能。
+但由于`enter`键本身在shell meta中特殊性，在 `\` escape字符后面仅仅取消其`CR`功能， 而不保留其IFS功能。
 
 你或许发现光是一个`enter`键所产生的字符，就有可能是如下这些可能：
 
@@ -383,11 +372,10 @@ BC
 - NULL
 - ...
 
-至于，什么时候解释为什么字符，这个我就没法去挖掘了，
-或者留给读者君自行慢慢摸索了。
+至于，什么时候解释为什么字符，这个我就没法去挖掘了，或者留给读者君自行慢慢摸索了。
 
 
-至于soft quote跟hard quote的不同，主要是对于某些meta的关闭与否，以$来做说明：
+至于soft quote跟hard quote的不同，主要是对于某些meta的关闭与否，以`$`来做说明：
 ```shell
 $ A=B\ C
 $ echo "$A"
@@ -395,15 +383,14 @@ B C
 $ echo '$A'
 $A
 ```
-在第一个`echo`命令行中，$被置于soft quote中，将不被关闭，因此继续处理变量替换，因此，`echo`将A的变量值输出到屏幕，也就是"B C"的结果。
+在第一个`echo`命令行中，`$`被置于soft quote中，将不被关闭，因此继续处理变量替换，因此，`echo`将A的变量值输出到屏幕，也就是`B C`的结果。
 
-在第二个`echo`命令行中，$被置于hard quote中，则被关闭，因此，$只是一个$符号，并不会用来做变量替换处理，因此结果是$符号后面接一个A字母：$A.
+在第二个`echo`命令行中，`$`被置于hard quote中，则被关闭，因此，`$`只是一个`$`符号，并不会用来做变量替换处理，因此结果是`$`符号后面接一个`A`字母：`$A`。
 
 
->  **练习与思考:** 如下结果为何不同？
-
->  tips: 单引号和双引号，在quoting中均被关闭了。
-
+**练习与思考:** 
+如下结果为何不同？
+> tips: 单引号和双引号，在quoting中均被关闭了。
 
 ```shell
 $ A=B\ C
@@ -411,49 +398,44 @@ $ echo '"$A"'  #最外面的是单引号
 "$A"
 $ echo "'$A'"  #最外面的是双引号
 'B C'
-```
+ ```
 
-------------------------------------
-在CU的shell版里，我发现很多初学者的问题，都与quoting的理解有关。
-比方说，若我们在awk或sed的命令参数中，调用之前设定的一些变量时，常会问及为何不能的问题。
+比方说，若我们在`awk`或`sed`的命令参数中，调用之前设定的一些变量时，常会问及为何不能的问题。
 
 要解决这些问题，关键点就是：**区分出 shell meta 与 command meta**
 
-前面我们提到的那些meta，都是在command line中有特殊用途的，比方说{}就是将一系列的command line置于不具名的函数中执行(可简单视为command block)，
-但是，awk却需要用{}来区分出awk的命令区段(BEGIN,MAIN,END)。
+前面我们提到的那些meta，都是在command line中有特殊用途的，比方说`{}`就是将一系列的command line置于不具名的函数中执行(可简单视为command block)。
+但是，`awk`却需要用`{}`来区分出`awk`的命令`区段`(`BEGIN,MAIN,END`)。
 若你在command line中如此输入：
 ```shell
 $ awk {print $0} 1.txt
 ```
-由于{}在shell中并没有关闭，那shell就将{print $0}视为command block，但同时没有`;`符号作命令分隔，因此，就出现awk语法错误结果。
+由于`{}`在`shell`中并没有关闭，那`shell`就将`{print $0}`视为command block，但同时没有`;`符号作命令分隔，因此，就出现awk语法错误结果。
 
 要解决之，可用hard quote:
 ```shell
-awk '{print $0}'
+awk '{print $0}' 1.txt
 ```
-上面的hard quote应好理解，就是将原来的{、<space>、$、}这几个shell meta关闭，避免掉在shell中遭到处理，而完整的成为awk的参数中command meta。
+上面的hard quote应好理解，就是将原来的`{、<space>、$、}`这几个shell meta关闭，避免掉在`shell`中遭到处理，而完整的成为`awk`的参数中command meta。
 
 > **Note:**
 
-> awk中使用的$0 是awk中内建的field nubmer，而非awk的变量，
-> awk自身的变量无需使用$.
+> `awk`中使用的`$0`是`awk`中内建的field nubmer，而非`awk`的变量，`awk`自身的变量无需使用$。
 
 要是理解了hard quote的功能，在来理解soft quote与escape就不难：
 ```shell
 awk "{print \$0}" 1.txt
 awk \{print \$0\} 1.txt
 ```
-然而，若要你改变awk的$0的0值是从另一个shell变量中读进呢？
-比方说：已有变量$A的值是0， 那如何在`command line`中解决
-awk的$$A呢？
+然而，若要你改变`awk`的`$0`的`0`值是从另一个`shell`变量中读进呢？
+比方说：已有变量`$A`的值是`0`， 那如何在`command line`中解决awk的$$A呢？
 你可以很直接否定掉hard quote的方案：
 ```shell
 $ awk '{print $$A}' 1.txt
 ```
-那是因为$A的$在hard quote中是不能替换变量的。
+那是因为`$A`的`$`在hard quote中是不能替换变量的。
 
-聪明的读者(如你！)，经过本章的学习，我想，你应该可以理解为
-为何我们可以使用如下操作了吧：
+聪明的读者(如你！)，经过本章的学习，我想，你应该可以理解为何我们可以使用如下操作了吧：
 ```shell
 A=0
 awk "{print \$$A}" 1.txt
@@ -464,9 +446,8 @@ awk '{print $'"$A"'}' 1.txt
 或许，你能给出更多方案... ^_^
 
 
-  一个关于read命令的小问题：
-  很早以前觉得很奇怪：执行read命令，然后读取用户输入给变量赋值，
-  但如果输入是以空格键开始的话，这空格会被忽略，比如：
+一个关于read命令的小问题：
+很早以前觉得很奇怪：执行read命令，然后读取用户输入给变量赋值，但如果输入是以空格键开始的话，这空格会被忽略，比如：
 ```shell
 read a  #输入：    abc
 echo "$a" #只输出abc
@@ -520,8 +501,7 @@ abc
 ```
 > **Note:**
 
->  1. 这里是用 soft quoting 将里面的 space 关闭，使之不是 meta(IFS)，
->  而是一个literal(white space);
+>  1. 这里是用 soft quoting 将里面的 space 关闭，使之不是 meta(IFS)，而是一个literal(white space);
 >  2. IFS=`;` 意义是将IFS设置为空字符，因为`;`是shell的元字符(meta);
 
 
@@ -543,8 +523,7 @@ test
 
 这个问题，出在`IFS=;`上。
 因为这个`;`在问题一中的command line上是一个meta,并非`";"`符号本身。
-因此，`IFS=;`是将IFS设置为 null charactor
-(不是space、tab、newline)。
+因此，`IFS=;`是将IFS设置为 null charactor(不是space、tab、newline)。
 
 要不是试试下面这个代码片段：
 ```shell
@@ -571,7 +550,7 @@ do
    echo $i
 done
 ```
-文件file的行中包含若干空，经过read只保留不重复的空格。
+文件file的行中包含若干空，经过`read`只保留不重复的空格。
 如何才能所见即所得。
 
 ```shell
@@ -580,8 +559,7 @@ do
    echo "X${i}X"
 done
 ```
-从上面的输出，可以看出read，读入是按整行读入的;
-不能原汁原味的原因：
+从上面的输出，可以看出read，读入是按整行读入的，不能原汁原味的原因：
 
 > 1.  如果行的起始部分有IFS之类的字符，将被忽略;
 > 2.  `echo $i`的解析过程中，首先将`$i`替换为字符串，然后对`echo`字符串中字符串分词，然后命令重组，输出结果;在分词，与命令重组时，可能导致多个相邻的IFS转化为一个;
@@ -592,17 +570,14 @@ do
   echo "$i"
 done
 ```
-以上代码可以解决原因2中的，command line的分词和重组导致meta字符丢失；
-但仍然解决不了原因1中，read读取行时，忽略行起始的IFS meta字符。
+以上代码可以解决原因2中的，command line的分词和重组导致meta字符丢失；但仍然解决不了原因1中`read`读取行时，忽略行起始的IFS meta字符。
 
 回过头来看上面这个问题：为何要原汁原味呢？
-cat命令就是原汁原味的，只是shell的read、echo导致了某些shell的meta字符丢失;
+`cat`命令就是原汁原味的，只是`shell`的`read`、`echo`导致了某些`shell`的meta字符丢失;
 
 如果只是IFS meta的丢失，可以采用如下方式：
-将IFS设置为null，即`IFS=;`, 
-在此再次重申此处`;`是shell的meta字符,而不是literal字符;
-因此要使用literal的	`;`应该是`\;`
-或者关闭meta 的(soft/hard) quoting的`";"`或者`';'`。
+将IFS设置为null，即`IFS=;`, 在此再次重申此处`;`是shell的meta字符，而不是literal字符;
+因此要使用literal的`;`应该是`\;`或者关闭meta 的(soft/hard) quoting的`";"`或者`';'`。
 
 因此上述的解决方案是：
 ```shell
@@ -614,11 +589,9 @@ do
 done
 IFS=old_IFS #恢复IFS的原始值
 ```
-现在，回过头来看这个问题，为什么会有这个问题呢；
-其本源的问题应该是没有找到解决原始问题的最合适的方法，而是采取了一个迂回的方式来解决了问题；
+现在，回过头来看这个问题，为什么会有这个问题呢；其本源的问题应该是没有找到解决原始问题的最合适的方法，而是采取了一个迂回的方式来解决了问题；
 
-因此，我们应该回到问题的本源，重新审视一下，问题的本质。
-如果要精准的获取文件的内容，应该使用od或者hexdump会更好些。
+因此，我们应该回到问题的本源，重新审视一下，问题的本质。如果要精准的获取文件的内容，应该使用od或者hexdump会更好些。
 
 
 
@@ -632,7 +605,7 @@ IFS=old_IFS #恢复IFS的原始值
 
 
 ### 1. 变量设定(set)
-在bash中， 你可以用`=`来设定或者重新定义变量的内容：
+在`bash`中， 你可以用`=`来设定或者重新定义变量的内容：
 ```shell
 name=value
 ```
@@ -662,7 +635,7 @@ This_Is_A_Long_Name=b #可用_连接较长的名称或值，且有大小区别�
 ```
 
 ### 2. 变量替换(substitution)
-shell 之所以强大，其中的一个因素是它可以在命令行中对变量作替换(substitution)处理。
+`shell`之所以强大，其中的一个因素是它可以在命令行中对变量作`替换`(`substitution`)处理。
 在命令行中使用者可以使用`$`符号加上变量名称(除了用`=`定义变量名称之外)，
 将变量值给替换出来，然后再重新组建命令行。
 
@@ -674,10 +647,10 @@ $ C=/tmp
 $ $A -$B $C
 ```
 以上命令行的第一个`$`是`shell prompt`, 并不在命令行之内。
-必须强调的是，我们所提的变量替换，只发生在`command line`上面。
-(是的，请让我们再次回到命令行吧！) 仔细分析,最后那行`command line`,不难发现在被执行前(在输入`CR`字符之前)，
-`$`符号对每一个变量作替换处理(将变量的值替换出来再重组命令行),
-最后会得出如下命令行：
+必须强调的是，我们所提的变量替换，只发生在command line上面。
+**是的，请让我们再次回到命令行吧！**
+仔细分析,最后那行command line,不难发现在被执行前(在输入`CR`字符之前)，`$`符号对每一个变量作替换处理(将变量的值替换出来再重组命令行),
+最后会得出如下结果：
 ```shell
 ls -la /tmp
 ```
@@ -687,12 +660,12 @@ ls -la /tmp
 
 > **Note:**
 
-> 若从技术的细节来看，`shell`会依据`IFS`(Internal Field Seperator)
-> 将`command line`所输入的文字拆解为字段(word/field)。
-> 然后再针对特殊字符(meta)先作处理，最后重组整行`command line`。
+> 若从技术的细节来看，`shell`会依据`IFS`(`Internal Field Seperator`)
+> 将command line所输入的文字拆解为字段(word/field)。
+> 然后再针对特殊字符(meta)先作处理，最后重组整行command line。
 
 
-这里的`$`就是`command line`中最经典的meta之一了，就是作变量替换的。
+这里的`$`就是command line中最经典的meta之一了，就是作变量替换的。
 在日常的shell操作中，我们常会使用`echo`命令来查看特定的变量的值。
 例如：
 ```shell
@@ -703,8 +676,7 @@ $ echo $A -$B $C
 ```shell
 ls -al /tmp
 ```
-这是由于`echo`命令在执行时，会先将`$A` (ls)、`$B` (la)跟`$C` (/tmp)给替换出来；
-利用shell对变量的替换处理能力，我们在设定变量时就更为灵活了：
+这是由于`echo`命令在执行时，会先将`$A` (ls)、`$B` (la)跟`$C` (/tmp)给替换出来；利用shell对变量的替换处理能力，我们在设定变量时就更为灵活了：
 ```shell
 A=B
 B=$A
@@ -726,10 +698,10 @@ A=C
 上面是单纯定义了两个不同名称的变量：
 A 与 B, 它们的取值分别是C与B。
 
-若变量被重复定义的话，则原有值为新值所取代。(这不正是可变的量吗？^_^)
+若变量被重复定义的话，则原有旧值将被新值所取代。(这不正是可变的量吗？^_^)
 当我们在设定变量的时候，请记住这点：**用一个名称存储一个数值**， 仅此而已。
 
-此外， 我们也可以利用命令行的变量替换能力来扩充(append)变量的值：
+此外， 我们也可以利用命令行的变量替换能力来`扩充`(`append`)变量的值：
 ```shell
 A=B:C:D
 A=$A:E
@@ -750,18 +722,14 @@ A=BCD
 A=${A}E
 ```
 
-上例中，我们使用`{}`将变量名称范围给明确定义出来，如此一来，我们就可以将`A`的变量值从`BCD`给扩充为`BCDE`。
+上例中，我们使用`{}`将变量名称范围给明确定义出来，如此一来，我们就可以将A的变量值从BCD给扩充为BCDE。
 
 > **Tips:**
-> 关于${name}事实上还可以做到更多的变量处理能力，
-> 这些均属于比较进阶阶段的变量处理，现阶段暂不介绍了，
-> 请大家自行参考资料。
+> 关于${name}事实上还可以做到更多的变量处理能力，这些均属于比较进阶阶段的变量处理，现阶段暂不介绍了，请大家自行参考资料。
 
 ### 3. export 变量
 
-严格来说，我们在当前shell中所定义的变量，均属于
-**本地变量(local variable)**, 只有经过`export`命令的
-**输出处理**，才能成为**环境变量(environment variable)**：
+严格来说，我们在当前shell中所定义的变量，均属于**本地变量(local variable)**, 只有经过`export`命令的**输出处理**，才能成为**环境变量(environment variable)**：
 ```shell
 $ A=B
 $ export A
@@ -780,8 +748,8 @@ $ export $A
 上面的命令并未将A输出为**环境变量**，而是将B导出。
 这是因为在这个命令行中，$A会首先被替换为B,然后在塞回作`export`的参数。
 
-要理解这个`export`，事实上需要从process(进程)的角度来理解才能透彻。
-我们将于下一章为大家说明process(进程)的概念，敬请留意。
+要理解这个`export`，事实上需要从`process`(`进程`)的角度来理解才能透彻。
+我们将于下一章为大家说明`process`(`进程`)的概念，敬请留意。
 
 
 #### 4. 取消变量(unset)
@@ -789,8 +757,7 @@ $ export $A
 ```shell
     unset A
 ```
-与`export`一样，`unset`命令行，也同样会作变量替换(这其实是shell的功能之一)，
-因此:
+与`export`一样，`unset`命令行，也同样会作变量替换(这其实是shell的功能之一)，因此:
 ```shell
 $ A=B
 $ B=C
@@ -798,7 +765,7 @@ $ unset $A
 ```
 事实上，所取消的是变量B而不是A。
 
-此外，变量一旦经过unset取消之后，其结果是将整个变量拿掉，而不是取消变量的值。
+此外，变量一旦经过`unset`取消之后，其结果是将整个变量拿掉，而不是取消变量的值。
 
 如下两行其实是很不一样的：
 ```shell
@@ -814,7 +781,7 @@ $ echo $A
 $ unset A
 $ echo $A
 ```
-请学员务必能识别null value 与 unset的本质区别，这在一些进阶的变量处理上是很严格的。
+请你务必能识别`null value`与`unset`的本质区别，这在一些进阶的变量处理上是很严格的。
 
 比方说：
 ```shell
@@ -831,7 +798,7 @@ expr
 $ echo $str
 expr
 ```
-聪明的读者(yes, you!)，稍加思考的话，应该不难发现为何同样的`var=${str=expr}`在`str`为null与`unset`之下的不同吧？
+聪明的读者(yes, you!)，稍加思考的话，应该不难发现为何同样的`var=${str=expr}`在`str`为`null`与`unset`之下的不同吧？
 若你看不出来，那可能是如下原因之一：
 
 - 你太笨了
@@ -847,51 +814,48 @@ expr
 
 > **提问:**
 
-> cd /etc/aa/bb/cc可以执行
-> 但是把这条命令放入shell脚本后，shell脚本不执行！
+> 执行命令`cd /etc/aa/bb/cc`可以执行并移动到`/etc/aa/bb/cc`目录，但是把这条命令放入`shell脚本`执行,却没移动`/etc/aa/bb/cc`目录！
 > 这是什么原因？
 
-意思是：运行shell脚本，并没有移动到/etc/aa/bb/cc目录。
 
-我当时如何回答暂时别去深究，先让我们了解一下进程(process)的概念好了。
+我当时如何回答暂时别去深究，先让我们了解一下`进程`(`process`)的概念好了。
 
-首先，我们所执行的任何程序，都是父进程(parent process)产生的一个子进程(child process),子进程在结束后，将返回到父进程去。
-此现象在Linux中被称为`fork`。
+首先，我们所执行的任何程序，都是`父进程`(`parent process`)产生的一个`子进程`(`child process`),子进程在结束后，将返回到父进程去。
+
+此现象在`Linux`中被称为`fork`。
 
 (为何要称为fork呢？ 嗯，画一下图或许比较好理解。^_^)
+![image](http://www.ok188.net/images/posts/shell_fork.jpg)
 
-当子进程被产生的时候，将会从父进程那里获得一定的资源分配、及(更重要的是)继承父进程的环境。
+当子进程被产生的时候，将会从父进程那里获得一定的资源分配、及**更重要的是**继承父进程的环境。
 
 让我们回到上一章所谈到的环境变量吧：
 
-> **所谓环境变量其实就是那些会传给子进程的变量**。
-> 简单而言, 遗传性就是区分本地变量与环境变量的决定性指标。
-> 然而，从遗传的角度来看，我们不难发现环境变量的另一个重要特征：
+> 所谓环境变量其实就是那些会传给子进程的变量。
+简单而言, 遗传性就是区分本地变量与环境变量的决定性指标。然而，从遗传的角度来看，我们不难发现环境变量的另一个重要特征：
 > **环境变量只能从父进程到子进程单向传递。换句话说：在子进程中环境如何变更，均不会影响父进程的环境。**
 
-接下来，在让我们了解一下shell脚本(shell script)的概念。
-所谓shell script 讲起来很简单，就是将你平时在shell prompt输入的多行`command line`, 依序输入到一个文件文件而已。
+接下来，在让我们了解一下`shell脚本`(`shell script`)的概念。
+所谓`shell script`讲起来很简单，就是将你平时在shell prompt输入的多行command line, 依序输入到一个文件文件而已。
 
 再结合以上两个概念(process + script)，那应该不难理解如下的这句话的意思了：
-> 正常来说，当我们执行一个shell script时，其实是先产生一个sub-shell的子进程，然后sub-shell再去产生命令行的子进程。
+> 正常来说，当我们执行一个`shell script`时，其实是先产生一个`sub-shell`的子进程，然后`sub-shell`再去产生命令行的子进程。
 
-然则，那让我们回到本章开始时，所提到的例子在重新思考：
+现在让我们回到本章开始时所提到的例子再从新思考：
 
-> **帖子提问:**
+> **提问:**
 
-> cd /etc/aa/bb/cc可以执行
-> 但是把这条命令放入shell脚本后，shell脚本不执行！
+> 执行命令`cd /etc/aa/bb/cc`可以执行并移动到`/etc/aa/bb/cc`目录，但是把这条命令放入`shell脚本`执行,却没移动`/etc/aa/bb/cc`目录！
 > 这是什么原因？
 
-意思是：运行shell脚本，并没有移动到/etc/aa/bb/cc目录。
 
 我当时的答案是这样的：
 
-> 因为，我们一般跑的shell script是用sub-shell去执行的。
-> 从process的概念来看，是 parent process产生一个child process去执行，当child结束后，返回parent, 但parent的环境是不会因child的改变而改变的。
-> 所谓的环境变量元数很多，如effective id(euid)，variable, working dir等等...
-> 其中的working dir($PWD) 正是楼主的疑问所在：
-> 当用sub-shell来跑script的话，sub-shell的$pwd会因为cd而变更， 但返回primary shell时，$PWD是不会变更的。
+> 因为，我们一般跑的`shell script`是用`sub-shell`去执行的。
+> 从`process`的概念来看，是`parent process`产生一个`child process`去执行，当`child`结束后，返回`parent`, 但`parent`的环境是不会因`child`的改变而改变的。
+> 所谓的环境变量元数很多，如`effective id(euid)`，`variable`, `working dir`等等...
+> 其中的`working dir($PWD)` 正是楼主的疑问所在：
+> 当用`sub-shell`来跑`script`的话，`sub-shell`的`$pwd`会因为`cd`而变更， 但返回`primary shell`时，`$PWD`是不会变更的。
 
 
 能够了解问题的原因及其原理是很好的，但是如何解决问题，恐怕是我们更应该感兴趣的是吧？
@@ -899,12 +863,12 @@ expr
 那好，接下来，再让我们了解一下`source`命令好了。
 当你有了`fork`的概念之后，要理解`soruce`就不难：
 
-所谓`source`，就是让script在当前shell内执行而不是产生一个sub-shell来执行。
-由于所有执行结果均在当前shell内执行,而不是产生一个sub-shell来执行。
+所谓`source`，就是让`script`在当前`shell`内执行而不是产生一个`sub-shell`来执行。
+由于所有执行结果均在当前`shell`内执行,而不是产生一个`sub-shell`来执行。
 
-因此, 只要我们原本单独输入的script命令行，变成`source`命令的参数，就可轻而易举地解决前面提到的问题了。
+因此, 只要我们原本单独输入的`script`命令行，变成`source`命令的参数，就可轻而易举地解决前面提到的问题了。
 
-比方说，原本我们是如此执行script的：
+比方说，原本我们是如此执行`script`的：
 ```shell
 $ ./my_script.sh
 ```
@@ -917,21 +881,21 @@ $ source ./my_script.sh
 $ . ./my_script.sh
 ```
 
-说到这里，我想，各位有兴趣看看`/etc`底下的众多设定的文件，应该不难理解它们被定义后，如何让其他script读取并继承了吧？
+说到这里，我想，各位有兴趣看看`/etc`底下的众多设定的文件，应该不难理解它们被定义后，如何让其他`script`读取并继承了吧？
 
-若然，日后，你有机会写自己的script，应也不难专门指定一个设定的文件以供不同的script一起共用了。
+若然，日后，你有机会写自己的`script`，应也不难专门指定一个设定的文件以供不同的`script`一起共用了。
 
 ok,到这里，若你搞懂`fork`与`source`的不同，那接下来再接受一个挑战：
 > 那`exec`又与`source`/`fork`有何不同呢？
 
 哦...要了解`exec`或许较为复杂，尤其是扯上`File Decscriptor`的话。
 不过，简单来说：
-> `exec` 也是让script在同一个进程上执行，但是原有进程则被结束了。
+> `exec` 也是让`script`在同一个进程上执行，但是原有进程则被结束了。
 > 简言之，原有进程能否终止，就是`exec`与`source`/`fork`的最大差异了。
 
 嗯，光是从理论去理解，或许没那么好消化，不如动手实践+思考来得印象深刻哦。
 
-下面让我们为两个简单的script，分别命名为1.sh以及2.sh
+下面让我们为两个简单的`script`，分别命名为1.sh以及2.sh
 
 1.sh
 
@@ -987,35 +951,34 @@ $ ./1.sh exec
 
 嗯，这次轻松一下，不讲太多... ^_^
 
-先说一下，为何要用()或者{}好了。
+先说一下，为何要用`()`或者`{}`好了。
 
-许多时候，我们在shell操作上，需要在一定的条件下执行多个命令，也就是说，要么不执行，要么就全执行，而不是每次依序的判断是否要执行下一个命令。
+许多时候，我们在`shell`操作上，需要在一定的条件下执行多个命令，也就是说，要么不执行，要么就全执行，而不是每次依序的判断是否要执行下一个命令。
 
-或者，要从一些命令执行的先后次序中得到结果，如算术运算的2*(3+4)那样。
+或者，要从一些命令执行的先后次序中得到结果，如算术运算的`2*(3+4)`那样。
 
 这时候，我们就可以引入**命令群组(command group)**的概念，将许多命令集中处理。
 
-在shell `command line`中，一般人或许不太计较`()`与`{}`这两对符号的差异。
+在`shell` command line中，一般人或许不太计较`()`与`{}`这两对符号的差异。
 虽然两者都可以将多个命令当作群组处理，但若从技术细节上，却是很不一样的：
 
-- `()` 将`command group`置于`sub-shell`(`子shell`)中去执行，也称 `nested sub-shell`。
-- `{}` 则是在同一个`shell`内完成，也称`non-named command group`。
+- `()` 将command group置于sub-shell(子shell)中去执行，也称nested sub-shell。
+- `{}` 则是在同一个shell内完成，也称non-named command group。
 
 若你对上一章的fork与source的概念还记得的话，那就不难理解两者的差异了。
 
-要是在 `command group`中扯上变量及其他环境的修改，我们可以根据不同的需求来使用`()`或`{}`。
-通常而言, 若所作的修改是临时的，且不想影响原有或以后的设定，那我们就使用`nested sub-shell`, 即`()`;
-反之，则用`non-named command group`, 即`{}`。
+要是在command group中扯上变量及其他环境的修改，我们可以根据不同的需求来使用`()`或`{}`。
+通常而言, 若所作的修改是临时的，且不想影响原有或以后的设定，那我们就使用nested sub-shell, 即`()`;反之，则用non-named command group, 即`{}`。
 
-是的，光从`command line`来看，`()` 与 `{}`差别就讲完了，够轻松吧, ^_^
+是的，光从command line来看，`()` 与 `{}`差别就讲完了，够轻松吧。 ^_^
 
-然而，这两个`meta`用在其他`command meta`或领域中(如Regular Expression)，还是有很多差别的。
+然而，这两个meta用在其他command meta或领域中(如Regular Expression)，还是有很多差别的。
 只是，我不打算再去说明了，留给读者慢慢发掘好了。
 
-我这里只想补充一个概念，就是`function`。
-所谓`function`，就是用一个名字去命名一个`command group`, 然后再调用这个名字去执行`command group`。
+我这里只想补充一个概念，就是function。
+所谓function，就是用一个名字去命名一个command group, 然后再调用这个名字去执行command group。
 
-从`non-named command group`来推断，大概你也可以推测到我要说的是`{}`了吧？(yes! 你真聪明 ^_^)
+从non-named command group来推断，大概你也可以推测到我要说的是`{}`了吧？(yes! 你真聪明 ^_^)
 
 在bash中，function的定义方式有两种：
 
@@ -1041,15 +1004,14 @@ function_name () {
 用哪一种方式无所谓，只是碰到所定义的名称与现有的命令或者别名冲突的话，方式二或许会失败。
 但方式二起码可以少打个`function`这一串英文字符，对懒人来说(如我)，有何乐而不为呢？...^_^
 
-`function` 在一定程度上来说，也可以称为**函数**，但请不要与传统编程所使用的**函数(library)**搞混了，毕竟两者差异很大。
+function在一定程度上来说，也可以称为**函数**，但请不要与传统编程所使用的**函数(library)**搞混了，毕竟两者差异很大。
 唯一相同的是，我们都可以随时用**已定义的名称**来调用它们。
 
 若我们在shell操作中，需要不断地重复某些命令，我们首先想到的，或许是将命令写成shell脚本(shell script)。
 不过，我们也可以写成function, 然后在command line中打上function_name就可当一般的shell script使用了。
 
-若只是你在shell中定义的`function`, 除了用`unset` function_name取消外，一旦你退出shell， function也跟着消失。
-然而，在script中使用function却有许多好处，除了提高整体script的执行性能外(因为已经载入)，
-还可以节省许多重复的代码。
+若只是你在shell中定义的function, 除了用`unset function_name`取消外，一旦你退出shell， function也跟着消失。
+然而，在script脚本中使用function却有许多好处，除了提高整体script的执行性能外(因为已经载入)，还可以节省许多重复的代码。
 
 简单而言，若你会将多个命令写成script以供调用的话，那你可以将function看成script中script。... ^_^
 
@@ -1063,26 +1025,25 @@ ok，说要轻松点的嘛，那这次就暂时写到这吧。
 ## shell十三问之8: $(())与$()还有${}差在哪？
 --------------------------------------------
 
-我们上一章介绍了()与{}的不同，这次让我们扩展一下，看看更多的变化：
-$()与${}又是啥玩意儿呢？
+我们上一章介绍了`()`与`{}`的不同，这次让我们扩展一下，看看更多的变化：
 
-在bash shell中, $()与\`\`(反引号)都是用来做`命令替换`(command substitution)的。
-所谓的`命令替换`与我们第五章学过的变量替换差不多，都是用来`重组命令行`;完成 \`\` 或者`$()`里面的命令，将其结果替换出来，再重组命令行。
+> `$()`与`${}`又是啥玩意儿呢？
+
+在bash shell中, $()与\`\`(反引号)都是用来做`命令替换`(`command substitution`)的。
+所谓的**命令替换**与我们第五章学过的变量替换差不多，都是用来**重组命令行**;完成 \`\` 或者$()里面的命令，将其结果替换出来，再重组命令行。
 
 例如：
 ```shell
 $ echo the last sunday is $(date -d "last sunday" +%Y-%m-%d)
 ```
-如此便可方便得到上一个星期天的日期了...^_^
+如此便可方便得到上一个星期天的日期了。^_^
 
 在操作上， 用$()或\`\`都无所谓,只是我个人比较喜欢用$(),理由是：
 
-1. \`\`(反引号)很容易与''(单引号)搞混乱，尤其对初学者来说。
-    有时在一些奇怪的字形显示中，两种符号是一模一样的(只取两点)。
-	当然了有经验的朋友还是一眼就能分辨两者。只是，若能更好的避免混乱，
-	又何乐而不为呢？ ^_^
+- \`\`(反引号)很容易与''(单引号)搞混乱，尤其对初学者来说。有时在一些奇怪的字形显示中，两种符号是一模一样的(只取两点)。当然了有经验的朋友还是一眼就能分辨两者。只是，若能更好的避免混乱，又何乐而不为呢？ ^_^
 
-2.  在多次的复合替换中， \`\`需要额外的转义(escape, \)处理，而$()则比较直观。
+- 在多次的复合替换中， \`\`需要额外的转义(escape, \)处理，而$()则比较直观。
+
 例如，一个错误的使用的例子：
 ```shell
 	command1 `command2 `command3` `
@@ -1202,6 +1163,7 @@ shell字符串取子串的格式：`${s:pos:length}`,取字符串s的子串：�
 length为子串的长度;
 
 > **Note:** 字符串中字符的起始编号为0。
+
 ### 6. shell字符串变量值的替换：
 -----
 
@@ -1301,8 +1263,7 @@ A[3]=xyz
 
 > 诸如此类的...
 
-> 能够善用bash的$()与${}可以大大提高及
-> 简化shell在变量上的处理能力哦 ^_^
+> 能够善用bash的$()与${}可以大大提高及简化shell在变量上的处理能力哦 ^_^
 
 ### 10. $(())作用:
 ----
@@ -1363,7 +1324,7 @@ a=5; b=7; ((a< b)) #会得到0 (true)返回值。
 
 怎样？ 好玩吧... ^_^ 
 
-okay,这次暂时说这么多。
+ok,这次暂时说这么多。
 
 上面的介绍，并没有详列每一种可用的状态，更多的，就请读者参考手册文件(man)吧。
 
@@ -1419,9 +1380,9 @@ my_fun fp1 "fp2 fp3"
 ```
 然后在command line中跑一下 script就知道了：
 ```shell
-chmod 755 my.sh
+$ chmod 755 my.sh
 
-./my.sh p1 "p2 p3"
+$ ./my.sh p1 "p2 p3"
 $0 outside function is ./my.sh
 $1 outside function is p1
 $2 outside function is p2 p3
@@ -1432,40 +1393,39 @@ $2 inside function is fp2 fp3
 
 然而，在使用positional parameter的时候，我们要注意一些陷阱哦：
 
-**$10不是替换第10个参数，而是替换第一个参数，然后在补一个0于其后;**
+`$10`不是替换第10个参数，而是替换第一个参数，然后在补一个0于其后;
 
-也就是说， `my.sh one two three four five six seven eight nine ten`这样的command line, my.sh里的$10不是ten而是one0哦。小心小心要抓到ten的话，有两种方法：
+也就是说， `my.sh one two three four five six seven eight nine ten`这样的command line, `my.sh`里的`$10`不是ten而是`one`（`1`）`0`哦。小心小心要抓到ten的话，有两种方法：
 
-- 方法一：使用我们上一章介绍的${}, 也就是用${10}即可。
-
+- 方法一：使用我们上一章介绍的`${}`, 也就是用`${10}`即可。
 - 方法二：就是shift了。
 
-用通俗的说法来说，**所谓的shift就是取消positional parameter中最左边的参数($0不受影响)**。
-其预设值为1，也就是shift 或shift 1 都是取消$1,而原本的$2则变成$1, $3则变成$2。
-那亲爱的读者，你说要shift掉多少个参数，才可用$1取得到${10} 呢？ ^_^
+用通俗的说法来说，**所谓的shift就是取消positional parameter中最左边的参数(`$0`不受影响)**。
+其预设值为1，也就是shift 或shift 1 都是取消`$1`,而原本的`$2`则变成`$1`, `$3`则变成`$2`。
+那亲爱的读者，你说要shift掉多少个参数，才可用`$1`取得到`${10}` 呢？ ^_^
 
 ok，当我们对positional parameter有了基本的概念之后，那再让我们看看其他相关变量吧。
 
 
 ### 2. shell script的positional parameter的number
 
-先是$#, 它可抓出positional parameter的数量。
+先是`$#`, 它可抓出positional parameter的数量。
 以前面的`my.sh p1 "p2 p3"`为例：
-由于"p2 p3"之间的`IFS`是在soft quote中，因此，$#就可得到的值是2。但如果p2与p3没有置于quoting中话，那$#就可得到3的值了。
+由于"p2 p3"之间的`IFS`是在soft quote中，因此，`$#`就可得到的值是2。但如果p2与p3没有置于quoting中话，那`$#`就可得到3的值了。
 同样的规则，在function中也是一样。
 
 因此，我们常在shell script里用如下方法，测试script是否有读进参数：
 ```shell
 [ $# = 0 ]
 ```
-假如为0, 那就表示script没有参数，否则就是带有参数。
+假如为`0`, 那就表示script没有参数，否则就是带有参数。
 
 ### 3. shell script中的$@与$*
 
-接下来就是$@与$*:
-精确来讲，两者只有在soft quote中才有差异，否则，都表示“全部参数” ($0除外)。
+接下来就是`$@`与`$*`:
+精确来讲，两者只有在soft quote中才有差异，否则，都表示全部参数 (`$0`除外)。
 
-若在comamnd line上， 跑`my.sh p1 "p2 p3" p4`的话，不管$@还是$\*, 都可得到 p1 p2 p3 p4就是了。
+若在comamnd line上， 跑`my.sh p1 "p2 p3" p4`的话，不管`$@`还是`$\*`, 都可得到 p1 p2 p3 p4就是了。
 
 但是，如果置于soft quote中的话：
 
@@ -1486,7 +1446,7 @@ echo 'the number of parameter in "$*" is ' $(my_fun "$*")
 ```
 然后再执行:
 ```shell
-./my.sh p1 "p2 p3" p4
+$ ./my.sh p1 "p2 p3" p4
 ```
 就知道，$@与$*差在哪了。
 
@@ -1498,9 +1458,7 @@ echo 'the number of parameter in "$*" is ' $(my_fun "$*")
 一路走来，很辛苦吧？也很快乐吧？ ^_^
 
 在解答本章题目之前，先让我们了解一个概念：
-return value。
-
-我们在shell下跑的每一个command或function，在结束的时候都会传回父进程一个值，称为 `return value`。
+> return value。我们在shell下跑的每一个command或function，在结束的时候都会传回父进程一个值，称为 `return value`。
 
 在shell command line中可用`$?`，这个变量得到最新的一个`return value`，也就是刚刚结束的那个进程传回的值。
 
@@ -1539,7 +1497,7 @@ $ echo $?     #third echo
 
 请记住：
 每一个command在结束时，都会返回`return value`，不管你跑什么命令。
-然而，有一个命令却是“专门”用来测试某一条而返回`return value`，以供true或false的判断， 它就是`test`命令。
+然而，有一个命令却是专门用来测试某一条而返回`return value`，以供true或false的判断， 它就是`test`命令。
 
 若你用的是bash， 请在command line下，打`man test`，或者 `man bash` 来了解这个`test`的用法。
 这是你可用作参考的最精准的文件了，别人说的，仅作参考就好。
@@ -1565,7 +1523,7 @@ test expression
 
 - string：字符串，也就是纯文字。
 - integer：整数(0或正整数、不含负数或小数)
-- file: 文件
+- file：文件
 
 请初学者，一定要搞清楚这三者的差异，因为`test`所使用的expression是不一样的。
 
@@ -1573,28 +1531,27 @@ test expression
 
 - `[ "$A" = 123 ]` #是字符串测试，测试$A是不是1、2、3这三个字符。
 
-- `[ "$A" -eq 123 ]` #是整数测试，以测试$A是否等于123.
+- `[ "$A" -eq 123 ]` #是整数测试，以测试$A是否等于123。
 
-- `[-e "$A" ]` #文件测试，测试123这份文件是否存在.
+- `[ -e "$A" ]` #文件测试，测试123这份文件是否存在。
 
 
 第三，
 当expression测试为“真”时， `test`就返回0(true)的`return value`; 
-否则，返回非0(false).
+否则，返回非0(false)。
 
-若在 expression 之前加一个`!`(感叹号)，则在expression为假时，return value为0,
-否则, return value 为非0值。
+若在 expression 之前加一个`!`(感叹号)，则在expression为假时，return value为`0`,否则, return value 为非`0`值。
 
 同时，`test`也允许多重复合测试：
 
-- expression1 -a expression2 #当两个expression都为true，返回0，否则，返回非0；
-- expression1 -o expression2 #当两个expression均为false时，返回非0，否则，返回0；
+- expression1 -a expression2 #当两个expression都为true，返回`0`，否则，返回非`0`；
+- expression1 -o expression2 #当两个expression均为false时，返回非`0`，否则，返回`0`；
 
 例如：
 ```shell
 [ -d "$file"  -a  -x "$file" ]
 ```
-表示当$file是一个目录，且同时具有x权限时，test才会为true。
+表示当`$file`是一个目录，且同时具有`x`权限时，`test`才会为true。
 
 第四，在command line中使用`test`时，请别忘记命令行的“重组”特性，也就是在碰到meta时，会先处理meta，在重新组建命令行。
 (这个概念在第2章和第4章进行了反复强调)
@@ -1611,8 +1568,7 @@ $ unset A
 $ [ $A = abc ]
 [: =: unary oprator expected
 ```
-这是因为命令行碰到$这个meta时，会替换$A的值，然后，再重组命令行，那就变成了`[ = abc ]`, 
-如此一来，=的左边就没有字符串存在了，因此，造成test的语法错误。
+这是因为命令行碰到`$`这个meta时，会替换`$A`的值，然后，再重组命令行，那就变成了`[ = abc ]`, 如此一来，`=`的左边就没有字符串存在了，因此，造成test的语法错误。
 但是，下面这个写法则是成立的。
 
 ```shell
@@ -1624,10 +1580,9 @@ $ echo $?
 `[ "" = abc ]`, 
 由于等号的左边我们用soft quote得到一个空串，而让test的语法得以通过。
 
-读者诸君，请务必留意这些细节哦，因为稍一不慎，将会导致`test`的结果变了个样。
-若您对`test`还不是很有经验的话，那在使用test时，不妨先采用如下这一个法则:
-
-** 若在`test`中碰到变量替换，用soft quote是最保险的***。
+读者诸君，请务必留意这些细节哦，因为稍一不慎，将会导致test的结果变了个样。
+若您对test还不是很有经验的话，那在使用test时，不妨先采用如下这一个法则:
+> 若在`test`中碰到变量替换，用soft quote是最保险的。
 
 若你对quoting不熟的话，请重新温习第四章的内容吧...^_^
 ok, 关于更多的`test`的用法，老话一句：请看其man page (`man test`)吧！^_^
@@ -1635,7 +1590,7 @@ ok, 关于更多的`test`的用法，老话一句：请看其man page (`man test
 
 问得好:
 告诉你：return value的作用可大了，若你想要你的shell变聪明的话，就全靠它了：
-有了return value， 我们可以让shell根据不同的状态做不同的事情。
+有了return value，我们可以让shell根据不同的状态做不同的事情。
 这时候，才让我来揭晓本章的答案吧^_^
 
 `&&` 与 `||` 都是用来组建多个command line用的；
@@ -1681,16 +1636,15 @@ no, it's Not true
 ```shell
 $ A=123
 $ [ -n "$A" ] && [ "$A" -lt 100 ] || echo 'too big!'
-$ too big!
+too big!
 ```
 若我取消A，照理说，应该不会输出文字啊，(因为第一个条件不成立)。
 ```shell
 $ unset A
 $ [ -n "$A" ] && [ "$A" -lt 100 ] || echo 'too big!'
-$ too big!
+too big!
 ```
-为何上面的结果也可得到呢？
-又如何解决呢？
+为何上面的结果也可得到呢？输出了too big？又如何解决呢？
 
 > **Tips:**
 
@@ -1708,7 +1662,7 @@ $ [ -n "$A" ] && ( [ "$A" -lt 100 ] || echo 'too big!' )
 解决方法二：`command group`:
 ```shell
 $ unset A
-$ [ -n "$A" ] && { [ "$A" -lt 100 ] || echo 'too big!'}
+$ [ -n "$A" ] && { [ "$A" -lt 100 ] || echo 'too big!'; }
 ```
 
 ## shell十三问之11：>与< 差在哪？
@@ -1801,7 +1755,7 @@ okay, 至此，关于fd及其名称、还有相关联的设备，相信你已经
 
 
 --------
-#### 2.1 输入重定向`n<`(input redirection)
+#### 2.1 输入重定向 n < (input redirection)
 --------
 比方说：
 ```shell
@@ -1812,14 +1766,14 @@ $ cat < my.file
 ```shell
 $ mail -s test root < /etc/passwd
 ```
-则是从/etc/passwd读入，这样一来，stdin将不再是从keyboard读入，而是从指定的文件读入了。
+则是从`/etc/passwd`读入，这样一来，stdin将不再是从keyboard读入，而是从指定的文件读入了。
 
-严格来说，**`<`符号之前需要指定一个fd的(之前不能有空白)，但因为0是`<`的预设值，因此，`<`与`0<`是一样的***。
+严格来说，`<`符号之前需要指定一个fd的(之前不能有空白)，但因为0是`<`的预设值，因此，`<`与`0<`是一样的。
 
 ok，这样好理解了吧？
 
 那要是用两个`<`，即`<<`又是啥呢？
-**这是所谓的`here document`, 它可以让我们输入一段文本，直到读到`<<` 后指定的字符串**。
+这是所谓的`here document`, 它可以让我们输入一段文本，直到读到`<<` 后指定的字符串。
 
 比方说：
 ```shell
@@ -1832,7 +1786,7 @@ EOF
 这样的话, `cat`会读入3个句子，而无需从keyboard读进数据且要等到(ctrl+d, ^d)结束输入。
 
 -------------
-#### 2.2 重定向输出`>n`(output redirection)
+#### 2.2 重定向输出 > n (output redirection)
 -------------
 
 当你搞懂了`0<` 原来就是改变`stdin`的数据输入通道之后，相信要理解如下两个redirection就不难了：
@@ -1842,7 +1796,7 @@ EOF
 
 两者都是将原来输出到monitor的数据，重定向输出到指定的文件了。
 
-**由于1是`>`的预设值，因此，`1>`与`>`是相同的，都是改变`stdout`**.
+由于1是`>`的预设值，因此，`1>`与`>`是相同的，都是改变`stdout`。
 
 用上次的ls的例子说明一下好了:
 ```shell
@@ -1867,7 +1821,7 @@ $ ls my.file no.such.file 1>file.out 2>file.err
 
 
 呵呵，看来要理解`>`一点也不难啦是不？ 没骗你吧？ ^_^
-**不过有些地方还是要注意一下的**。
+不过有些地方还是要注意一下的。
 
 ```shell
 $ ls my.file no.such.file 1>file.both 2>file.both
@@ -1885,7 +1839,7 @@ $ ls my.file no.such.file 1>file.both 2>file.both
 
 那如何解决呢？所谓山不转路转，路不转人转嘛，我们可以换一个思维：
 将`stderr`导进`stdout`
-或者将`stdout`导进到`stderr`,而不是大家在抢同一份文件，不就行了。
+或者将`stdout`导进到`stderr`，而不是大家在抢同一份文件，不就行了。
 bingo就是这样啦：
 
 - 2>&1 #将`stderr`并进`stdout`输出
@@ -1902,9 +1856,9 @@ $ ls my.file no.such.file 2>file.both >&2
 故事还没有结束，别走开广告后，我们在回来....
 
 ------
-#### 2.3 I/O重定向与linux中的`/dev/null`
+#### 2.3 I/O重定向与linux中的 /dev/null
 ------
-okay，这次不讲I/O Redirection, 请佛吧。
+ok，这次不讲I/O Redirection, 请佛吧。
 
 学佛的最高境界，就是**四大皆空**。
 至于是空哪四大块，我也不知，因为我还没有到那个境界。
@@ -1949,7 +1903,7 @@ $ ls my.file no.such.file &>/dev/null
 
 
 ------
-#### 2.4 重定向输出append (`>>`)
+#### 2.4 重定向输出append (>>)
 -------
 ok？ 请完佛，接下来，再让我们看看如下情况：
 ```shell
@@ -1960,9 +1914,7 @@ $ echo "2" > file.out
 $ cat file.out
 2
 ```
-看来，我们在重定向stdout或stderr进一个文件时，似乎永远只能获得最后一次的重定向的结果.
-那之前的内容呢？
-
+看来，我们在重定向stdout或stderr进一个文件时，似乎永远只能获得最后一次的重定向的结果，那之前的内容呢？
 呵呵，要解决这个问题，很简单啦，将`>`换成`>>` 就好了；
 ```shell
 $ echo "3" >> file.out
@@ -1982,8 +1934,10 @@ $ echo "4" > file.out
 -bash：file: cannot overwrite existing file.
 ```
 
-那，要如何取消这个限制呢?
-哦，将`set -o `换成 `set +o`就行了：
+- > 那，要如何取消这个限制呢?
+
+- > 哦，将`set -o `换成 `set +o`就行了：
+
 ```shell
 $ set +o noclobber
 $ echo "5" > file.out
@@ -1991,10 +1945,14 @@ $ cat file.out
 5
 ```
 
-再问：那有办法不取消而又临时改写目标文件吗？
-哦，佛曰：不可告也。
-啊，开玩笑的，开玩笑啦^_^，
-哎，早就料到人心是不足的了
+- > 再问：那有办法不取消而又临时改写目标文件吗？
+
+- > 哦，佛曰：不可告也。
+
+- > 啊，开玩笑的，开玩笑啦^_^，
+
+- > 哎，早就料到人心是不足的了
+
 ```shell
 $ set -o noclobber
 $ echo "6" >| file.out
@@ -2002,7 +1960,7 @@ $ cat file.out
 6
 ```
 留意到没有：
-**在`>`后面加个`|`就好，注意： `>`与`|`之间不能有空白哦**。
+> 在`>`后面加个`|`就好，注意： `>`与`|`之间不能有空白哦。
 
 
 -----
@@ -2025,7 +1983,7 @@ why？ why？ why？
 
 前面提到：`$cat < file > file`之后，原本有内容的文件，结果却被清空了。
 要理解这个现象其实不难，这只是priority的问题而已：
-** 在IO Redirection中, stdout与stderr的管道先准备好，才会从stdin读入数据。**
+> 在IO Redirection中, stdout与stderr的管道先准备好，才会从stdin读入数据。
 也就是说，在上例中，`>file`会将file清空，然后才读入 `< file`。
 但这时候文件的内容已被清空了，因此就变成了读不进任何数据。
 
@@ -2072,56 +2030,44 @@ sorry,因为我也只知道这么多而已啦嘻^_^
 那么，你能想象一下水管是怎样一个根接一根的吗？
 又， 每根水管之间的input跟output又如何呢？
 灵光一闪：原来pipe line的I/O跟水管的I/O是一模一样的：
-**上一个命令的stdout接到下一个命令的stdin去了**
-的确如此。不管在command line上使用了多少个pipe line，
-前后两个command的I/O是彼此连接的
-(恭喜：你终于开放了 ^_^ )
+> 上一个命令的stdout接到下一个命令的stdin去了
+的确如此。不管在command line上使用了多少个pipe line，前后两个command的I/O是彼此连接的(恭喜：你终于开放了 ^_^ )
 
 不过...然而...但是... ...stderr呢？
 好问题不过也容易理解：
 若水管漏水怎么办？
-也就是说：在pipe line之间, 
-前一个命令的stderr是不会接进下一个命令的stdin的，
-其输出，若不用2>file的话，其输出在monitor上来。
+也就是说：在pipe line之间, 前一个命令的stderr是不会接进下一个命令的stdin的，其输出，若不用2>file的话，它还是送到monitor显示器上来。
 这点请你在pipe line运用上务必要注意的。
 
 那，或许你有会问:
-**有办法将stderr也喂进下一个命令的stdin吗？**
+- > 有办法将stderr也喂进下一个命令的stdin吗？
 (贪得无厌的家伙)，方法当然是有的，而且，你早已学习过了。
-提示一下就好：**请问你如何将stderr合并进stdout一同输出呢？
+提示一下就好：请问你如何将stderr合并进stdout一同输出呢？
 若你答不出来，下课后再来问我...(如果你脸皮足够厚的话...)
 
 或许，你仍意犹未尽，或许，你曾经碰到过下面的问题：
-在`cmd1 | cmd2 | cmd3 | ...`
-这段pipe line中如何将cmd2的输出保存到一个文件呢？
+在`cmd1 | cmd2 | cmd3 | ...`这段pipe line中如何将cmd2的输出保存到一个文件呢？
 
-若你写成`cmd1 | cmd2 >file | cmd3`的话，
-那你肯定会发现`cmd3`的stdin是空的，(当然了，你都将水管接到别的水池了)
+若你写成`cmd1 | cmd2 >file | cmd3`的话，那你肯定会发现`cmd3`的stdin是空的，(当然了，你都将水管接到别的水池了)
 聪明的你或许会如此解决：
 ```shell
 cmd1 | cmd2 >file; cmd3 < file
 ```
 
 是的，你可以这样做，但最大的坏处是：
-file I/O会变双倍，在command执行的整个过程中，
-file I/O是最常见的最大效能杀手。
+file I/O会变双倍，在command执行的整个过程中，file I/O是最常见的最大效能杀手。
 凡是有经验的shell操作者，都会尽量避免或降低file I/O的频度。
-
-
 那上面问题还有更好的方法吗？
 有的，那就是`tee`命令了。
-**所谓的`tee`命令是在不影响原本I/O的情况下，
-将stdout赋值到一个文件中去。**
+所谓的`tee`命令是在不影响原本I/O的情况下，将stdout赋值到一个文件中去。
 因此，上面的命令行，可以如此执行：
 ```shell
 cmd1 | cmd2 | tee file | cmd3
 ```
 在预设上，`tee`会改写目标文件，若你要改为追加内容的话，那可用-a参数选项。
-
 基本上，pipe line的应用在shell操作上是非常广泛的。
 尤其是在text filtering方面，如，cat, more, head, tail, wc, expand, tr, grep, sed, awk...等等文字处理工具。
-搭配起pipe line 来使用，你会觉得 command line
-原来活得如此精彩的。
+搭配起pipe line 来使用，你会觉得 command line原来活得如此精彩的。
 常让人有“众里寻他千百度，蓦然回首，那人却在灯火阑珊处”之感。
 
 好了，关于I/O Redirection的介绍就到此告一段落。
@@ -2153,8 +2099,7 @@ cmd1 && {
 
 事实上， 我们在写shell script的时候，经常需要用到这样、那样的条件以作出不同的处理动作。
 用`&&`与`||`的确可以达成条件执行的结果，然而，从“人类语言”上来理解，却不是那么直观。
-更多时候，我们还是喜欢用`if...then...else...`
-这样的的keyword来表达条件执行。
+更多时候，我们还是喜欢用`if...then...else...`这样的的keyword来表达条件执行。
 
 在bash shell中，我们可以如此修改上一段代码：
 ```shell
@@ -2248,10 +2193,8 @@ QQ
 
 QQ
 ```
-我们常用的`case`的判断式来判断某一变量
-在不同的值(通常是string)时，作出不同的处理，比方说，**判断script参数，以执行不同的命令**。
-
-若你有兴趣，且用linux系统的话，不妨挖一挖`/etc/init.d/*`中的那堆script中的`case`用法.
+我们常用的`case`的判断式来判断某一变量在不同的值(通常是string)时，作出不同的处理，比方说，判断script参数，以执行不同的命令。
+若你有兴趣，且用linux系统的话，不妨挖一挖`/etc/init.d/*`中的那堆script中的`case`用法。
 如下就是一例：
 ```shell
 case "$1" in
@@ -2358,29 +2301,27 @@ done
 
 分析上例：
 
->   1. 在`while`之前，定义变量num=1.
+>   1. 在`while`之前，定义变量num=1。
 
->   2. 然后测试(`test`)$num是否小于或等于10.
+>   2. 然后测试(`test`)$num是否小于或等于10。
 
->   3. 结果为true，于是执行`echo`并将num的值加1.
+>   3. 结果为true，于是执行`echo`并将num的值加1。
 
 >   4. 再作第二轮测试，此时num的值为1+1=2，依然小于或等于10，因此，为true，循环继续。
 
 >   5. 直到num为10+1=11时，测试才会失败...于是结束循环。
 
 我们不难发现：
-**若`while`的测试结果永远为true的话，那循环将一直永久执行下去**：
+> 若`while`的测试结果永远为true的话，那循环将一直永久执行下去：
 
 ```shell
 while:; do
 	echo looping...
 done
 ```
-上面的**`:`是bash的null command，不做任何动作，除了返回true的return value**。
+上面的`:`是bash的null command，不做任何动作，除了返回true的return value。
 因此这个循环不会结束，称作死循环。
-
 死循环的产生有可能是故意设计的(如跑daemon)，也可能是设计的错误。
-
 若要结束死循环，可通过signal来终止(如按下ctrl-c)，
 (关于process与signal，等日后有机会再补充，十三问略过。)
 
@@ -2419,10 +2360,8 @@ ok, 关于bash的三个常用的loop暂时介绍到这里。
 
 - `break`
 - `continue`
-这两个命令常用在复合式循环里，
-也就是`do ... done`之间又有更进一层的loop，
-当然，用在单一循环中也未尝不可啦... ^_^
 
+这两个命令常用在复合式循环里，也就是`do ... done`之间又有更进一层的loop，当然，用在单一循环中也未尝不可啦... ^_^
 `break`用来中断循环，也就是强迫结束循环。
 若`break`后面指定一个数值n的话，则从里向外中断第n个循环，预设值为 `break 1`，也就是中断当前循环。
 在使用break时，需要注意的是，它与`return`及`exit`是不同的：
@@ -2431,23 +2370,19 @@ ok, 关于bash的三个常用的loop暂时介绍到这里。
 - `return`是结束function；
 - `exit`是结束script/shell;
 
-而`continue`则与`break`相反：强迫进入下一次循环动作.
-
+而`continue`则与`break`相反：强迫进入下一次循环动作。
 若你理解不来的话，那你可简单的看成：
 在`continue`在`done`之间的句子略过而返回到循环的顶端。
-
 与`break`相同的是：`continue`后面也可以指定一个数值n，以决定继续哪一层(从里往外计算)的循环，预设值为 `continue 1`,也就是继续当前的循环。
-
 在shell script设计中，若能善用loop，将能大幅度提高script在复杂条件下的处理能力。
-请多加练习吧...
+请多加练习吧...^_^
 
 
-## shell十三问之14: [^ ] 跟[! ]差在哪？ (wildcard)
+## shell十三问之14: [^ ] 跟[! ]差在哪？ (wildcard)通配符篇。
 --------------------------------------
 
-这个题目说穿了，就是要探讨Wildcard与Regular Expression的差别的。
+这个题目说穿了，就是要探讨Wildcard（通配符）与Regular Expression（正则表达式）的差别的。
 这也是很多初学shell的朋友很容易混淆的地方。
-
 首先，让我们回到十三问之第2问，再一次将我们提到的command line format 温习一次：
 
 ```shell
@@ -2466,18 +2401,13 @@ command_name options arguments
 ---------------------------
 
 首先`Wildcard` 也是属于 `command line` 的处理工序，作用于 `arguments` 里的 `path` 之上。
-
 没错，它不用在`command_name`，也不用在`options`上。
 而且，若argument不是path的话，那也与wildcard无关。
-
 换句更为精确的定义来讲，`wildcard`是一种命令行的路径扩展(path expansion)功能。
 提到这个扩展，那就不要忘了command line的重组特性了！
-
 是的，这与`变量替换`(variable subtitution)及`命令替换`(command substitution)的重组特性是一样的。
-
 也就是在`wildcard`进行扩展后，命令行会先完成重组，才会交给shell来处理。
-
-了解了`wildcard`的扩展与重组特性后，接下来，让我们了解一些常见的wildcard吧。 
+了解了`wildcard`的扩展与重组特性后，接下来，让我们了解一些常见的wildcard通配符吧。 
 
 
 |wildcard   | 功能               |
@@ -2490,8 +2420,7 @@ command_name options arguments
 
 
 Note:
->  list 中可以指定单个字符，如abcd, 
->  也可以指定ASCII字符的起止范围，如 a-d。
+>  list 中可以指定单个字符，如abcd, 也可以指定ASCII字符的起止范围，如 a-d。
 >  即[abcd] 与 [a-d] 是等价的，称为一个自定义的字符类。
 
 
@@ -2506,21 +2435,20 @@ a{abc,xyz,123}b # a 与 b之间只能是abc或者xyz或者123这三个字串之�
 
 
 1. `[! ]` 中的`!` 只有放在第一位时，才有取反的功效。
-  eg:
-    `[!a]*` 表示当前目录下不以a开头的路径名称；
-    `/tmp/[a\!]*`表示/tmp目录下所有以a 或者 ! 开头的路径名称；
+  举例:
+    `[!a]*` 表示当前目录下不以`a`开头的路径名称；
+    `/tmp/[a\!]*`表示/tmp目录下所有以`a` 或者 `!` 开头的路径名称；
     
-    思考：为何!前面要加\呢？提示是十三问之4.
+    思考：为何`!`前面要加`\`呢？
 
 2. `[ - ]`中`-`左右两边均有字符时，才表示一个范围，否则,仅作`-`(减号)字符来处理。
-举例：
-    `/tmp/*[-z]/[a-zA-Z]*` 表示/tmp 目录下所有以z或者-结尾的子目录中，
-    以英文字母(不分大小写)开头的目录名称。
+  举例：
+    `/tmp/*[-z]/[a-zA-Z]*` 表示/tmp目录下所有以`z`或者`-`结尾的子目录中，以英文字母(不分大小写)开头的目录名称。
 
 3. 以\*或?开头的wildcard不能匹配隐藏文件(即以.开头的文件名)。
- eg: 
+   举例: 
     `*.txt`并不能匹配`.txt`但能匹配1.txt这样的路径名。
-    但1*txt及1?txt均可匹配1.txt这样的路径名。
+    但`1*txt`及`1?txt`均可匹配1.txt这样的路径名。
 
 
 基本上，要掌握wildcard并不难，只要多加练习，再勤于思考，就能灵活运用了。
@@ -2529,17 +2457,12 @@ a{abc,xyz,123}b # a 与 b之间只能是abc或者xyz或者123这三个字串之�
 
 > 别忘了wildcard的"扩展" + "重组" 这个重要特性，而且只作用在 argument的path上。
 
-比方说，假如当前目录下有：
-a.txt b.txt c.txt 1.txt 2.txt 3.txt 这几个文件。
-
-当我们在命令行中执行`ls -l [0-9].txt`的命令行时，因为wildcard处于argument的位置上，
-
-于是根据匹配的路径，扩展为: 1.txt 2.txt 3.txt，在重组出`ls -l 1.txt 2.txt 3.txt` 这样的命令行。
-
+比方说，假如当前目录下有：a.txt b.txt c.txt 1.txt 2.txt 3.txt 这几个文件。
+当我们在命令行中执行`ls -l [0-9].txt`的命令行时，因为wildcard处于argument的位置上，于是根据匹配的路径，扩展为: 1.txt 2.txt 3.txt，在重组出`ls -l 1.txt 2.txt 3.txt` 这样的命令行。
 因此，你在命令行上敲 `ls -l [0-9].txt` 与 `ls -l 1.txt 2.txt 3.txt` 输出的结果是一样，原因就是在于此。
 
 
-## shell十三问之15: [^ ] 跟[! ]差在哪？ (RE: Regular Expression）
+## shell十三问之15: [^ ] 跟[! ]差在哪？ (RE: Regular Expression）正则表达式篇
 ------------------------------------------------------------
 
 ### 2.Regular Expression (正则表达式)
@@ -2548,46 +2471,30 @@ a.txt b.txt c.txt 1.txt 2.txt 3.txt 这几个文件。
 接下来的Regular Expression(RE) 可是个大题目，要讲的很多。
 我这里当然不可能讲得很全。
 只希望能带给大家一个基本的入门概念，就很足够了。
-
 先来考一下英文好了：What is expression?
 简单来说，就是**表达**，也就是人们在沟通的时候所要陈述的内容。
-
 然而，生活中，表达方要清楚的将意思描述清楚，而让接收方完整无误地领会，可不是件容易的事情。
-
 因而才会出现那么多的误会, 真可叹句表达不易啊。
-
 同样的情形也发生在计算机的数据处理过程中，尤其是当我们在描述一段文字内容的时候。
 那么，我们不禁要问：
 有何方法可以让大家的误会降至最低程度，而让表达的精确度达到最高程度呢？
 答案就是**标准化**了，也就是我们这里要谈的`Regular Expression`啦...^_^
-
 然而，在进入`RE`介绍之前，不妨先让我们温习一下shell十三问之第4问，那就是关于quoting的部分。
-
 **关键是要能够区分 shell command line上的meta与literal的这两种不同的字符类型**。
-
 然后，我这里也跟你讲：
-**RE 表达式里字符也分meta与literal这两种**。
+> RE 表达式里字符也分meta与literal这两种。
 
 呵，不知亲爱的读者是否被我搞混乱了呢？... ^_^
-
 这也难怪啦，因为这的确是最容易混淆的地方，刚学`RE`的朋友很多时候，都死在这里！
 因此，请特别小心理解哦。
-
 简单而言，除非你将`RE`写在特定程序使用的脚本里，否则，我们的`RE`也是通过 command line输入的。
 然而，**不少RE所使用的meta字符，跟shell 的meta字符是冲突的**。
-
 比方说，**`*`这个字符，在RE里是一个modifier(修饰符);而在command line上，确是wildcard(通配符)**。
-
 那么，我们该如何解决这样的冲突呢？
 关键就是看你对shell十三问的第4问中所提的quoting是否足够理解了！
-
-若你明白到
-**shell quoting 就是用来在command line上关闭shell meta这一基本原理**，
-那你就能很轻松的解决 RE meta与shell meta的冲突问题了：
-**用shell quoting 关闭掉shell meta就是了**。
+若你明白**shell quoting 就是用来在command line上关闭shell meta这一基本原理**，那你就能很轻松的解决 RE meta与shell meta的冲突问题了：
+> 用shell quoting 关闭掉shell meta就是了。
 就这么简单... ^_^
-
-
 再以刚提到`*`字符为例，若在command line的path中没有quoting处理的话，如abc\* 就会被作为wildcard expression来扩充及重组了。
 若将其置于quoting中，即"abc\*"，则可以避免wildcard expand的处理。
 
@@ -2604,19 +2511,15 @@ a.txt b.txt c.txt 1.txt 2.txt 3.txt 这几个文件。
 >  RE 所处理的字符串，通常是指纯文本或通过stdin读进的内容。
 
 
-okay，够了够了，我已看到一堆人开始出现不耐烦的样子了... ^_^
-现在，就让我们登堂入室，揭开RE的神秘面纱吧，
-这样可以放过我了吧？ 哈哈...
-
+ok，够了够了，我已看到一堆人开始出现不耐烦的样子了... ^_^
+现在，就让我们登堂入室，揭开RE的神秘面纱吧，这样可以放过我了吧？ 哈哈...^_^
 
 在RE的表达式里，主要分为两种字符：`literal`与`meta`。
 所谓`literal`就是在RE里不具有特殊功能的字符，如abc，123等；
 而`meta`,在RE里具有特殊的功能。
-要关闭之，需要在`meta`之前使用escape(\)转义字符。
-
+要关闭之，需要在`meta`之前使用escape(`\`)转义字符。
 
 然而，在介绍`meta`之前，先让我们来认识一下字符组合(character set)会更好些。
-
 一、所谓的char set就是将多个连续的字符作为一个集合。
 如 abc\|xyz 表示abc或xyz这连个char set之一。
 其它含义如下：
@@ -2662,14 +2565,12 @@ okay，够了够了，我已看到一堆人开始出现不耐烦的样子了... 
 若没有边界字符的帮忙，我们很容易做出错误的解读。
 比方说: 我们用`ab{3,5}`这个RE（少了c这个边界字符)
 可以抓到"abbbbbbbbbb"(a后面有10个b)的字符串吗？
-从刚才的modifier的说明，我们一般认为，我们要的b是3到5个，
-若超出了此范围，就不是我们所要表达的。
+从刚才的modifier的说明，我们一般认为，我们要的b是3到5个，若超出了此范围，就不是我们所要表达的。
 因此，我们或许会很轻率地认为这个RE抓不到结果（上述"abbbbbbbbbb"字符串）。
 
 然而，答案却是可以的！为什么呢？
 让我们重新解读`ab{3,5}`这个RE看看：
-我们要表达的是a后接3到5个b即可，但3到5个b后面，我们却没有规定什么，
-因此，在RE后面可以是任意的字符串，当然包括b也可以啦！(明白了吗？)
+我们要表达的是a后接3到5个b即可，但3到5个b后面，我们却没有规定什么，因此，在RE后面可以是任意的字符串，当然包括b也可以啦！(明白了吗？)
 
 同样，我们用`b{3,5}c`也同样可以抓到"abbbbbbbbbbc"这样的字符串。
 
@@ -2687,14 +2588,12 @@ bx*c, bcx*, x*bc
 刚学RE时，只要能掌握上面这些基本的meta的大概就可以入门了。
 一如前述，RE是一种规范化的文字表达式，
 主要用于某些文字处理工具之间，如：
-grep， perl， vi，awk，sed，等等，
-常用于表示一段连续的字符串，查找和替换。
+`grep`， `perl`， `vi`，`awk`，`sed`，等等，常用于表示一段连续的字符串，查找和替换。
 
 然而每种工具对RE表达式的具体解读或有一些细微差别，不过原理还是一致的。
 只要掌握RE的基本原理，那就一理通百理了，只是在实践时，稍加变通即可。
 
-比方以grep来说，在Linux上，你可以找到grep，egrep，fgrep这些程序，
-其差异大致如下：
+比方以`grep`来说，在`Linux`上，你可以找到`grep`，`egrep`，`fgrep`这些程序，其差异大致如下：
 
 grep： 传统的grep程序，在没有任何选项(options)的情况下，只输出符合RE字串的句子，
  其常见的选项如下：
@@ -2717,14 +2616,14 @@ egrep：为grep的扩充版本，改良了许多传统grep不能或者不便的�
 - grep 不支持`a|b`或（`abc|xyz`）这类“或一”的匹配，但egrep支持；
 - grep 在处理`{n,m}`时，需要\\{ 与 \\}处理，但egrep不需。
 
-等诸如此类的。我个人建议能用egrep就不用grep啦...^_^
+等诸如此类的。我个人建议能用`egrep`就不用`grep`啦...^_^
 
 fgrep: 不作RE处理，表达式仅作一般的字符串处理，所有的meta均市区功能。
 
 好了，关于RE的入门，我们暂时就介绍到这里。
 虽然有点乱，且有些观念也不恨精确，不过，姑且算是对大家的一个交差吧...^_^
 若这两天有时间的话，我在举些范例来分析一下，以帮助大家更好的理解。
-假如更有可能的话，也顺道为大家介绍一下sed这个工具。
+假如更有可能的话，也顺道为大家介绍一下`sed`这个工具。
 
 ---------------------------------------
 
@@ -2751,12 +2650,10 @@ A1=abc
 ```shell
 eval echo \$A$a
 ```
-说穿了，`eval` 只不过是在命令行完成替换重组后，
-在来一次替换重组罢了...
-就是这么简单啦^_^
+说穿了，`eval` 只不过是在命令行完成替换重组后，在来一次替换重组罢了。就是这么简单啦^_^
 
 ---------------------------------------
-## 一个能让系统shell崩溃的shell 片段
+## 加餐：一个能让系统shell崩溃的shell 片段
 ---------------------------------------
 一个能让系统shell崩溃的shell 片段：
 
@@ -2776,47 +2673,30 @@ echo '十人|日一|十十o' | sed 's/.../&\n/g'   # <--- 跟你讲就不听，�
 }
 :
 ```
-> 代码分析：
+代码分析：
 
-> (即除最后一行外)
 
-> 定义了一个 shell 函数，函数名是`:`，
-
-> 而这个函数体执行一个后台命令`:|:` 
-
-> 即冒号命令(或函数，下文会解释)的输出通过管道再传给冒号命令做输入
-
+> 定义了一个 shell 函数，函数名是`:`，而这个函数体执行一个后台命令`:|:` 即冒号命令(或函数，下文会解释)的输出通过管道再传给冒号命令做输入。
 > 最后一行执行“:”命令在各种shell中运行结果分析：
 > 这个代码只有在 **bash** 中执行才会出现不断创建进程而耗尽系统资源的严重后果;
-
-> 在 ksh (Korn shell), sh (Bourne shell)中并不会出现，
-
-> 在 ksh88 和传统 unix Bourne shell 中冒号不能做函数名，
-
-> 即便是在 unix-center freebsd 系统中的 sh 和 pdksh（ksh93 手边没有，没试）中冒号可以做函数名，但还是不会出现那个效果。
-
-
+> 在 ksh (Korn shell), sh (Bourne shell)中并不会出现，在 ksh88 和传统 unix Bourne shell 中冒号不能做函数名，即便是在 unix-center freebsd 系统中的 sh 和 pdksh（ksh93 手边没有，没试）中冒号可以做函数名，但还是不会出现那个效果。
 > 原因是 sh、ksh 中内置命令的优先级高于函数，所以执行“:”，总是执行内置命令“:”而不是刚才定义的那个恐怖函数。
-
-> 但是在 **bash** 中就不一样，bash 中函数的优先级高于内置命令，
-> 所以执行“:”结果会导致不断的递归，而其中有管道操作，
-> 这就需要创建两个子进程来实现，这样就会不断的创建进程而导致资源耗尽。
+> 但是在 **bash** 中就不一样，bash 中函数的优先级高于内置命令，所以执行“:”结果会导致不断的递归，而其中有管道操作，这就需要创建两个子进程来实现，这样就会不断的创建进程而导致资源耗尽。
 
 
 众所周知，bash是一款极其强大的shell，提供了强大的交互与编程功能。
-
 这样的一款shell中自然不会缺少“函数”这个元素来帮助程序进行模块化的高效开发与管理。
 于是产生了由于其特殊的特性，bash拥有了fork炸弹。
 
 Jaromil在2002年设计了最为精简的一个fork炸弹的实现。
 
-> 所谓fork炸弹是一种恶意程序，它的内部是一个不断在fork进程的无限循环.
+![image](https://ok188.net/images/posts/shell_fork.jpg)
+
+> 所谓fork炸弹是一种恶意程序，它的内部是一个不断在fork进程的无限循环。
 
 > fork炸弹并不需要有特别的权限即可对系统造成破坏。
 
 > fork炸弹实质是一个简单的递归程序。
 
-> 由于程序是递归的，如果没有任何限制，
-
-> 这会导致这个简单的程序迅速耗尽系统里面的所有资源.
+> 由于程序是递归的，如果没有任何限制，这会导致这个简单的程序迅速耗尽系统里面的所有资源。
 
