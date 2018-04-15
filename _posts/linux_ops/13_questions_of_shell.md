@@ -2084,14 +2084,14 @@ cmd1 | cmd2 | tee file | cmd3
 若你记得`return value`，我想你也应该记得了`&&` 与 `||` 什么意思吧?
 用这两个符号再搭配 command group的话，我们可让shell script变得更加聪明哦。
 比方说：
-```shell
+```
 cmd1 && {
     cmd2
-	cmd3
-	;
+        cmd3
+        ;
 } || {
-	cmd4
-	cmd5
+        cmd4
+        cmd5
 }
 ```
 意思是说：
@@ -2102,14 +2102,14 @@ cmd1 && {
 更多时候，我们还是喜欢用`if...then...else...`这样的的keyword来表达条件执行。
 
 在bash shell中，我们可以如此修改上一段代码：
-```shell
+```
 if cmd1
 then
-	cmd2
-	cmd3
+        cmd2                                                                                                                               
+        cmd3                                                                                                                               
 else
-	cmd4
-	cmd5
+        cmd4                                                                                                                               
+        cmd5                                                                                                                               
 fi
 ```
 
@@ -2121,16 +2121,16 @@ fi
 > (若`then`后不想跑任何command，可用`:`这个`null command`代替)。
 > 当然，then或else后面，也可以再使用更进一层的条件判断式，这在shell script的设计上很常见。
 > 若有多项条件需要"依序"进行判断的话，那我们则可使用`elif`这样的keyword：
- 
-```shell
-if cmd1; then
+```bash
+if cmd1; then                                                                                                                              
     cmd2;
-elif cmd3; then
- 	cmd4
+elif cmd3; then                                                                                                                            
+        cmd4                                                                                                                               
 else
- 	cmd5
+        cmd5                                                                                                                               
 fi
 ```
+ 
 意思是说：
 > 	若cmd1为true，然则执行cmd2；
 > 	否则在测试cmd3，若为true则执行cmd4；
@@ -2141,17 +2141,16 @@ fi
 接下来为要为大家介绍的是`case`判断式。
 虽然`if`判断式已可应付大部分的条件执行了，然而，在某些场合中，却不够灵活，尤其是在string式样的判断上，
 比方如下：
-
-```shell
+```bash
 QQ() {
-    echo -n "Do you want to continue? (Yes/No): "
- 	read YN
- 	if [ "$YN" = Y -o "$YN" = y -o "$YN" = "Yes" -o "$YN" = "yes" -o "$YN" = YES]
- 	then
- 		QQ
- 	else
- 		exit 0
- 	fi	
+    echo -n "Do you want to continue? (Yes/No): "                                                                                          
+        read YN                                                                                                                            
+        if [ "$YN" = Y -o "$YN" = y -o "$YN" = "Yes" -o "$YN" = "yes" -o "$YN" = YES]                                                      
+        then                                                                                                                               
+                QQ                                                                                                                         
+        else                                                                                                                               
+                exit 0                                                                                                                     
+        fi                                                                                                                                 
 }
 
 QQ
@@ -2160,65 +2159,68 @@ QQ
 从例中，我们看得出来，最麻烦的部分是在判断YN的值可能有好几种样式。
 
 聪明的你或许会如此修改：
-```shell
+```bash
  QQ() {
- 	echo -n "Do you want to continue? (Yes/No): "
- 	read YN
- 	if echo "$YN" | grep -q '^[Yy]\([Ee][Ss]\)*$'
- 	then
- 		QQ
- 	else
- 		exit 0
- 	fi	
+        echo -n "Do you want to continue? (Yes/No): "                                                                                      
+        read YN                                                                                                                            
+        if echo "$YN" | grep -q '^[Yy]\([Ee][Ss]\)*$'                                                                                      
+        then                                                                                                                               
+                QQ                                                                                                                         
+        else                                                                                                                               
+                exit 0                                                                                                                     
+        fi                                                                                                                                 
 }
 
 QQ
 ```
+
+
 也就是用`Regular Expression`来简化代码。
 (我们有机会，再来介绍`RE`)
 只是...是否有其他更方便的方法呢？有的，就是用`case`判断式即可：
-```shell
- QQ() {
- 	echo -n "Do you want to continue? (Yes/No): "
- 	read YN
- 	case "$YN" in
- 		[Yy]|[Yy][Ee][Ss])
- 			QQ
- 			;;
- 		*)
- 			exit 0
- 			;;
- 	esac
-}
-
-QQ
+```bash
+ QQ() {                                                                                                                                    
+        echo -n "Do you want to continue? (Yes/No): "                                                                                      
+        read YN                                                                                                                            
+        case "$YN" in                                                                                                                      
+                [Yy]|[Yy][Ee][Ss])                                                                                                         
+                        QQ                                                                                                                 
+                        ;;                                                                                                                 
+                *)                                                                                                                         
+                        exit 0                                                                                                             
+                        ;;                                                                                                                 
+        esac                                                                                                                               
+}                                                                                                                                          
+                                                                                                                                           
+QQ 
 ```
 我们常用的`case`的判断式来判断某一变量在不同的值(通常是string)时，作出不同的处理，比方说，判断script参数，以执行不同的命令。
 若你有兴趣，且用linux系统的话，不妨挖一挖`/etc/init.d/*`中的那堆script中的`case`用法。
 如下就是一例：
-```shell
-case "$1" in
-	start)
-		start
-		;;
-	stop)
-		stop
-		;;
-	status)
-		rhstatus
-		;;
-	restart|reload)
-		restart
-		;;
-	condrestart)
-		[ -f /var/lock/subsys/syslog ] && restart || :
-		;;
+```bash
+case "$1" in                                                                                                                               
+        start)                                                                                                                             
+                start                                                                                                                      
+                ;;                                                                                                                         
+        stop)                                                                                                                              
+                stop                                                                                                                       
+                ;;                                                                                                                         
+        status)                                                                                                                            
+                rhstatus                                                                                                                   
+                ;;                                                                                                                         
+        restart|reload)                                                                                                                    
+                restart                                                                                                                    
+                ;;                                                                                                                         
+        condrestart)                                                                                                                       
+                [ -f /var/lock/subsys/syslog ] && restart || :                                                                             
+                ;;                                                                                                                         
 
-	*)
-		echo $"Usage: $0 {start|stop|status|restart|condrestart}"
-		exit 1
+        *)
+                echo $"Usage: $0 {start|stop|status|restart|condrestart}"                                                                  
+                exit 1                                                                                                                     
 esac
 ```
+
 (若你对 postional parameter的印象已经模糊了，请重看第9章吧。)
 
 ## shell十五问之13： for what？ while与until差在哪？
@@ -2237,12 +2239,12 @@ bash shell中常用的`loop`有如下三种：
 
 `for` loop 是从一个清单列表中读进变量的值，并依次的循环执行`do`到`done`之间的命令行。
 例：
-```shell
-for var in one two three four five
+```bash
+for var in one two three four five                                                                                                         
 do
-    echo -----------------
-	echo '$var is '$var
-	echo
+    echo -----------------                                                                                                                 
+        echo '$var is '$var                                                                                                                
+        echo                                                                                                                               
 done
 ```
 
@@ -2259,11 +2261,12 @@ done
 我们不难看出，在`for` loop中，变量值的多寡，决定循环的次数。
 然而，变量在循环中是否使用则不一定，得视设计需求而定。
 倘若`for` loop没有使用in这个keyword来制变量清单的话，其值将从`$@`(或`$*`)中继承：
-```shell
+```bash
 for var; do
-	......
+        ......                                                                                                                             
 done
 ```
+
 > **Tips:**
 
 > 若你忘记了`positional parameter, 请温习第9章...
@@ -2271,24 +2274,24 @@ done
 `for` loop用于处理清单(list)项目非常方便，其清单除了明确指定或从`postional parameter`取得之外，也可以从`变量替换`或者`命令替换`取得。
 (再一次提醒：别忘了命令行的“重组”特性)
 然而，对于一些“累计变化”的项目(整数的加减)，for也能处理：
-```shell
-for ((i = 1; i <= 10; i++))
+```bash
+for ((i = 1; i <= 10; i++))                                                                                                                
 do
-	echo "num is $i"
+        echo "num is $i"                                                                                                                   
 done
 ```
-
 ### 2. while loop
 ---------
 
 除了`for` loop, 上面的例子，我们也可改用`while` loop来做到：
-```shell
+```bash
 num=1
-while [ "$num" -le 10 ]; do
-	echo "num is $num"
-	num=$(($num + 1))
+while [ "$num" -le 10 ]; do                                                                                                                
+        echo "num is $num"                                                                                                                 
+        num=$(($num + 1))                                                                                                                  
 done
 ```
+
 `while` loop的原理与`for` loop稍有不同：
 它不是逐次处理清单中的变量值，而是取决于`while` 后面的命令行的return value：
 
@@ -2309,12 +2312,13 @@ done
 
 我们不难发现：
 > 若`while`的测试结果永远为true的话，那循环将一直永久执行下去：
-
-```shell
+```bash
 while:; do
-	echo looping...
+        echo looping...                                                                                                                    
 done
 ```
+
+
 上面的`:`是bash的null command，不做任何动作，除了返回true的return value。
 因此这个循环不会结束，称作死循环。
 死循环的产生有可能是故意设计的(如跑daemon)，也可能是设计的错误。
@@ -2329,21 +2333,22 @@ done
 一旦你能够理解`while` loop的话，那就能理解`until` loop:
 与`while`相反， `until`是在return value 为false时进入循环，否则，结束。
 因此，前面的例子，我们也可以轻松的用`until`来写：
-```shell
+```bash
 num=1
-until [ ! "$num" -le 10 ]; do
-	echo "num is $num"
-	num=$(($num + 1))
+until [ ! "$num" -le 10 ]; do                                                                                                              
+        echo "num is $num"                                                                                                                 
+        num=$(($num + 1))                                                                                                                  
 done
 ```
+
 或者：
 
-```shell
+```bash
 num=1
 
-until [ "$num" -gt 10 ]; do
-	echo "num is $num"
-	num=$(($num + 1))
+until [ "$num" -gt 10 ]; do                                                                                                                
+        echo "num is $num"                                                                                                                 
+        num=$(($num + 1))                                                                                                                  
 done
 ```
 
