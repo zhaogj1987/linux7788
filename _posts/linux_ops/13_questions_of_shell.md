@@ -544,16 +544,17 @@ a b c
 
 
 思考问题二：文本处理：读文件时，如何保证原汁原味。
-```shell
+```bash
 cat file | while read i
 do
    echo $i
 done
 ```
+
 文件file的行中包含若干空，经过`read`只保留不重复的空格。
 如何才能所见即所得。
 
-```shell
+```bash
 cat file | while read i
 do
    echo "X${i}X"
@@ -564,7 +565,7 @@ done
 > 1.  如果行的起始部分有IFS之类的字符，将被忽略;
 > 2.  `echo $i`的解析过程中，首先将`$i`替换为字符串，然后对`echo`字符串中字符串分词，然后命令重组，输出结果;在分词，与命令重组时，可能导致多个相邻的IFS转化为一个;
 
-```shell
+```bash
 cat file | while read i
 do
   echo "$i"
@@ -580,7 +581,7 @@ done
 因此要使用literal的`;`应该是`\;`或者关闭meta 的(soft/hard) quoting的`";"`或者`';'`。
 
 因此上述的解决方案是：
-```shell
+```bash
 old_IFS=$IFS
 IFS=; #将IFS设置为null
 cat file | while read i
@@ -640,7 +641,7 @@ This_Is_A_Long_Name=b #可用_连接较长的名称或值，且有大小区别�
 将变量值给替换出来，然后再重新组建命令行。
 
 比方:
-```shell
+```bash
 $ A=ls
 $ B=la
 $ C=/tmp
@@ -899,7 +900,7 @@ ok,到这里，若你搞懂`fork`与`source`的不同，那接下来再接受一
 
 1.sh
 
-```shell
+```bash
 #!/bin/bash 
 
 A=B 
@@ -925,7 +926,7 @@ echo "1.sh: \$A is $A"
 ```
 2.sh
 
-```shell
+```bash
 #!/bin/bash
 
 echo "PID for 2.sh: $$"
@@ -983,21 +984,22 @@ $ ./1.sh exec
 在bash中，function的定义方式有两种：
 
 - 方式一：
-```shell
+```bash
 function function_name {
-    command1
-	command2
-	command3
-	.....
+        command1
+        command2
+        command3
+        .....
 }
 ```
+
 - 方式二：
-```shell
+```bash
 function_name () {
-	command1
-	command2
-	command3
-	......
+        command1
+        command2
+        command3
+        ......
 }
 ```
 
@@ -1433,17 +1435,17 @@ ok，当我们对positional parameter有了基本的概念之后，那再让我�
 - "$*"则可得到 "p1 p2 p3 p4" 这一整个单一的字段。
 
 我们修改一下前面的my.sh，使之内容如下：
-```shell
+```bash
 #!/bin/bash
 
 my_fun() {
-	echo "$#"
+        echo "$#"
 }
 
 echo 'the number of parameter in "$@" is ' $(my_fun "$@")
 echo 'the number of parameter in "$*" is ' $(my_fun "$*")
-
 ```
+
 然后再执行:
 ```shell
 $ ./my.sh p1 "p2 p3" p4
