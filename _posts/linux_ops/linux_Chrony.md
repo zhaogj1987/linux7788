@@ -12,8 +12,8 @@ Linux系统下校时服务Chrony使用
 Chrony 应用本身已经有几年了，其是是网络时间协议的 (NTP) 的另一种实现。一直以来众多发行版里标配的都是ntpd对时服务，自rhel7/centos7 起，Chrony做为了发行版里的标配服务，不过老的ntpd服务依旧在rhel7/centos7里可以找到 。Chrony可以同时做为ntp服务的客户端和服务端。默认安装完后有两个程序chronyd和chronyc 。chronyd是一个在系统后台运行的守护进程，chronyc是用来监控chronyd性能和配置其参数程序
 ## 安装和启用
 ```
-[root@ok188.net ~]# yum install -y chrony
-[root@ok188.net ~]# cat << EOF > /etc/chrony.conf
+[root@linux7788.com ~]# yum install -y chrony
+[root@linux7788.com ~]# cat << EOF > /etc/chrony.conf
 # 使用上层的internet ntp服务器
 server time1.aliyun.com iburst
 server time2.aliyun.com iburst
@@ -34,10 +34,10 @@ logchange 0.5
 logdir /var/log/chrony
 EOF
 
-[root@ok188.net ~]# systemctl stop ntpd
-[root@ok188.net ~]# systemctl disable ntpd
-[root@ok188.net ~]# systemctl enable chronyd.service
-[root@ok188.net ~]# systemctl start chronyd.service
+[root@linux7788.com ~]# systemctl stop ntpd
+[root@linux7788.com ~]# systemctl disable ntpd
+[root@linux7788.com ~]# systemctl enable chronyd.service
+[root@linux7788.com ~]# systemctl start chronyd.service
 ```
 #### 配置文件解析
 如果本局域网内有对时服务开启的话，通过将上面的几条serer记录删除，增加指定局域网内的对时服务器并restart chrony服务即可。其中主要的配置参数有如下几个：
@@ -54,7 +54,7 @@ EOF
 ## 查看同步状态
 检查ntp源服务器状态：
 ```
-[root@ok188.net ~]# chronyc sourcestats
+[root@linux7788.com ~]# chronyc sourcestats
 210 Number of sources = 4
 Name/IP Address            NP  NR  Span  Frequency  Freq Skew  Offset  Std Dev
 ==============================================================================
@@ -64,7 +64,7 @@ time5.aliyun.com           12   7   73m     +0.052      0.262  -1194us   275us
 ```
 检查ntp详细同步状态：
 ```
-[root@ok188.net ~]#  chronyc sources -v
+[root@linux7788.com ~]#  chronyc sources -v
 210 Number of sources = 4
 
   .-- Source mode  '^' = server, '=' = peer, '#' = local clock.
@@ -100,7 +100,7 @@ MS Name/IP address         Stratum Poll Reach LastRx Last sample
 
 输入help命令可以查看更多chronyc的交互命令。
 ```
-[root@ok188.net ~]# chronyc
+[root@linux7788.com ~]# chronyc
 chrony version 2.1.1
 Copyright (C) 1997-2003, 2007, 2009-2015 Richard P. Curnow and others
 chrony comes with ABSOLUTELY NO WARRANTY.  This is free software, and
