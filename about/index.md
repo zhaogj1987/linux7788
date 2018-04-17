@@ -7,4 +7,4 @@ type: "about"
 > E-Mail:374251609@qq.com
 > 技术交流，可微信扫二维码加好友。
 
-> ![image](https://ok188.net/images/weixin.png)
+> ![image](https://linux7788.com/images/weixin.png)
