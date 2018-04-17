@@ -18,7 +18,7 @@ _______________________________________
 
 然而，从使用者的角度来说，使用者没有办法直接操作一个`kernel`，而是通过`kernel`的“外壳”程序，也就是所谓的`shell`，来与`kernel`沟通。
 这也正是`kernel`跟`shell`的形象命名的的关系。如图：
-![image](http://www.ok188.net/images/posts/kernel_shell.jpg)
+![image](http://www.linux7788.com/images/posts/kernel_shell.jpg)
 
 从技术的角度来说，`shell`是一个使用者与系统的`交互界面(interface)`,只能让使用者通过`命令行`(`command line`)来使用系统来完成工作。
 因此，`shell`最简单的定义就是`命令解释器`( `Command Interpreter`):
@@ -820,7 +820,7 @@ expr
 此现象在`Linux`中被称为`fork`。
 
 (为何要称为fork呢？ 嗯，画一下图或许比较好理解。^_^)
-![image](http://www.ok188.net/images/posts/shell_fork.jpg)
+![image](http://www.linux7788.com/images/posts/shell_fork.jpg)
 
 当子进程被产生的时候，将会从父进程那里获得一定的资源分配、及**更重要的是**继承父进程的环境。
 
@@ -2676,7 +2676,7 @@ fork炸弹的概念：进程递归式派生（fork，亦即自我复制），以
 
 Jaromil在2002年设计了最为精简的一个fork炸弹的实现。
 
-![image](https://ok188.net/images/posts/fork_bomb.png)
+![image](https://linux7788.com/images/posts/fork_bomb.png)
 
 > 所谓fork炸弹是一种恶意程序，它的内部是一个不断在fork进程的无限循环。
 
