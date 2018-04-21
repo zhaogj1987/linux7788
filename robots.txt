@@ -6,4 +6,4 @@ Disallow: /css/
 Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
-Sitemap: https://ok188.net/sitemap.xml
+Sitemap: https://linux7788.com/sitemap.xml
