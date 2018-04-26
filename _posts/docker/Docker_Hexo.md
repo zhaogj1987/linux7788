@@ -25,14 +25,14 @@ hexo是一个基于Node.js的静态博客程序，可以方便的生成静态网
 - 使用hexo博客必须配置SSH，打开git bash，输入
 
 ```
-[root@linux7788.com ~]# cd ~/.ssh
+[root@ok188.net ~]# cd ~/.ssh
 ```
 如果提示：No such file or directory 说明未配置SSH。
 
 - 本地生成密钥对
 
 ```
-[root@linux7788.com ~]# ssh-keygen -t rsa -C "你的邮件地址"
+[root@ok188.net ~]# ssh-keygen -t rsa -C "你的邮件地址"
 ```
 注意命令中的大小写不要搞混。按提示指定保存文件夹，不设置密码。
 
@@ -44,29 +44,29 @@ hexo是一个基于Node.js的静态博客程序，可以方便的生成静态网
 - 测试连接情况git bash中输入命令
 
 ```
-[root@linux7788.com ~]# ssh -T git@github.com ，选yes，等待片刻可看到成功提示。
+[root@ok188.net ~]# ssh -T git@github.com ，选yes，等待片刻可看到成功提示。
 ```
 - 修改本地的ssh remote url，不用https协议，改用git协议
 Github仓库中获取ssh协议相应的url
 本地仓库执行命令
 
 ```
-[root@linux7788.com ~]# git remote set-url origin SSH对应的url，
+[root@ok188.net ~]# git remote set-url origin SSH对应的url，
 ```
 配置完后可用
 
 ```
-[root@linux7788.com ~]# git remote -v查看结果
+[root@ok188.net ~]# git remote -v查看结果
 ```
 这样
 
 ```
-[root@linux7788.com ~]# git push
+[root@ok188.net ~]# git push
 ```
 或
 
 ```
-[root@linux7788.com ~]# hexo d
+[root@ok188.net ~]# hexo d
 ```
 时不再需要输入账号密码。
 
@@ -81,14 +81,14 @@ Docker是一个基于轻量级虚拟化技术的容器，整个项目基于Go语
 编写启动脚本
 
 ```
-[root@linux7788.com ~]# cat << EOF > start_hexo.sh
+[root@ok188.net ~]# cat << EOF > start_hexo.sh
 
 if [ "\$1" = 's' ] || [ "\$1" = 'server' ]; then
     set -- /usr/bin/hexo s -p 80
 fi
 
 if [ "\$1" = 'd' ] || [ "\$1" = 'deploy' ]; then
-    cd /data/linux7788.com/source/
+    cd /data/ok188.net/source/
     git add *
     git commit -m "\`date +%y.%m.%d\`"
     git push -u origin master
@@ -98,11 +98,11 @@ exec "\$@"
 
 EOF
 
-[root@linux7788.com ~]# chmod a+x start_hexo.sh
+[root@ok188.net ~]# chmod a+x start_hexo.sh
 ```
 生成Dockerfile文件
 ```
-[root@linux7788.com ~]# cat << EOF > Dockerfile
+[root@ok188.net ~]# cat << EOF > Dockerfile
 
 FROM centos:7
 
@@ -117,7 +117,7 @@ RUN curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Cen
 RUN curl --silent --location https://rpm.nodesource.com/setup_8.x | bash - \\
 && yum -y install nodejs
 
-WORKDIR /data/linux7788.com
+WORKDIR /data/ok188.net
 
 RUN npm install hexo-cli -g \\
 && hexo init . \\
@@ -132,32 +132,32 @@ RUN git clone https://github.com/iissnan/hexo-theme-next themes/next \\
 && git config --global user.email "your email"
 
 
-COPY start.sh /data/linux7788.com/start_hexo.sh
+COPY start.sh /data/ok188.net/start_hexo.sh
 
 EOF
 ```
 创建Dockerfile后可通过docker build命令制作成镜像。
 ```
-[root@linux7788.com ~]# docker build -t hexo-docker-centos7:v1.0 .
+[root@ok188.net ~]# docker build -t hexo-docker-centos7:v1.0 .
 ```
 ### 创建和运行容器
 ```
-[root@linux7788.com ~]# docker run -d \
--v /data/site/source/_posts:/data/linux7788.com/source/_posts \
+[root@ok188.net ~]# docker run -d \
+-v /data/site/source/_posts:/data/ok188.net/source/_posts \
 --init=true \
 --name hexo-s \
 --net=host \
 hexo-docker-centos7:v1.0 \
-sh  /data/linux7788.com/start.sh s
+sh  /data/ok188.net/start.sh s
 ```
 这个时侯我们已经可以通过浏览器直接访问了。如果想外网也能访问。可推送到GitHub上，通过GitHub的[GitHub Pages](https://pages.github.com/)实现。
 ```
 docker run -d \
 -v /root/.ssh/:/root/.ssh/ \
--v /data/site/source/_posts:/data/linux7788.com/source/_posts \
+-v /data/site/source/_posts:/data/ok188.net/source/_posts \
 --init=true \
 --name hexo-d \
 --net=host \
 hexo-docker-centos7:v1.0 \
-sh  /data/linux7788.com/start.sh d
+sh  /data/ok188.net/start.sh d
 ```

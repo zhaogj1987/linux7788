@@ -1,4 +1,5 @@
 title: shell十五问--shell教程
+sticky: 10
 date: 2018/04/14 10:38:25
 categories:
 - Linux系统运维
@@ -13,12 +14,13 @@ _______________________________________
 
 
 在我们回答 `shell`是什么东西之前，不妨让我们重新审视`使用者`和`计算机系统`的关系：
+
 我们知道计算机的运作不能离开硬件，但使用者却无法直接操作硬件，硬件的驱动只能通过一种称为“`操作系统`(`OS`，`Opertating System`)”的软件来管控。
 事实上，我们每天所谈的“`linux`”，严格来说只是一个`操作系统`(`OS`),我们称之为“`内核`(`kernel`)”。
 
 然而，从使用者的角度来说，使用者没有办法直接操作一个`kernel`，而是通过`kernel`的“外壳”程序，也就是所谓的`shell`，来与`kernel`沟通。
 这也正是`kernel`跟`shell`的形象命名的的关系。如图：
-![image](http://www.linux7788.com/images/posts/kernel_shell.jpg)
+![image](https://linux7788.com/images/posts/kernel_shell.jpg)
 
 从技术的角度来说，`shell`是一个使用者与系统的`交互界面(interface)`,只能让使用者通过`命令行`(`command line`)来使用系统来完成工作。
 因此，`shell`最简单的定义就是`命令解释器`( `Command Interpreter`):
@@ -66,7 +68,8 @@ _______________________________________
 ## shell十五问之2：shell prompt(PS1)与Carriage Return(CR)关系
 _____________________________________________________________
 
-当你成功登陆一个`shell`终端的文字界面之后，大部分的情形下，你会在屏幕上看到一个不断闪烁的方块或者底线(视不同的版本而别)，我们称之为`游标`(`cursor`)。`cursor`作用就是告诉你接下来你从键盘输入的按键所插入的位置，且每输入一个键，`cursor`便向右移动一个格子，如果连续输入太多的话，则自动接在下一行输入。
+当你成功登陆一个`shell`终端的文字界面之后，大部分的情形下，你会在屏幕上看到一个不断闪烁的方块或者底线(视不同的版本而别)，我们称之为`游标`(`cursor`)。
+`cursor`作用就是告诉你接下来你从键盘输入的按键所插入的位置，且每输入一个键，`cursor`便向右移动一个格子，如果连续输入太多的话，则自动接在下一行输入。
 
 假如你刚完成登陆，还没有输入任何按键之前，你所看到的`cursor`所在的位置的同一行的左边部分，我们称之为`提示符`(`prompt`)。
 
@@ -76,11 +79,14 @@ _____________________________________________________________
 - \#: 给root(管理员)账号使用;
 
 
-事实上，`shell prompt`的意思很简单：告诉`shell`使用者，您现在可以输入命令行了。
+事实上，`shell prompt`的意思很简单：
+告诉`shell`使用者，您现在可以输入命令行了。
 
 我们可以说，使用者只有在得到shell prompt才能打命令行，而`cursor`是指示键盘在命令行的输入位置，使用者每输入一个键，`cursor`就往后移动一个格，直到碰到命令行读进`CR`(`Carriage Return`, 由`Enter`键产生)字符为止。
- `CR`的意思也很简单，使用者告诉`shell`：老兄，你可以执行的我命令行了。
-严格来说：所谓的命令行， 就是在`shell prompt`与`CR`之间所输入的文字。
+ `CR`的意思也很简单：
+使用者告诉`shell`：老兄，你可以执行的我命令行了。
+严格来说：
+所谓的命令行， 就是在`shell prompt`与`CR`之间所输入的文字。
 
 (**question：为何我们这里坚持使用`CR`字符而不说`Enter`按键呢？答案在后面的学习中给出**)。
 
@@ -102,7 +108,7 @@ command-name options argument
 
 系统可以接受的命令的名称(command-name)可以从如下途径获得：
 
-- 路径所指定的外部命令
+- 确的路径所指定的外部命令
 - 命令的别名(alias)
 - shell内建命令(built-in)
 - $PATH之下的外部命令
@@ -319,12 +325,12 @@ B C
 > A=B 然后碰到`<IFS>`，接着执行C命令
 
 在第二次给A变量赋值时，由于空白符被置于soft quote中，因此被关闭，不在作为`IFS`：
-> A=B<space>C
+> `A=B<space>C`
 
 事实上，空白符无论在soft quote还是在hard quote中，均被关闭。Enter键字符亦然：
 
 ```shell
-$ A='B
+$ A=`B
 > C
 > '
 $ echo "$A"
@@ -401,14 +407,14 @@ $ echo "'$A'"  #最外面的是双引号
 前面我们提到的那些meta，都是在command line中有特殊用途的，比方说`{}`就是将一系列的command line置于不具名的函数中执行(可简单视为command block)。
 但是，`awk`却需要用`{}`来区分出`awk`的命令`区段`(`BEGIN,MAIN,END`)。
 若你在command line中如此输入：
-```bash
+```shell
 $ awk {print $0} 1.txt
 ```
 由于`{}`在`shell`中并没有关闭，那`shell`就将`{print $0}`视为command block，但同时没有`;`符号作命令分隔，因此，就出现awk语法错误结果。
 
 要解决之，可用hard quote:
-```bash
-$ awk '{print $0}' 1.txt
+```shell
+awk '{print $0}' 1.txt
 ```
 上面的hard quote应好理解，就是将原来的`{、<space>、$、}`这几个shell meta关闭，避免掉在`shell`中遭到处理，而完整的成为`awk`的参数中command meta。
 
@@ -417,25 +423,25 @@ $ awk '{print $0}' 1.txt
 > `awk`中使用的`$0`是`awk`中内建的field nubmer，而非`awk`的变量，`awk`自身的变量无需使用$。
 
 要是理解了hard quote的功能，在来理解soft quote与escape就不难：
-```bash
-$ awk "{print \$0}" 1.txt
-$ awk \{print \$0\} 1.txt
+```shell
+awk "{print \$0}" 1.txt
+awk \{print \$0\} 1.txt
 ```
 然而，若要你改变`awk`的`$0`的`0`值是从另一个`shell`变量中读进呢？
 比方说：已有变量`$A`的值是`0`， 那如何在`command line`中解决awk的$$A呢？
 你可以很直接否定掉hard quote的方案：
-```bash
+```shell
 $ awk '{print $$A}' 1.txt
 ```
 那是因为`$A`的`$`在hard quote中是不能替换变量的。
 
 聪明的读者(如你！)，经过本章的学习，我想，你应该可以理解为何我们可以使用如下操作了吧：
-```bash
-$ A=0
-$ awk "{print \$$A}" 1.txt
-$ awk  \{print\ \$$A\} 1.txt
-$ awk '{print $'$A'}' 1.txt
-$ awk '{print $'"$A"'}' 1.txt
+```shell
+A=0
+awk "{print \$$A}" 1.txt
+awk  \{print\ \$$A\} 1.txt
+awk '{print $'$A'}' 1.txt
+awk '{print $'"$A"'}' 1.txt
 ```
 或许，你能给出更多方案... ^_^
 
@@ -820,7 +826,7 @@ expr
 此现象在`Linux`中被称为`fork`。
 
 (为何要称为fork呢？ 嗯，画一下图或许比较好理解。^_^)
-![image](http://www.linux7788.com/images/posts/shell_fork.jpg)
+![image](https://linux7788.com/images/posts/shell_fork.jpg)
 
 当子进程被产生的时候，将会从父进程那里获得一定的资源分配、及**更重要的是**继承父进程的环境。
 
@@ -1359,22 +1365,21 @@ my.sh p1 "p2 p3" p4
 假设my.sh里有一个函数(function)叫my_fun,若在script中跑`my_fun fp1 fp2 fp3`,那么，function内的$0就是my.sh，而$1是fp1而不是p1了。
 
 不如写个简单的my.sh script 看看吧：
-```bash
+```shell
 #!/bin/bash
 
 my_fun() {
-        echo '$0 inside function is '$0
-        echo '$1 inside function is '$1
-        echo '$2 inside function is '$2
+    echo '$0 inside function is '$0
+	echo '$1 inside function is '$1
+	echo '$2 inside function is '$2
 }
 
 echo '$0 outside function is '$0
 echo '$1 outside function is '$1
 echo '$2 outside function is '$2
 
-my_fun fp1 "fp2 fp3"
+my_fun fp1 "fp2 fp3" 
 ```
-
 然后在command line中跑一下 script就知道了：
 ```shell
 $ chmod 755 my.sh
@@ -1993,13 +1998,26 @@ $ cat < file >>file
 嗯...同学们，这两个答案就当练习题喽，下课前交作业。
 
 > **Tips:**
-> 我们了解到`>file`能够快速把文件file清空；或者使用`:>file`同样可以清空文件，
-> `:>file`与`>file`的功能：若文件file存在，则将file清空; 否则，创建空文件file (等效于`touch file`);
+> 我们了解到`>file`能够快速把文件file清空；
+> 或者使用`:>file`同样可以清空文件，
+> `:>file`与`>file`的功能：
+> 若文件file存在，则将file清空; 否则，创建空文件file (等效于`touch file`);
 > 二者的差别在于`>file`的方式不一定在所有的shell的都可用。
 
 
-好了， I/O Redirection也快讲完了，sorry,因为我也只知道这么多而已啦嘻^_^
-不过，还有一样东东是一定要讲的，各位观众(请自行配乐~!#@$%):就是`pipe line`也。
+> `exec 5<>file; echo "abcd" >&5; cat <&5` 
+> 将file文件的输入、输出定向到文件描述符5，
+> 从而描述符5可以接管file的输入输出；
+> 因此，`cat <>file`等价于`cat < file`。
+>
+> 而`cat < file >>file`则使file内容成几何级数增长。
+
+
+好了， I/O Redirection也快讲完了，
+sorry,因为我也只知道这么多而已啦嘻^_^
+不过，还有一样东东是一定要讲的，各位观众(请自行配乐~!#@$%):
+就是`pipe line`也。
+
 
 
 --------------
@@ -2023,8 +2041,8 @@ $ cat < file >>file
 也就是说：在pipe line之间, 前一个命令的stderr是不会接进下一个命令的stdin的，其输出，若不用2>file的话，它还是送到monitor显示器上来。
 这点请你在pipe line运用上务必要注意的。
 
-那，或许你又会问:
-有办法将stderr也喂进下一个命令的stdin吗？
+那，或许你有会问:
+- > 有办法将stderr也喂进下一个命令的stdin吗？
 (贪得无厌的家伙)，方法当然是有的，而且，你早已学习过了。
 提示一下就好：请问你如何将stderr合并进stdout一同输出呢？
 若你答不出来，下课后再来问我...(如果你脸皮足够厚的话...)
@@ -2050,7 +2068,7 @@ cmd1 | cmd2 | tee file | cmd3
 ```
 在预设上，`tee`会改写目标文件，若你要改为追加内容的话，那可用-a参数选项。
 基本上，pipe line的应用在shell操作上是非常广泛的。
-尤其是在text filtering方面，如，`cat`, `more`, `head`, `tail`, `wc`, `expand`, `tr`, `grep`, `sed`, `awk`...等等文字处理工具。
+尤其是在text filtering方面，如，cat, more, head, tail, wc, expand, tr, grep, sed, awk...等等文字处理工具。
 搭配起pipe line 来使用，你会觉得 command line原来活得如此精彩的。
 常让人有“众里寻他千百度，蓦然回首，那人却在灯火阑珊处”之感。
 
@@ -2106,19 +2124,19 @@ fi
 > 当然，then或else后面，也可以再使用更进一层的条件判断式，这在shell script的设计上很常见。
 > 若有多项条件需要"依序"进行判断的话，那我们则可使用`elif`这样的keyword：
 ```bash
-if cmd1; then
-    cmd2
-elif cmd3; then
-    cmd4
+if cmd1; then                                                                                                                              
+    cmd2;
+elif cmd3; then                                                                                                                            
+        cmd4                                                                                                                               
 else
-    cmd5
+        cmd5                                                                                                                               
 fi
 ```
-
+ 
 意思是说：
-> 若cmd1为true，然则执行cmd2；
-> 否则在测试cmd3，若为true则执行cmd4；
-> 倘若cmd1与cmd3均不成立，那就执行cmd5。
+> 	若cmd1为true，然则执行cmd2；
+> 	否则在测试cmd3，若为true则执行cmd4；
+> 	倘若cmd1与cmd3均不成立，那就执行cmd5。
 
 `if`判断式的例子很常见，你可从很多shell script中看得到，我这里不再举例子了。
 
@@ -2227,8 +2245,8 @@ bash shell中常用的`loop`有如下三种：
 for var in one two three four five                                                                                                         
 do
     echo -----------------                                                                                                                 
-    echo '$var is '$var                                                                                                                
-    echo                                                                                                                               
+        echo '$var is '$var                                                                                                                
+        echo                                                                                                                               
 done
 ```
 
@@ -2676,7 +2694,7 @@ fork炸弹的概念：进程递归式派生（fork，亦即自我复制），以
 
 Jaromil在2002年设计了最为精简的一个fork炸弹的实现。
 
-![image](https://linux7788.com/images/posts/fork_bomb.png)
+![image](https://ok188.net/images/posts/fork_bomb.png)
 
 > 所谓fork炸弹是一种恶意程序，它的内部是一个不断在fork进程的无限循环。
 
