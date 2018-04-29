@@ -1,4 +1,4 @@
-title: Docker的问与答——关于Docker的一切。
+title: Docker的问与答——关于Docker的一切
 date: 2018/04/26 10:32:25
 categories:
 - Docker
