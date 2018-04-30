@@ -2694,7 +2694,7 @@ fork炸弹的概念：进程递归式派生（fork，亦即自我复制），以
 
 Jaromil在2002年设计了最为精简的一个fork炸弹的实现。
 
-![image](https://ok188.net/images/posts/fork_bomb.png)
+![image](https://linux7788.com/images/posts/fork_bomb.png)
 
 > 所谓fork炸弹是一种恶意程序，它的内部是一个不断在fork进程的无限循环。
 

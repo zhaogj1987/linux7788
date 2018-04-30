@@ -7,16 +7,20 @@ tags:
 
 ---
 
+
 ## 问：Docker 和 传统的虚拟机有什么差别？
-**答：**我们知道inux系统将自身划分为两部分，一部分为核心软件，也称作内核空间(`kernel`)，另一部分为普通应用程序，这部分称为用户空间(`userland`)。
+**答：** 我们知道inux系统将自身划分为两部分，一部分为核心软件，也称作内核空间(`kernel`)，另一部分为普通应用程序，这部分称为用户空间(`userland`)。
 容器内的进程是直接运行于宿主内核的，这点和宿主进程一致，只是容器的 `userland` 不同，容器的 `userland` 由容器镜像提供，也就是说镜像提供了 `rootfs`。
 假设宿主是 `Ubuntu`，容器是 `CentOS`。`CentOS` 容器中的进程会直接向 `Ubuntu` 宿主内核发送 `syscall`，而不会直接或间接的使用任何 `Ubuntu` 的 `userland` 的库。
 这点和虚拟机有本质的不同，虚拟机是虚拟环境，在现有系统上虚拟一套物理设备，然后在虚拟环境内运行一个虚拟环境的操作系统内核，在内核之上再跑完整系统，并在里面调用进程。
 还以上面的例子去考虑，虚拟机中，`CentOS` 的进程发送 `syscall` 内核调用，该请求会被虚拟机内的 `CentOS` 的内核接到，然后 `CentOS` 内核访问虚拟硬件时，由虚拟机的服务软件截获，并使用宿主系统，也就是 `Ubuntu` 的内核及 `userland` 的库去执行。
 而且，Linux 和 Windows 在这点上非常不同。Linux 的进程是直接发 `syscall` 的，而 Windows 则把 `syscall` 隐藏于一层层的 `DLL` 服务之后，因此 Windows 的任何一个进程如果要执行，不仅仅需要 Windows 内核，还需要一群服务来支撑，所以如果 Windows 要实现类似的机制，容器内将不会像 Linux 这样轻量级，而是非常臃肿。看一下微软移植的 Docker 就非常清楚了。
 所以不要把 Docker 和虚拟机弄混，Docker 容器只是一个进程而已，只不过利用镜像提供的 `rootfs` 提供了调用所需的 `userland` 库支持，使得进程可以在受控环境下运行而已，它并没有虚拟出一个机器出来。
+
+**Linux 容器不是模拟一个完整的操作系统，而是对进程进行隔离。**
+
 ## 问：如何安装 Docker？
-**答：**很多人问到 `docker`, `docker.io`, `docker-engine` 甚至 `lxc-docker` 都有什么区别？
+**答：** 很多人问到 `docker`, `docker.io`, `docker-engine` 甚至 `lxc-docker` 都有什么区别？
 其中，RHEL/CentOS 软件源中的 Docker 包名为 `docker`；Ubuntu 软件源中的 Docker 包名为 `docker.io`；而很古老的 Docker 源中 Docker 也曾叫做 `lxc-docker`。这些都是非常老旧的 Docker 版本，并且基本不会更新到最新的版本，而对于使用 Docker 而言，使用最新版本非常重要。另外，17.04 以后，包名从 `docker-engine` 改为 `docker-ce`，因此从现在开始安装，应该都使用 `docker-ce `这个包。
 正确的安装方法有两种：
 
@@ -56,6 +60,154 @@ wget https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/
 yum install -y container-selinux
 rpm -ivh docker-ce-17.12.0.ce-1.el7.centos.x86_64.rpm
 ```
+
+
+## 问：Docker中使用了那些核心技术？
+**答：** `Linux Namespace`命名空间、`Linux CGroup`全称`Linux Control Group控制组`和 `UnionFS` 全称`Union File System联合文件系统`，三大技术支撑了目前 Docker 的实现，也是 Docker 能够出现的最重要原因。
+
+### `Linux Namespace`是Linux提供的一种内核级别环境隔离的方法。
+通过隔离要做到的效果是：如果某个 `Namespace` 中有进程在里面运行，它们只能看到该 `Namespace` 的信息，无法看到 `Namespace` 以外的东西。Linux 的命名空间机制提供了以下七种不同的命名空间，包括` CLONE_NEWCGROUP`、`CLONE_NEWIPC`、`CLONE_NEWNET`、`CLONE_NEWNS`、`CLONE_NEWPID`、`CLONE_NEWUSER` 和 `CLONE_NEWUTS`，通过这七个选项我们能在创建新的进程时设置新进程应该在哪些资源上与宿主机器进行隔离。这些 `Namespace` 基本上覆盖了一个程序运行所需的环境，保证运行在的隔离的 `Namespace` 中的，会让程序不会受到其他收到 `Namespace `程序的干扰。但不是所有的系统资源都能隔离，时间就是个例外，没有对应的 `Namespace`，因此同一台 Linux 启动的容器时间都是相同的。
+
+名称	| 宏定义	| 隔离的内容
+---------| --------- | ---------
+IPC |	CLONE_NEWIPC |	System V IPC, POSIX message queues (since Linux 2.6.19)
+Network	| CLONE_NEWNET	| network device interfaces, IPv4 and IPv6 protocol stacks, IP routing tables, firewall rules, the /proc/net and /sys/class/net directory trees, sockets, etc (since Linux 2.6.24)
+Mount |	CLONE_NEWNS	| Mount points (since Linux 2.4.19)
+PID	| CLONE_NEWPID |	Process IDs (since Linux 2.6.24)
+User |	CLONE_NEWUSER	| User and group IDs (started in Linux 2.6.23 and completed in Linux 3.8)
+UTS	| CLONE_NEWUTS	| Hostname and NIS domain name (since Linux 2.6.19)
+Cgroup |	CLONE_NEWCGROUP	| Cgroup root directory (since Linux 4.6)
+
+### `Linux CGroup`是Linux内核用来限制，控制与分离一个进程组群的资源（如CPU、内存、磁盘输入输出等）。
+`Linux CGroupCgroup` 可​​​让​​​您​​​为​​​系​​​统​​​中​​​所​​​运​​​行​​​任​​​务​​​（进​​​程​​​）的​​​用​​​户​​​定​​​义​​​组​​​群​​​分​​​配​​​资​​​源​​​ — 比​​​如​​​ `CPU 时​​​间​​​`、​​​`系​​​统​​​内​​​存​​​`、​​​`网​​​络​​​带​​​宽​​​`或​​​者​​​这​​​些​​​资​​​源​​​的​​​组​​​合​​​。​​​您​​​可​​​以​​​监​​​控​​​您​​​配​​​置​​​的​​​ `cgroup`，拒​​​绝​​​` cgroup` 访​​​问​​​某​​​些​​​资​​​源​​​，甚​​​至​​​在​​​运​​​行​​​的​​​系​​​统​​​中​​​动​​​态​​​配​​​置​​​您​​​的​​​ `cgroup`。
+主要提供了如下功能：
+
+- `Resource limitation`: 限制进程使用的资源上限，比如最大内存、文件系统缓存使用限制。
+- `Prioritization`: 优先级控制，比如：CPU利用和磁盘IO吞吐。
+- `Accounting`: 一些审计或一些统计，主要目的是为了计费。
+- `Control`: 挂起一组进程，或者重启一组进程。
+
+前面说过，`cgroups` 是用来对进程进行资源管理的，因此 `cgroup` 需要考虑如何抽象这两种概念：进程和资源，同时如何组织自己的结构。`cgroups `中有几个非常重要的概念：
+
+- `task`：任务，对应于系统中运行的一个实体，一般是指进程
+- `subsystem`：子系统，具体的资源控制器（`resource class` 或者 `resource controller`），控制某个特定的资源使用。比如 CPU 子系统可以控制 CPU 时间，memory 子系统可以控制内存使用量
+- `cgroup`：控制组，一组任务和子系统的关联关系，表示对这些任务进行怎样的资源管理策略
+- `hierarchy`：层级树，一系列 `cgroup` 组成的树形结构。每个节点都是一个 `cgroup`，`cgroup` 可以有多个子节点，子节点默认会继承父节点的属性。系统中可以有多个 `hierarchy`
+
+`cgroups`为每种可以控制的资源定义了一个子系统。典型的子系统介绍如下：
+
+- `Block IO（blkio)`：限制块设备（磁盘、SSD、USB 等）的 IO 速率
+- `CPU Set(cpuset)`：限制任务能运行在哪些 CPU 核上
+- `CPU Accounting(cpuacct)`：生成 `cgroup` 中任务使用 CPU 的报告
+- `CPU (CPU)`：限制调度器分配的 CPU 时间
+- `Devices (devices)`：允许或者拒绝 cgroup 中任务对设备的访问
+- `Freezer (freezer)`：挂起或者重启 cgroup 中的任务
+- `Memory (memory)`：限制 cgroup 中任务使用内存的量，并生成任务当前内存的使用情况报告
+- `Network Classifier(net_cls)`：为 cgroup 中的报文设置上特定的 classid 标志，这样 tc 等工具就能根据标记对网络进行配置
+- `Network Priority (net_prio)`：对每个网络接口设置报文的优先级
+- `perf_event`：识别任务的 cgroup 成员，可以用来做性能分析
+
+使用 `cgroups` 的方式有几种：
+
+- 使用 `cgroups` 提供的虚拟文件系统，直接通过创建、读写和删除目录、文件来控制 `cgroups`
+- 使用命令行工具，比如 `libcgroup `包提供的 `cgcreate`、`cgexec`、`cgclassify` 命令
+- 使用 `rules engine daemon` 提供的配置文件
+- 当然，`systemd`、`lxc`、`docker` 这些封装了 `cgroups` 的软件也能让你通过它们定义的接口控制 `cgroups` 的内容
+
+在实践中，系统管理员一般会利用`CGroup`做下面这些事（有点像为某个虚拟机分配资源似的）：
+
+- 隔离一个进程集合（比如：`nginx`的所有进程），并限制他们所消费的资源，比如绑定CPU的核。
+- 为这组进程 分配其足够使用的内存
+- 为这组进程分配相应的网络带宽和磁盘存储限制
+- 限制访问某些设备（通过设置设备的白名单）
+
+### `UnionFS`就是把不同物理位置的目录合并mount到同一个目录中
+
+`UnionFS `其实是一种为 Linux 操作系统设计的用于把多个文件系统『联合』到同一个挂载点的文件系统服务。
+
+操作系统中，联合挂载`（union mounting）`是一种将多个目录结合成一个目录的方式，这个目录看起来就像包含了他们结合的内容一样。
+
+联合文件系统的实现通常辅有`“写时复制（CoW）”`的实现技术，这样任何对于底层文件系统分层的更改都会被`“向上拷贝”`到文件系统的一个临时、工作、或高层的分层里面。这个可写的层然后可以被看做是一个`“改动（diff）”`，能将之应用到下层只读的层，而这些层很可能作为底层被很多容器的进程中共享。这是一个很重要的点。
+
+而 `AUFS` 即 `Advanced UnionFS` 其实就是 `UnionFS` 的升级版，它能够提供更优秀的性能和效率。
+`AUFS`有所有`Union FS`的特性，把多个目录，合并成同一个目录，并可以为每个需要合并的目录指定相应的权限，实时的添加、删除、修改已经被`mount`好的目录。而且，他还能在多个可写的`branch/dir`间进行负载均衡。
+`AUFS` 作为联合文件系统，它能够将不同文件夹中的层联合`（Union）`到了同一个文件夹中，这些文件夹在 `AUFS` 中称作分支，整个『联合』的过程被称为联合挂载`（Union Mount）`
+`AUFS` 只是 Docker 使用的存储驱动的一种，除了 `AUFS` 之外，Docker 还支持了不同的存储驱动，包括 `aufs`、`devicemapper`、`overlay2`、`zfs` 和` vfs `等等，在最新的 Docker 中，`overlay2` 取代了 `aufs` 成为了推荐的存储驱动，但是在没有 `overlay2` 驱动的机器上仍然会使用 `aufs `作为 Docker 的默认驱动。
+
+官方参考文档：
+
+- [https://docs.docker.com/storage/storagedriver/select-storage-driver/#supported-backing-filesystems](https://docs.docker.com/storage/storagedriver/select-storage-driver/#supported-backing-filesystems)
+
+
+## 问：OCI、runC 、Containerd 、Docker-shim 是什么？他们之间有怎么样的关联？
+
+**答：** 
+Open Container Initiative（OCI）是：
+
+> OCI在2015年6月宣布成立，旨在围绕容器格式和运行时制定一个开放的工业化标准。OCI的目标是为了避免容器的生态分裂为“小生态王国”，确保一个引擎上构建的容器可以运行在其他引擎之上。这是实现容器可移植性至关重要的部分。只要Docker是唯一的运行时，它就是事实上的行业标准。但是随着可用（和采纳）和其他引擎，有必要从技术的角度上定义“什么是容器”，以便不同实现上可以达成最终的一致。
+
+runC是：
+
+> runC是从Docker的libcontainer中迁移而来的，实现了容器启停、资源隔离等功能。runC是一个轻量级的工具，它是用来运行容器的，只用来做这一件事，并且这一件事要做好。如果你了解过Docker引擎早期的历史，你应该知道当时启动和管理一个容器需要使用LXC工具集，然后在使用libcontainer。libcontainer就是使用类似cgroup和namespace一样的Linux内核设备接口编写的一小段代码，它是容器的基本构建模块。为了是过程更加简单，runC基本上是一个小命令行工具且它可以不用通过Docker引擎，直接就可以使用容器。这是一个独立的二进制文件，使用OCI容器就可以运行它。
+
+Containerd是：
+
+> Containerd是一个简单的守护进程，它可以使用runC管理容器，使用gRPC暴露容器的其他功能。相比较Docker引擎，使用gRPC，containerd暴露出针对容器的增删改查的接口，然而Docker引擎只是使用full-blown HTTP API接口对Images、Volumes、network、builds等暴露出这些方法。containerd向上为Docker Daemon提供了gRPC接口，使得Docker Daemon屏蔽下面的结构变化，确保原有接口向下兼容。向下通过containerd-shim结合runC，使得引擎可以独立升级，避免之前Docker Daemon升级会导致所有容器不可用的问题。
+
+Docker-shim 是：
+
+> docker-shim是一个真实运行的容器的真实垫片载体，每启动一个容器都会起一个新的docker-shim的一个进程，
+他直接通过指定的三个参数：容器id，boundle目录 。运行是二进制（默认为runc）来调用runc的api创建一个容器。
+
+它们之间的关联关系：
+
+我们`ls`看下主机上的Docker二进制文件，会发现有`docker`,`dockerd`,`docker-containerd`,`docker-containerd-shim`,和`docker-containerd-ctr`，`docker-runc`等。
+
+```bash
+$ ls /usr/bin |grep docker
+docker
+docker-containerd
+docker-containerd-ctr
+docker-containerd-shim
+dockerd
+docker-init
+docker-proxy
+docker-runc
+```
+
+
+
+- `dockerd`是`docker engine`守护进程，`dockerd`启动时会启动`docker-containerd`子进程。
+
+- `dockerd`与`docker-containerd`通过`grpc`进行通信。
+
+- `docker-containerd-ctr`是`docker-containerd`的`cli`。
+
+- `docker-containerd`通过`docker-containerd-shim`操作`docker-runc`，`docker-runc`真正控制容器生命周期 。
+
+- 启动一个容器就会启动一个`docker-containerd-shim`进程。
+
+- `docker-containerd-shim`直接调用`docker-runc`的包函数。
+
+- 真正用户想启动的进程由`docker-runc`的`init`进程启动，即`runc init [args ...]` 。
+
+进程关系模型：
+
+```bash
+
+docker     ctr
+  |         |
+  V         V
+dockerd -> containerd ---> shim -> runc -> runc init -> process
+                      |-- > shim -> runc -> runc init -> process
+                      +-- > shim -> runc -> runc init -> process
+```
+
+![images](https://linux7788.com/images/posts/docker-containerd-runc.png)
+
+Docker引擎仍然管理者`images`，然后移交给`containerd`运行，`containerd`再使用`runC`运行容器。
+
+`Containerd`只处理`containers`管理容器的开始，停止，暂停和销毁。由于容器运行时是孤立的引擎，引擎最终能够启动和升级而无需重新启动容器。
 
 ## 问：Docker pull 镜像如何加速？
 
@@ -369,6 +521,49 @@ $ docker network inspect ingress
 
 所以不要再使用 `--link` 以及 `docker-compose.yml` 中的 `links` 了。应该使用 `docker network`，建立网络，而 `docker run --network` 来连接特定网络。或者使用 `version: '2'` 的 `docker-compose.yml` 直接定义自定义网络并使用。
 
+## 问：CNM和CNI分别是啥东东？
+
+**答：** 目前关于Linux容器网络接口的配置有两种的可能的标准：`容器网络模型（CNM）`和`容器网络接口（CNI）`。网络是相当复杂的，而且提供某种功能的方式也多种多样。
+
+`CNM`是一个被 Docker 公司提出的规范。现在已经被`Cisco Contiv`,` Kuryr`, `Open Virtual Networking (OVN)`, `Project Calico`, `VMware` 和 `Weave `这些公司和项目所采纳。
+
+`CNI`是由`CoreOS`提出的一个容器网络规范。已采纳改规范的包括`Apache Mesos`, `Cloud Foundry`, `Kubernetes`, `Kurma` 和 `rkt`。另外 `Contiv Networking`, `Project Calico` 和 `Weav`e这些项目也为CNI提供插件。
+
+这两种方案都使用了驱动模型或者插件模型来为容器创建网络栈。这样的设计使得用户可以自由选择。两者都支持多个网络驱动被同时使用，也允许容器加入一个或多个网络。两者也都允许容器`runtime`在它自己的命名空间中启动网络。
+
+`CNM` 模式下的网络驱动不能访问容器的网络命名空间。这样做的好处是`libnetwork`可以为冲突解决提供仲裁。一个例子是：两个独立的网络驱动提供同样的静态路由配置，但是却指向不同的下一跳IP地址。与此不同，`CNI`允许驱动访问容器的网络命名空间。`CNI`正在研究在类似情况下如何提供仲裁。
+
+`CNI`支持与第三方`IPAM`的集成，可以用于任何容器`runtime`。`CNM`从设计上就仅仅支持Docker。由于`CNI`简单的设计，许多人认为编写`CNI`插件会比编写`CNM`插件来得简单。
+
+**`CNI`官方网络插件**
+
+地址：
+
+- [https://github.com/containernetworking/cni](https://github.com/containernetworking/cni)
+
+所有的标准和协议都要有具体的实现，才能够被大家使用。`CNI` 也不例外，目前官方在 `github` 上维护了同名的 `CNI`代码库，里面已经有很多可以直接拿来使用的 `CNI `插件。
+
+官方提供的插件目前分成三类：`main`、`meta` 和 `ipam`。
+`main` 是主要的实现了某种特定网络功能的插件；
+`meta` 本身并不会提供具体的网络功能，它会调用其他插件，或者单纯是为了测试；
+`ipam` 是分配 IP 地址的插件。`ipam` 并不提供某种网络功能，只是为了灵活性把它单独抽象出来，这样不同的网络插件可以根据需求选择 `ipam`，或者实现自己的 `ipam`。
+
+这些插件的功能详细说明如下：
+
+- main
+-- loopback：这个插件很简单，负责生成 lo 网卡，并配置上 127.0.0.1/8 地址
+-- bridge：和 docker 默认的网络模型很像，把所有的容器连接到虚拟交换机上
+-- macvlan：使用 macvlan 技术，从某个物理网卡虚拟出多个虚拟网卡，它们有独立的 ip 和 mac 地址
+-- ipvlan：和 macvlan 类似，区别是虚拟网卡有着相同的 mac 地址
+-- ptp：通过 veth pair 在容器和主机之间建立通道
+- meta
+-- flannel：结合 bridge 插件使用，根据 flannel 分配的网段信息，调用 bridge 插件，保证多主机情况下容器
+- ipam
+-- host-local：基于本地文件的 ip 分配和管理，把分配的 IP 地址保存在文件中
+-- dhcp：从已经运行的 DHCP 服务器中获取 ip 地址
+
+
+
 ## 问：容器怎么取宿主机 IP 啊？
 
 **答：**
@@ -424,13 +619,80 @@ source /etc/variables
 
 - [https://docs.docker.com/engine/reference/commandline/run/#/set-storage-driver-options-per-container](https://docs.docker.com/engine/reference/commandline/run/#/set-storage-driver-options-per-container)
 
+## 问：我在容器里面看到的内存使用量是真实的该容器内存使用情况？
+
+**答：** 不是的，众所周知，Docker相比于虚拟机，在隔离性上略显不足，这个Docker隔离性不足导致资源显示问题。进入容器看到是完整的物理机资源。
+虽然 Docker原生的资源查询接口可以正确地识别分配的资源，但是用户常用的 `top`、`free`等命令却未能正确地识别我们施加于 Docker的资源限制，那么原因究竟是怎样。
+事实上，类似 `top`、`free`等命令，其实多半都是从一些系统文件中获取资源信息,`/proc/cpuinfo`,`/proc/meminfo`而 Docker的隔离性不足的问题里，就包括跟宿主机共享 `sys`、`proc`等系统文件，因此如果在容器中使用依赖这些文件的命令，如 `uptime`等，实际上都显示的是宿主机信息。
+
+容器的显示问题，在很早期的版本中就有人提出过。而 Docker官方可能是出于某些原因的考虑，并没有试图修复这些显示问题。目前来说，解决显示问题还没办法很好地在 Docker中进行集成，仍然需要在 Docker之外做一些修改。
+
+目前社区中常见的做法是利用 `lxcfs`来提供容器中的资源可见性。`lxcfs` 是一个开源的`FUSE（用户态文件系统）`实现来支持`LXC`容器，它也可以支持Docker容器。
+
+`LXCFS`通过用户态文件系统，在容器中提供下列` procfs` 的文件。
+
+```bash
+/proc/cpuinfo
+/proc/diskstats
+/proc/meminfo
+/proc/stat
+/proc/swaps
+/proc/uptime
+```
+
+容器中进程读取相应文件内容时，`LXCFS`的`FUSE`实现会从容器对应的`Cgroup`中读取正确的内存限制。从而使得应用获得正确的资源约束设定。
+
+使用方法：
+
+安装 `lxcfs` 的`RPM`包
+
+```bash
+$ wget https://copr-be.cloud.fedoraproject.org/results/ganto/lxd/epel-7-x86_64/00486278-lxcfs/lxcfs-2.0.5-3.el7.centos.x86_64.rpm
+$ yum install lxcfs-2.0.5-3.el7.centos.x86_64.rpm
+```
+
+启动 `lxcfs`
+
+```bash
+$ mkdir -p /var/lib/lxcfs
+$ lxcfs /var/lib/lxcfs &
+```
+
+
+运行Docker容器测试
+
+```bash
+$ docker run -it -m 300m \
+      -v /var/lib/lxcfs/proc/cpuinfo:/proc/cpuinfo:rw \
+      -v /var/lib/lxcfs/proc/diskstats:/proc/diskstats:rw \
+      -v /var/lib/lxcfs/proc/meminfo:/proc/meminfo:rw \
+      -v /var/lib/lxcfs/proc/stat:/proc/stat:rw \
+      -v /var/lib/lxcfs/proc/swaps:/proc/swaps:rw \
+      -v /var/lib/lxcfs/proc/uptime:/proc/uptime:rw \
+      docker.17usoft.com/library/centos:7 /bin/bash
+
+[root@e851562db40d /]# free -m
+              total        used        free      shared  buff/cache   available
+Mem:            300           3         295          29           0         295
+Swap:           300           0         300
+[root@e851562db40d /]# cat /proc/meminfo
+MemTotal:         307200 kB
+MemFree:          302768 kB
+MemAvailable:     302768 kB
+Buffers:               0 kB
+.......................
+```
+
+我们可以看到`MemTotal`的内存为`300MB`，配置已经生效。
+
+官方项目地址：
+
+- [https://github.com/lxc/lxcfs](https://github.com/lxc/lxcfs)
 
 
 ## 问：数据容器、数据卷、命名卷、匿名卷、挂载目录这些都有什么区别？
 
-**答：**
-
-首先，挂载分为`挂载本地宿主目录` 和 `挂载数据卷(Volume)`。而数据卷又分为`匿名数据卷`和`命名数据卷`。
+**答：** 首先，挂载分为`挂载本地宿主目录` 和 `挂载数据卷(Volume)`。而数据卷又分为`匿名数据卷`和`命名数据卷`。
 
 绑定宿主目录的概念很容易理解，就是将宿主目录绑定到容器中的某个目录位置。这样容器可以直接访问宿主目录的文件。其形式是
 
@@ -463,17 +725,13 @@ docker run -d -v /var/www:/app nginx
 
 ## 问：卷和挂载目录有什么区别？
 
-**答：**
-
-`卷 (Docker Volume)` 是受控存储，是由 `Docker` 引擎进行管理维护的。因此使用卷，你可以不必处理 `uid`、`SELinux` 等各种权限问题，Docker 引擎在建立卷时会自动添加安全规则，以及根据挂载点调整权限。并且可以统一列表、添加、删除。另外，除了本地卷外，还支持网络卷、分布式卷。
+**答：** `卷 (Docker Volume)` 是受控存储，是由 `Docker` 引擎进行管理维护的。因此使用卷，你可以不必处理 `uid`、`SELinux` 等各种权限问题，Docker 引擎在建立卷时会自动添加安全规则，以及根据挂载点调整权限。并且可以统一列表、添加、删除。另外，除了本地卷外，还支持网络卷、分布式卷。
 
 而挂载目录那就没人管了，属于用户自行维护。你就必须手动处理所有权限问题。特别是在 `CentOS` 上，很多人碰到 `Permission Denied`，就是因为没有使用卷，而是挂载目录，而且还对 `SELinux` 安全权限一无所知导致。
 
 ## 问：为什么绑定了宿主的文件到容器，宿主修改了文件，容器内看到的还是旧的内容啊？
 
-**答：** 
-
-在绑定宿主内容的形式中，有一种特殊的形式，就是绑定宿主文件，既：
+**答：** 在绑定宿主内容的形式中，有一种特殊的形式，就是绑定宿主文件，既：
 
 ```bash
 docker run -d -v $PWD/myapp.ini:/app/app.ini myapp
@@ -506,22 +764,18 @@ $ ls -i
 
 ## 问：多个 Docker 容器之间共享数据怎么办？
 
-**答：**
-
- 如果是不同宿主，则可以使用分布式数据卷驱动，让分布在不同宿主的容器都可以访问到的分布式存储的位置。如S3之类：
+**答：** 如果是不同宿主，则可以使用分布式数据卷驱动，让分布在不同宿主的容器都可以访问到的分布式存储的位置。如S3之类：
 
 
 - [https://docs.docker.com/engine/extend/legacy_plugins/#authorization-plugins](https://docs.docker.com/engine/extend/legacy_plugins/#authorization-plugins)
 
 ## 问：既然一个容器一个应用，那么我想在该容器中用计划任务 cron 怎么办？
 
-**答：**
-
- `cron` 其实是另一个服务了，所以应该另起一个容器来进行，如需访问该应用的数据文件，那么可以共享该应用的数据卷即可。而 `cron` 的容器中，`cron` 以前台运行即可。
+**答：** `cron` 其实是另一个服务了，所以应该另起一个容器来进行，如需访问该应用的数据文件，那么可以共享该应用的数据卷即可。而 `cron` 的容器中，`cron` 以前台运行即可。
 
 比如，我们希望有个 `python` 脚本可以定时执行。那么可以这样构建这个容器。
 
-首先基于 python 的镜像定制：
+首先基于 `python` 的镜像定制：
 
 ```bash
 FROM python:3.5.2
@@ -608,15 +862,11 @@ $ docker inspect --format '{{.Name}} => {{with .Mounts}}{{range .}}
 ## 问：docker pull 下来的镜像文件都在哪？
 
 
-**答：**  
-
-Docker不是虚拟机，Docker 镜像也不是虚拟机的 ISO 文件。Docker 的镜像是分层存储，每一个镜像都是由很多层，很多个文件组成。而不同的镜像是共享相同的层的，所以这是一个树形结构，不存在具体哪个文件是 `pull` 下来的镜像的问题。
+**答：**  Docker不是虚拟机，Docker 镜像也不是虚拟机的 ISO 文件。Docker 的镜像是分层存储，每一个镜像都是由很多层，很多个文件组成。而不同的镜像是共享相同的层的，所以这是一个树形结构，不存在具体哪个文件是 `pull` 下来的镜像的问题。
 
 ## 问：docker images 命令显示的镜像占了好大的空间，怎么办？
 
-**答：**  
-
-这个显示的大小是计算后的大小，要知道 `docker image` 是分层存储的，在`1.10`之前，不同镜像无法共享同一层，所以基本上确实是下载大小。但是从`1.10`之后，已有的层（通过SHA256来判断），不需要再下载。只需要下载变化的层。所以实际下载大小比这个数值要小。而且本地硬盘空间占用，也比d`ocker images`列出来的东西加起来小很多，很多重复的部分共享了。
+**答：** 这个显示的大小是计算后的大小，要知道 `docker image` 是分层存储的，在`1.10`之前，不同镜像无法共享同一层，所以基本上确实是下载大小。但是从`1.10`之后，已有的层（通过SHA256来判断），不需要再下载。只需要下载变化的层。所以实际下载大小比这个数值要小。而且本地硬盘空间占用，也比d`ocker images`列出来的东西加起来小很多，很多重复的部分共享了。
 用以下命令可以清理旧的和未使用的Docker镜像：
 
 ```bash
@@ -629,9 +879,7 @@ $ docker image prune  [OPTIONS] #命令用于删除未使用的映像。 如果�
 
 ## 问：docker images -a 后显示了好多 <none> 的镜像？都是什么呀？能删么？
 
-**答：**  
-
-简单来说，`<none>` 就是说该镜像没有打标签。而没有打标签镜像一般分为两类，一类是依赖镜像，一类是丢了标签的镜像。
+**答：**  简单来说，`<none>` 就是说该镜像没有打标签。而没有打标签镜像一般分为两类，一类是依赖镜像，一类是丢了标签的镜像。
 
 **依赖镜像**
 
@@ -656,9 +904,7 @@ docker rmi $(docker images -aq -f "dangling=true")
 ## 问：为什么说不要使用 import, export, save, load, commit 来构建镜像？
 
 
-**答：**
-
-Docker 提供了很好的 `Dockerfile` 的机制来帮助定制镜像，可以直接使用` Shell `命令，非常方便。而且，这样制作的镜像更加透明，也容易维护，在基础镜像升级后，可以简单地重新构建一下，就可以继承基础镜像的安全维护操作。
+**答：** Docker 提供了很好的 `Dockerfile` 的机制来帮助定制镜像，可以直接使用` Shell `命令，非常方便。而且，这样制作的镜像更加透明，也容易维护，在基础镜像升级后，可以简单地重新构建一下，就可以继承基础镜像的安全维护操作。
 
 使用 `docker commit` 制作的镜像被称为`黑箱镜像`，换句话说，就是里面进行的是黑箱操作，除本人外无人知晓。即使这个制作镜像的人，过一段时间后也不会完整的记起里面的操作。那么当有些东西需要改变时，或者因基础镜像更新而需要重新制作镜像时，会让一切变得异常困难，就如同重新安装调试配置服务器一样，失去了 Docker 的优势了。
 
@@ -673,9 +919,7 @@ Docker 提供了很好的 `Dockerfile` 的机制来帮助定制镜像，可以�
 
 ## 问：Dockerfile 怎么写？
 
-**答：**
-
-最直接也是最简单的办法是看官方文档。
+**答：** 最直接也是最简单的办法是看官方文档。
 
 这篇文章讲述具体 Dockerfile 的命令语法：
 
@@ -758,9 +1002,7 @@ COPY . /usr/src/app
 
 ## 问：context 到底是一个什么概念？
 
-**答：**
-
-`context`，上下文，是 `docker build` 中很重要的一个概念。构建镜像必须指定 `context`：
+**答：** `context`，上下文，是 `docker build` 中很重要的一个概念。构建镜像必须指定 `context`：
 
 ```bash
 docker build -t xxx <context路径>
@@ -810,9 +1052,7 @@ db
 
 ## 问：ENTRYPOINT 和 CMD 到底有什么不同？
 
-**答：**
-
-`Dockerfile` 的目的是制作镜像，换句话说，实际上是准备的是主进程运行环境。那么准备好后，需要执行一个程序才可以启动主进程，而启动的办法就是调用 `ENTRYPOINT`，并且把 `CMD` 作为参数传进去运行。也就是下面的概念：
+**答：** `Dockerfile` 的目的是制作镜像，换句话说，实际上是准备的是主进程运行环境。那么准备好后，需要执行一个程序才可以启动主进程，而启动的办法就是调用 `ENTRYPOINT`，并且把 `CMD` 作为参数传进去运行。也就是下面的概念：
 
 ```bash
 ENTRYPOINT "CMD"
@@ -878,9 +1118,7 @@ $ docker run -d \
 
 ## 问：不同容器的日志汇聚到 fluentd 后如何区分？
 
-**答：**
-
-有两种概念的区分，一种是区分开不同容器的日志，另一种是区分开来不同服务的日志。
+**答：** 有两种概念的区分，一种是区分开不同容器的日志，另一种是区分开来不同服务的日志。
 
 区分不同容器的日志是很直观的想法。运行了几个不同的容器，日志都送向日志收集，那么显然不希望` nginx `容器的日志和 `MySQL` 容器的日志混杂在一起看。
 
@@ -977,9 +1215,7 @@ services:
 
 ## 问：为什么容器一运行就退出啊？
 
-**答：**
-
-这是初学 Docker 常常碰到的问题，此时还以虚拟机来理解 Docker，认为启动 Docker 就是启动虚拟机，也没有搞明白前台和后台的区别。
+**答：** 这是初学 Docker 常常碰到的问题，此时还以虚拟机来理解 Docker，认为启动 Docker 就是启动虚拟机，也没有搞明白前台和后台的区别。
 
 首先，碰到这类问题应该查日志和容器主进程退出码。
 
@@ -1018,9 +1254,7 @@ cc2aa3f4745f        ubuntu                          "/bin/bash"         23 hours
 
 ## 问：我想在docker容器里面运行docker命令，该如何操作？
 
-**答：**
-
-首先，不要在 Docker 容器中安装、运行 Docker 引擎，也就是所谓的 `Docker In Docker (DIND)`
+**答：** 首先，不要在 Docker 容器中安装、运行 Docker 引擎，也就是所谓的 `Docker In Docker (DIND)`
 
 因为Docker-in-Docker有很多问题和缺陷，参考文章：
 
@@ -1108,9 +1342,7 @@ Server:
 
 ## 问：都说不要用 root 去运行服务，但我看到的 Dockerfile 都是用 root 去运行，这不安全吧？
 
-**答：**
-
-并非所有官方镜像的 `Dockerfile` 都是用 `root` 用户去执行的。比如`mysql` 镜像的执行身份就是 `mysql` 用户；`redis` 镜像的服务运行用户就是 `redis`；`mongo `镜像内的服务执行身份是 `mongo` 用户；`jenkins` 镜像内是 `jenkins` 用户启动服务等等。所以说 `“都是用 root 去运行”` 是不客观的。
+**答：** 并非所有官方镜像的 `Dockerfile` 都是用 `root` 用户去执行的。比如`mysql` 镜像的执行身份就是 `mysql` 用户；`redis` 镜像的服务运行用户就是 `redis`；`mongo `镜像内的服务执行身份是 `mongo` 用户；`jenkins` 镜像内是 `jenkins` 用户启动服务等等。所以说 `“都是用 root 去运行”` 是不客观的。
 
 当然，这并不是说在容器内使用 `root` 就非常危险。容器内的 `root` 和宿主上的 `root` 不同，容器内的 `root` 虽然 `uid` 也默认为 `0`，但是却处于一个隔离的命名空间，而且被去掉了大量的特权。容器内的 `root` 是一个没有什么特权的用户，危险的操作基本都无法执行。
 
@@ -1129,9 +1361,7 @@ Server:
 
 ## 问：我在容器里运行 systemctl start xxx 怎么报错啊？
 
-**答：**
-
-如果在容器内使用 `systemctl` 命令，经常会发现碰到这样的错误：
+**答：** 如果在容器内使用 `systemctl` 命令，经常会发现碰到这样的错误：
 
 
 ```bash
@@ -1149,9 +1379,7 @@ Failed to get D-Bus connection: Operation not permitted
 
 ## 问：容器内的时间和宿主不一致，如何处理？
 
-**答：**
-
-一般情况直接设置环境变量 `TZ` 就够了，比如：
+**答：** 一般情况直接设置环境变量 `TZ` 就够了，比如：
 
 
 ```bash
@@ -1174,9 +1402,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 
 ## 问：我想让我的程序平滑退出，为什么截获 SIGTERM 信号不管用啊？
 
-**答：**
-
-`docker stop`, `docker service rm` 在停止容器时，都会先发 `SIGTERM` 信号，等待一段时间`（默认为 10 秒）`后，如果程序没响应，则强行 `SIGKILL `杀掉进程。
+**答：** `docker stop`, `docker service rm` 在停止容器时，都会先发 `SIGTERM` 信号，等待一段时间`（默认为 10 秒）`后，如果程序没响应，则强行 `SIGKILL `杀掉进程。
 
 这样应用进程就有机会平滑退出，在接收到` SIGTERM` 后，可以去 Flush 缓存、完成文件读写、关闭数据库连接、释放文件资源、释放锁等等，然后再退出。所以试图截获 SIGTERM 信号的做法是对的。
 
@@ -1190,11 +1416,11 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 
 明白了道理，解决方法就很简单，换成 `exec` 格式，并且将主进程执行文件放在第一位即可。这也是为什么之前推荐 `exec` 格式的原因之一。
 
+进程管理在Docker容器中和在完整的操作系统有一些不同之处。在每个容器的`PID1`进程，需要能够正确的处理`SIGTERM`信号来支持容器应用的优雅退出，同时要能正确的处理孤儿进程和僵尸进程。必要的时候使用Docker新提供的 `docker run --init` 参数可以解决相应问题。
+
 ## 问：Docker Swarm（一代swarm） 和Swarm mode（二代swarm）两者的区别是什么？
 
-**答：**
-
-因为 `docker run` 和 `docker service create `是两个不同理念的东西。
+**答：** 因为 `docker run` 和 `docker service create `是两个不同理念的东西。
 
 一代 Swarm 中，将 Swarm 集群视为一个巨大的 Docker 主机，本质上和单机没有区别，都是直接调度运行容器。因此依旧使用单机的 `docker run `的方式来启动特定容器。
 
@@ -1206,9 +1432,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 
 ## 问：我自建了私有镜像仓库Registry，我如何搜索查询仓库中的镜像？
 
-**答：**
-
-如果只使用开源的 `docker registry` 自建仓库的话，目前只能用 `API` 访问其内容。除此以外，官方还有商业版的 [Docker Trusted Registry](https://docs.docker.com/datacenter/dtr/2.0/) 项目，里面有一些增值的内容在里面，提供了类似于 Docker Hub 似得 UI 等，可以搜索过滤。目前 Docker Trusted Registry 属于 Docker Datacenter 的一部分。
+**答：** 如果只使用开源的 `docker registry` 自建仓库的话，目前只能用 `API` 访问其内容。除此以外，官方还有商业版的 [Docker Trusted Registry](https://docs.docker.com/datacenter/dtr/2.0/) 项目，里面有一些增值的内容在里面，提供了类似于 Docker Hub 似得 UI 等，可以搜索过滤。目前 Docker Trusted Registry 属于 Docker Datacenter 的一部分。
 
 另外，第三方也有一些提供了UI的。比如 [VMWare Harbor](https://github.com/vmware/harbor)。VMWare Harbor是 VMWare 中国基于开源 `docker registry `进一步开发的项目，有更复杂的上层逻辑。包括用户管理、镜像管理、Registry集群之类的功能。Harbor 是开源的，免费的。
 
@@ -1252,9 +1476,7 @@ if __name__ == "__main__":
 
 ## 问：如何删除私有 registry 中的镜像？
 
-**答：** 
-
-首先，在默认情况下，`docker registry` 是不允许删除镜像的，需要在配置`config.yml`中启用：
+**答：** 首先，在默认情况下，`docker registry` 是不允许删除镜像的，需要在配置`config.yml`中启用：
 
 
 ```bash
@@ -1304,6 +1526,70 @@ docker-compose start
 - [https://docs.docker.com/registry/configuration/#/delete](https://docs.docker.com/registry/configuration/#/delete)
 
 - [https://docs.docker.com/registry/spec/api/#/deleting-an-image](https://docs.docker.com/registry/spec/api/#/deleting-an-image)
+
+
+## 问：自己架的 registry 怎么任何用户都可以取到镜像？这不安全啊？
+
+**答：** 那是因为没有加认证，不加认证的意思就是允许任何人访问的。
+
+添加认证有两种方式：
+
+- Registry 配置中加入认证： [https://docs.docker.com/registry/configuration/#/auth](https://docs.docker.com/registry/configuration/#/auth)
+
+```bash
+auth:
+  token:
+    realm: token-realm
+    service: token-service
+    issuer: registry-token-issuer
+    rootcertbundle: /root/certs/bundle
+  htpasswd:
+    realm: basic-realm
+    path: /path/to/htpasswd
+```
+
+- 前端架设 nginx 进行认证：[https://docs.docker.com/registry/recipes/nginx/](https://docs.docker.com/registry/recipes/nginx/)
+
+```bash
+location /v2/ {
+    ...
+    auth_basic "Registry realm";
+    auth_basic_user_file /etc/nginx/conf.d/nginx.htpasswd;
+    ...
+}
+```
+
+使用VMWare Harbor部署镜像仓库，Harbor 提供了高级的安全特性，诸如用户管理，访问控制和活动审计等。
+
+## 问：CentOS 7 默认的内核太老了 3.10，是不是很多 Docker 功能不支持？
+**答：** 是的，有一些功能无法支持，比如 `overlay2` 的存储驱动就无法在` CentOS` 上使用，但并非所有需要高版本内核的功能都不支持。
+
+比如 `Overlay FS` 需要 `Linux 3.18`，而` Overlay network` 需要 `Linux 3.16`。而 `CentOS 7` 内核为 `3.10`，确实低于这些版本需求。但实际上，红帽团队会把一些新内核的功能 `backport` 回老的内核。比如` overlay fs`等。所以一些功能依旧会支持。因此 `CentOS 7 `的 `Docker Engine` 同样可以支持 `overlay network`，以及` overlay` 存储驱动（不是`overlay2`）。因此在新的 `Docker 1.12` 中，`CentOS/RHEL 7` 才有可能支持 `Swarm Mode`。
+
+即使红帽会把一些高版本内核的功能 `backport` 回 `3.10 `内核中，这种修修补补出来的功能，并不一定稳定。如果观察 `Docker Issue` 列表，会发现大量的由于 `CentOS` 老内核导致的问题，特别是在使用了 `1.12` 内置的 `Swarm Mode` 集群功能后，存储、网络出现的问题很多。
+
+所以想要在Centos 系统上更好的使用Docker，建议检查和升级下系统内核：
+
+```bash
+wget http://mirror.rc.usf.edu/compute_lock/elrepo/kernel/el7/x86_64/RPMS/kernel-ml-4.11.1-1.el7.elrepo.x86_64.rpm
+yum -y install linux-firmware
+rpm -ivh kernel-ml-4.11.1-1.el7.elrepo.x86_64.rpm
+grub2-set-default 0
+grub2-mkconfig -o /boot/grub2/grub.cfg
+package-cleanup --oldkernels --count=1 -y
+```
+
+然后需要重启下机器以启用新的内核。
+
+## 听说 Windows 10、Windows Server 2016 内置 Docker 了？和 Docker 官网下载的 Docker for Windows 有什么区别啊？
+
+二者完全不同。
+
+`Windows 10` 或者 `Windows Server 2016` 自带的 Docker，被称为 `Docker on Windows`，其运行于 `Windows NT `内核至上，以 Docker 类似的方式提供 Windows 容器服务，因此只可以运行 Windows 程序。
+
+而 Docker 官网下载的，被称为 `Docker for Windows`。这是我们常说的 Docker，它是运行于 `Linux` 内核上的 Docker。在 Windows 上运行时实际上是在` Hyper-V` 上的一个 `Alpine Linux` 虚拟机上运行的 Docker。它只可以运行 `Linux` 程序。
+
+`Docker on Windows` 极为臃肿，最小镜像也近 `GB`，启动时间并不快；而 `Docker for Windows` 则是正常的 Docker，最小镜像也就几十 `KB`，一般的镜像都在几百兆以内，而且启动时间基本是毫秒级。
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
