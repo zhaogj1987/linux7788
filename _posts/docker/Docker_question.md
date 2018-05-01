@@ -669,7 +669,7 @@ $ docker run -it -m 300m \
       -v /var/lib/lxcfs/proc/stat:/proc/stat:rw \
       -v /var/lib/lxcfs/proc/swaps:/proc/swaps:rw \
       -v /var/lib/lxcfs/proc/uptime:/proc/uptime:rw \
-      docker.17usoft.com/library/centos:7 /bin/bash
+      centos:7 /bin/bash
 
 [root@e851562db40d /]# free -m
               total        used        free      shared  buff/cache   available
