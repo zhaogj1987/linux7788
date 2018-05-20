@@ -1,0 +1,11 @@
+User-agent: * 
+Allow: /
+Allow: /archives/
+Allow: /categories/
+Allow: /resources/
+Allow: /tags/
+Allow: /about/
+
+
+Sitemap: https://linux7788.com/sitemap.xml
+Sitemap: https://linux7788.com/baidusitemap.xml

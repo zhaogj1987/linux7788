@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Docker,python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="赵光建的个人站点" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Docker-client for python简易安装1pip install docker-py 客户端初始化的三种方法123456import dockerdocker.api()docker.APIClient()docker.client()docker.DockerClient() #其实也是docker.client()的一个子集docker.from_env() #其实就是dock">
+<meta name="keywords" content="Docker,python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker Python Api 操作">
+<meta property="og:url" content="https://linux7788.com/docker/docker_python-api/index.html">
+<meta property="og:site_name" content="赵光建的个人站点">
+<meta property="og:description" content="Docker-client for python简易安装1pip install docker-py 客户端初始化的三种方法123456import dockerdocker.api()docker.APIClient()docker.client()docker.DockerClient() #其实也是docker.client()的一个子集docker.from_env() #其实就是dock">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-18T15:32:58.975Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker Python Api 操作">
+<meta name="twitter:description" content="Docker-client for python简易安装1pip install docker-py 客户端初始化的三种方法123456import dockerdocker.api()docker.APIClient()docker.client()docker.DockerClient() #其实也是docker.client()的一个子集docker.from_env() #其实就是dock">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://linux7788.com/docker/docker_python-api/"/>
+
+
+
+
+
+  <title>Docker Python Api 操作 | 赵光建的个人站点</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3e19b46404548192d1448e7c09e36aad";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <script type="text/javascript">
+      var host = "linux7788.com";
+      if ((host == window.location.host) && (window.location.protocol != "https:"))
+          window.location.protocol = "https";
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">赵光建的个人站点</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://linux7788.com/docker/docker_python-api/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="赵光建">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="赵光建的个人站点">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Docker Python Api 操作</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-04T21:30:25+08:00">
+                2018-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统运维/" itemprop="url" rel="index">
+                    <span itemprop="name">系统运维</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统运维/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Docker-client-for-python"><a href="#Docker-client-for-python" class="headerlink" title="Docker-client for python"></a>Docker-client for python</h2><h3 id="简易安装"><a href="#简易安装" class="headerlink" title="简易安装"></a>简易安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install docker-py</span><br></pre></td></tr></table></figure>
+<h3 id="客户端初始化的三种方法"><a href="#客户端初始化的三种方法" class="headerlink" title="客户端初始化的三种方法"></a>客户端初始化的三种方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> docker</span><br><span class="line">docker.api()</span><br><span class="line">docker.APIClient()</span><br><span class="line">docker.client()</span><br><span class="line">docker.DockerClient() <span class="comment">#其实也是docker.client()的一个子集</span></span><br><span class="line">docker.from_env() <span class="comment">#其实就是docker.client()的一个子集</span></span><br></pre></td></tr></table></figure>
+<h3 id="简单测试"><a href="#简单测试" class="headerlink" title="简单测试"></a>简单测试</h3><h4 id="查看docker版本号"><a href="#查看docker版本号" class="headerlink" title="查看docker版本号"></a>查看docker版本号</h4><p>等同于执行<code>docker version</code>命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">$ yum -y install ipython</span><br><span class="line">$ ipython</span><br><span class="line"></span><br><span class="line">In [1]: import docker</span><br><span class="line"></span><br><span class="line">In [2]: client = docker.APIClient(base_url=<span class="string">'unix://var/run/docker.sock'</span>,version=<span class="string">'auto'</span>,timeout=5)</span><br><span class="line"></span><br><span class="line">In [3]: client.version()</span><br><span class="line">Out[3]: </span><br><span class="line">&#123;u<span class="string">'ApiVersion'</span>: u<span class="string">'1.35'</span>,</span><br><span class="line"> u<span class="string">'Arch'</span>: u<span class="string">'amd64'</span>,</span><br><span class="line"> u<span class="string">'BuildTime'</span>: u<span class="string">'2017-12-27T20:12:46.000000000+00:00'</span>,</span><br><span class="line"> u<span class="string">'Components'</span>: [&#123;u<span class="string">'Details'</span>: &#123;u<span class="string">'ApiVersion'</span>: u<span class="string">'1.35'</span>,</span><br><span class="line">    u<span class="string">'Arch'</span>: u<span class="string">'amd64'</span>,</span><br><span class="line">    u<span class="string">'BuildTime'</span>: u<span class="string">'2017-12-27T20:12:46.000000000+00:00'</span>,</span><br><span class="line">    u<span class="string">'Experimental'</span>: u<span class="string">'false'</span>,</span><br><span class="line">    u<span class="string">'GitCommit'</span>: u<span class="string">'c97c6d6'</span>,</span><br><span class="line">    u<span class="string">'GoVersion'</span>: u<span class="string">'go1.9.2'</span>,</span><br><span class="line">    u<span class="string">'KernelVersion'</span>: u<span class="string">'4.11.1-1.el7.elrepo.x86_64'</span>,</span><br><span class="line">    u<span class="string">'MinAPIVersion'</span>: u<span class="string">'1.12'</span>,</span><br><span class="line">    u<span class="string">'Os'</span>: u<span class="string">'linux'</span>&#125;,</span><br><span class="line">   u<span class="string">'Name'</span>: u<span class="string">'Engine'</span>,</span><br><span class="line">   u<span class="string">'Version'</span>: u<span class="string">'17.12.0-ce'</span>&#125;],</span><br><span class="line"> u<span class="string">'GitCommit'</span>: u<span class="string">'c97c6d6'</span>,</span><br><span class="line"> u<span class="string">'GoVersion'</span>: u<span class="string">'go1.9.2'</span>,</span><br><span class="line"> u<span class="string">'KernelVersion'</span>: u<span class="string">'4.11.1-1.el7.elrepo.x86_64'</span>,</span><br><span class="line"> u<span class="string">'MinAPIVersion'</span>: u<span class="string">'1.12'</span>,</span><br><span class="line"> u<span class="string">'Os'</span>: u<span class="string">'linux'</span>,</span><br><span class="line"> u<span class="string">'Platform'</span>: &#123;u<span class="string">'Name'</span>: u<span class="string">''</span>&#125;,</span><br><span class="line"> u<span class="string">'Version'</span>: u<span class="string">'17.12.0-ce'</span>&#125;</span><br></pre></td></tr></table></figure>
+<p><code>docker.APIClient</code> 中部分相关参数说明</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Args:</span><br><span class="line">   base_url (str): 指定链接路径，可以通过socket或者tcp方式链接``unix:///var/run/docker.sock`` or ``tcp://127.0.0.1:1234``</span><br><span class="line">   version (str): 指定API使用的版本(docker=2.0.0默认的api版本是1.24,最低支持1.21,docker1.9+的api是1.21),因此在使用python的docker模块时一定要注意docker的api以及docker模块的api是否兼容。当然如果设置为 ``auto`` 会去自动检测server的版本</span><br><span class="line">   timeout (int): 使用API调用的默认超时时间，默认单位为秒</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h4 id="用docker-python-api的方式查看镜像"><a href="#用docker-python-api的方式查看镜像" class="headerlink" title="用docker python api的方式查看镜像"></a>用docker python api的方式查看镜像</h4><p>等同于执行<code>docker images</code>命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">$ ipython</span><br><span class="line"></span><br><span class="line">In [1]: import docker</span><br><span class="line">In [2]: client = docker.APIClient(base_url=<span class="string">'unix://var/run/docker.sock'</span>,version=<span class="string">'auto'</span>,timeout=5)</span><br><span class="line"></span><br><span class="line">In [6]: client.images()</span><br><span class="line">Out[6]: </span><br><span class="line">[&#123;u<span class="string">'Containers'</span>: -1,</span><br><span class="line">  u<span class="string">'Created'</span>: 1496683994,</span><br><span class="line">  u<span class="string">'Id'</span>: u<span class="string">'sha256:3bee3060bfc81c061ce7069df35ce090593bda584d4ef464bc0f38086c11371d'</span>,</span><br><span class="line">  u<span class="string">'Labels'</span>: &#123;u<span class="string">'build-date'</span>: u<span class="string">'20170605'</span>,</span><br><span class="line">   u<span class="string">'license'</span>: u<span class="string">'GPLv2'</span>,</span><br><span class="line">   u<span class="string">'name'</span>: u<span class="string">'CentOS Base Image'</span>,</span><br><span class="line">   u<span class="string">'vendor'</span>: u<span class="string">'CentOS'</span>&#125;,</span><br><span class="line">  u<span class="string">'ParentId'</span>: u<span class="string">''</span>,</span><br><span class="line">  u<span class="string">'RepoDigests'</span>: [u<span class="string">'centos@sha256:9173758d35da834e8320f57093290b3bdcefe7fc9f4855a1ed4012b7bd940273'</span>],</span><br><span class="line">  u<span class="string">'RepoTags'</span>: [u<span class="string">'centos:7'</span>],</span><br><span class="line">  u<span class="string">'SharedSize'</span>: -1,</span><br><span class="line">  u<span class="string">'Size'</span>: 192555856,</span><br><span class="line">  u<span class="string">'VirtualSize'</span>: 192555856&#125;,</span><br><span class="line"> &#123;u<span class="string">'Containers'</span>: -1,</span><br><span class="line">  u<span class="string">'Created'</span>: 1484706726,</span><br><span class="line">  u<span class="string">'Id'</span>: u<span class="string">'sha256:36b1e23becabc0b27c5787712dce019982c048665fd9e7e6cb032a46bcac510d'</span>,</span><br><span class="line">  u<span class="string">'Labels'</span>: &#123;&#125;,</span><br><span class="line">  u<span class="string">'ParentId'</span>: u<span class="string">''</span>,</span><br><span class="line">  u<span class="string">'RepoDigests'</span>: [u<span class="string">'swarm@sha256:815fc8fd4617d866e1256999c2c0a55cc8f377f3dade26c3edde3f0543a70c04'</span>],</span><br><span class="line">  u<span class="string">'RepoTags'</span>: [u<span class="string">'swarm:1.2.6'</span>],</span><br><span class="line">  u<span class="string">'SharedSize'</span>: -1,</span><br><span class="line">  u<span class="string">'Size'</span>: 15852351,</span><br><span class="line">  u<span class="string">'VirtualSize'</span>: 15852351&#125;]</span><br></pre></td></tr></table></figure>
+<h4 id="用docker-python-api的方式pull拉取一个镜像"><a href="#用docker-python-api的方式pull拉取一个镜像" class="headerlink" title="用docker python api的方式pull拉取一个镜像"></a>用docker python api的方式pull拉取一个镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ipython</span><br><span class="line">In [1]: import docker</span><br><span class="line"></span><br><span class="line">In [2]: client = docker.APIClient(base_url=<span class="string">'unix://var/run/docker.sock'</span>,version=<span class="string">'auto'</span>,timeout=5)</span><br><span class="line"></span><br><span class="line">In [7]: client.pull(<span class="string">'centos:7'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="通过docker-python-api的方式运行一个容器"><a href="#通过docker-python-api的方式运行一个容器" class="headerlink" title="通过docker python api的方式运行一个容器"></a>通过docker python api的方式运行一个容器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ ipython</span><br><span class="line">In [1]: import docker</span><br><span class="line"></span><br><span class="line">In [2]: client = docker.APIClient(base_url=<span class="string">'unix://var/run/docker.sock'</span>,version=<span class="string">'auto'</span>,timeout=5)</span><br><span class="line"></span><br><span class="line">In [8]: client = docker.from_env()</span><br><span class="line">In [9]: client.containers.run(image=<span class="string">"centos:7"</span>,stdin_open=True,tty=True,<span class="built_in">command</span>=<span class="string">"/bin/bash"</span>,name=<span class="string">"test_docker_python-api"</span>,detach=True)</span><br><span class="line">Out[9]: &lt;Container: e2cd190605&gt;</span><br><span class="line"></span><br><span class="line">In [10]: client.containers.list() <span class="comment"># 列出主机上当前运行的容器</span></span><br><span class="line">Out[10]: [&lt;Container: e2cd190605&gt;, &lt;Container: 5ef3e3e500&gt;]</span><br></pre></td></tr></table></figure>
+<p>在终端执行<code>docker ps -a</code>命令我们会看到刚刚新建的容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps -a</span><br><span class="line">CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS               NAMES</span><br><span class="line">e2cd19060581        centos:7               <span class="string">"/bin/bash"</span>              3 seconds ago      Up 2 seconds                            test_docker_python-api</span><br></pre></td></tr></table></figure>
+<h4 id="通过docker-python-api的方式对一个容docker器执行一些操作"><a href="#通过docker-python-api的方式对一个容docker器执行一些操作" class="headerlink" title="通过docker python api的方式对一个容docker器执行一些操作"></a>通过docker python api的方式对一个容docker器执行一些操作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ ipython</span><br><span class="line">In [1]: import docker</span><br><span class="line"></span><br><span class="line">In [2]: client = docker.APIClient(base_url=<span class="string">'unix://var/run/docker.sock'</span>,version=<span class="string">'auto'</span>,timeout=5)</span><br><span class="line">In [8]: client = docker.from_env()</span><br><span class="line">In [11]: container = client.containers.get(<span class="string">'e2cd190605'</span>) </span><br><span class="line">In [12]: container.logs() <span class="comment">#查看容器输出到控制台的相关日志</span></span><br><span class="line">In [13]: container.stop() <span class="comment">#停止容器ID为e2cd190605的容器</span></span><br><span class="line">In [14]: container.remove() <span class="comment">#删除这个容器</span></span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+<p><strong>关于docker python api的更多详细用法，可参看学习下官方文档</strong>：</p>
+<ul>
+<li><a href="https://github.com/docker/docker-py" target="_blank" rel="noopener">https://github.com/docker/docker-py</a></li>
+<li><a href="http://docker-py.readthedocs.io/en/stable/index.html" target="_blank" rel="noopener">http://docker-py.readthedocs.io/en/stable/index.html</a></li>
+<li><a href="https://docs.docker.com/develop/sdk/" target="_blank" rel="noopener">https://docs.docker.com/develop/sdk/</a></li>
+</ul>
+<h2 id="用python编写一个Docker容器监控脚本"><a href="#用python编写一个Docker容器监控脚本" class="headerlink" title="用python编写一个Docker容器监控脚本"></a>用python编写一个Docker容器监控脚本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># -* - coding: UTF-8 -* -</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> docker</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">usage</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">The output  configuration file contents.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Usage: zabbix_module_docker.py [docker.version] [docker.discovery] [docker.up] [docker.mem] [docker.cpu] [docker.stats] [docker.run]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Description</span></span><br><span class="line"><span class="string">            docker.version    The version of docker dameon.</span></span><br><span class="line"><span class="string">            docker.discovery  List containers. Similar to the `docker ps -a` command.</span></span><br><span class="line"><span class="string">            docker.up         The status of one per container.</span></span><br><span class="line"><span class="string">            docker.mem        The memory usage of one per container.</span></span><br><span class="line"><span class="string">            docker.cpu        The cpu usage of one per container.</span></span><br><span class="line"><span class="string">            docker.stats      The network stats of one per container.</span></span><br><span class="line"><span class="string">            docker.exec       Execute command in docker container.</span></span><br><span class="line"><span class="string">for example:</span></span><br><span class="line"><span class="string">    zabbix_module_docker.py docker.version</span></span><br><span class="line"><span class="string">    zabbix_module_docker.py docker.up test_container</span></span><br><span class="line"><span class="string">    zabbix_module_docker.py docker.cpu test_container system</span></span><br><span class="line"><span class="string">    zabbix_module_docker.py docker.stats test_container tx_packets</span></span><br><span class="line"><span class="string">    zabbix_module_docker.py docker.exec test_container fileopen</span></span><br><span class="line"><span class="string">    zabbix_module_docker.py docker.run  centos:7 /bin/bash test_container</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DockerService</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.url = <span class="string">'unix://var/run/docker.sock'</span></span><br><span class="line">        self.docker_running = <span class="keyword">False</span></span><br><span class="line">        self.client = docker.APIClient(base_url=self.url, timeout=<span class="number">3</span>, num_pools=<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_version</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.client.version()[<span class="string">'Version'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_discovery</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            containerList = self.client.containers(all=<span class="keyword">True</span>)</span><br><span class="line">            self.docker_running = <span class="keyword">True</span></span><br><span class="line">        <span class="comment"># Apologies for the broad exception, it just works here.</span></span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            self.docker_running = <span class="keyword">False</span></span><br><span class="line">        <span class="keyword">if</span> self.docker_running:</span><br><span class="line">            <span class="comment"># print 'status ok succeeded in obtaining docker container list</span></span><br><span class="line">            <span class="comment"># return containerList</span></span><br><span class="line">            <span class="keyword">if</span> len(containerList) == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">"&#123;"</span>)</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">"\t\"data\":["</span>)</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">"\t]"</span>)</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">"&#125;"</span>)</span><br><span class="line">                sys.exit(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"&#123;"</span>)</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"\t\"data\":[\n"</span>)</span><br><span class="line">            <span class="keyword">for</span> container <span class="keyword">in</span> containerList[<span class="number">0</span>:len(containerList)<span class="number">-1</span>]:</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">"\t&#123;"</span>)</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">"\t\t\"&#123;#CONTAINERNAME&#125;\":\""</span>+str(container[<span class="string">'Names'</span>][<span class="number">0</span>]).split(<span class="string">"/"</span>)[<span class="number">1</span>]+<span class="string">"\""</span>+<span class="string">","</span>)</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">"\t\t\"&#123;#CONTAINERID&#125;\":\""</span>+str(container[<span class="string">'Id'</span>])+<span class="string">"\""</span>)</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">"\t&#125;,"</span>)</span><br><span class="line">true        <span class="keyword">print</span> (<span class="string">"\t&#123;"</span>)</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"\t\t\"&#123;#CONTAINERNAME&#125;\":\""</span>+str(containerList[<span class="number">-1</span>][<span class="string">'Names'</span>][<span class="number">0</span>]).split(<span class="string">"/"</span>)[<span class="number">1</span>]+<span class="string">"\""</span>+<span class="string">","</span>)</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"\t\t\"&#123;#CONTAINERID&#125;\":\""</span>+str(containerList[<span class="number">-1</span>][<span class="string">'Id'</span>])+<span class="string">"\""</span>)</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"\t&#125;"</span>)</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"\n\t]"</span>)</span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"&#125;"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_up</span><span class="params">(self, containerName)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            containerList = self.client.containers(all=<span class="keyword">True</span>)</span><br><span class="line">            self.docker_running = <span class="keyword">True</span></span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            self.docker_running = <span class="keyword">False</span></span><br><span class="line">        <span class="keyword">if</span> self.docker_running:</span><br><span class="line">            <span class="keyword">for</span> container <span class="keyword">in</span> containerList:</span><br><span class="line">                <span class="keyword">if</span> containerName == str(container[<span class="string">'Names'</span>][<span class="number">0</span>]).split(<span class="string">"/"</span>)[<span class="number">1</span>]:</span><br><span class="line">                    <span class="keyword">if</span> container[<span class="string">'State'</span>] == <span class="string">"running"</span>:</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_stats</span><span class="params">(self, container)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            stats = self.client.stats(container, <span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            self.docker_running = <span class="keyword">False</span></span><br><span class="line">        <span class="keyword">if</span> self.docker_up(container) == <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">for</span> stat <span class="keyword">in</span> stats:</span><br><span class="line">                s = json.loads(json.dumps(stat))</span><br><span class="line">                <span class="keyword">return</span> s</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">'0'</span>)</span><br><span class="line">            sys.exit(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_inspect</span><span class="params">(self, container)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            inspect = self.client.inspect_container(container)</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            self.docker_running = <span class="keyword">False</span></span><br><span class="line">        <span class="keyword">if</span> self.docker_up(container) == <span class="number">1</span>:</span><br><span class="line">            s = json.loads(json.dumps(inspect))</span><br><span class="line">            <span class="keyword">return</span> s</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">'status err failed to obtain docker container inspect.'</span>)</span><br><span class="line">            sys.exit(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_cpu</span><span class="params">(self, container)</span>:</span></span><br><span class="line">        stats = self.docker_stats(container)</span><br><span class="line">        inspect = self.docker_inspect(container)</span><br><span class="line">        percpu_usage=stats[<span class="string">'cpu_stats'</span>][<span class="string">'cpu_usage'</span>][<span class="string">'percpu_usage'</span>]</span><br><span class="line">        <span class="keyword">while</span> <span class="number">0</span> <span class="keyword">in</span> percpu_usage:</span><br><span class="line">true    percpu_usage.remove(<span class="number">0</span>)</span><br><span class="line">        cpu_num=float(len(percpu_usage))</span><br><span class="line">        total_cpu1 = stats[<span class="string">'cpu_stats'</span>][<span class="string">'cpu_usage'</span>][<span class="string">'total_usage'</span>]</span><br><span class="line">        docker_system_usage1 = stats[<span class="string">'cpu_stats'</span>][<span class="string">'system_cpu_usage'</span>]</span><br><span class="line">        stats = self.docker_stats(container)</span><br><span class="line">        total_cpu2 = stats[<span class="string">'cpu_stats'</span>][<span class="string">'cpu_usage'</span>][<span class="string">'total_usage'</span>]</span><br><span class="line">        docker_system_usage2 = stats[<span class="string">'cpu_stats'</span>][<span class="string">'system_cpu_usage'</span>]</span><br><span class="line">        cpuDelta = float(total_cpu2) - float(total_cpu1)</span><br><span class="line">        systemDelta = float(docker_system_usage2) - float(docker_system_usage1)</span><br><span class="line">        daoke_cpu_num = str(str(self.client.inspect_container(str(container)))).split(<span class="string">'DAOKECPU='</span>)[<span class="number">-1</span>].split(<span class="string">"\'"</span>)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> cpuDelta &gt;= <span class="number">0</span> <span class="keyword">and</span> systemDelta &gt;= <span class="number">0</span>:</span><br><span class="line">           <span class="keyword">if</span> daoke_cpu_num == <span class="string">"&#123;u"</span>:</span><br><span class="line">              daoke_cpu_num = <span class="number">24</span></span><br><span class="line">              <span class="keyword">return</span> round((float(cpuDelta)/float(systemDelta) * cpu_num * <span class="number">100.0</span>)/float(daoke_cpu_num), <span class="number">2</span>)</span><br><span class="line">           <span class="keyword">elif</span> daoke_cpu_num == <span class="string">"0"</span>:</span><br><span class="line">              daoke_cpu_num = <span class="number">24</span></span><br><span class="line">              <span class="keyword">return</span> round((float(cpuDelta)/float(systemDelta) * cpu_num * <span class="number">100.0</span>)/float(daoke_cpu_num), <span class="number">2</span>)</span><br><span class="line">           <span class="keyword">else</span>:</span><br><span class="line">              <span class="keyword">return</span> round((float(cpuDelta)/float(systemDelta) * cpu_num * <span class="number">100.0</span>)/float(daoke_cpu_num), <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">          <span class="keyword">return</span> <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_mem</span><span class="params">(self, container, item)</span>:</span></span><br><span class="line">        stats = self.docker_stats(container)</span><br><span class="line">        <span class="keyword">if</span> item == <span class="string">"total_cache"</span>:</span><br><span class="line">            <span class="keyword">return</span> stats[<span class="string">'memory_stats'</span>][<span class="string">'stats'</span>][<span class="string">'total_cache'</span>]</span><br><span class="line">        <span class="keyword">elif</span> item == <span class="string">"hierarchical_memory_limit"</span>:</span><br><span class="line">            <span class="keyword">return</span> stats[<span class="string">'memory_stats'</span>][<span class="string">'stats'</span>][<span class="string">'hierarchical_memory_limit'</span>]</span><br><span class="line">        <span class="keyword">elif</span> item == <span class="string">"hierarchical_memsw_limit"</span>:</span><br><span class="line">            <span class="keyword">return</span> stats[<span class="string">'memory_stats'</span>][<span class="string">'stats'</span>][<span class="string">'hierarchical_memsw_limit'</span>]</span><br><span class="line">        <span class="keyword">elif</span> item == <span class="string">"total_rss"</span>:</span><br><span class="line">            <span class="keyword">return</span> stats[<span class="string">'memory_stats'</span>][<span class="string">'stats'</span>][<span class="string">'total_rss'</span>]</span><br><span class="line">        <span class="keyword">elif</span> item == <span class="string">"total_swap"</span>:</span><br><span class="line">            <span class="keyword">return</span> stats[<span class="string">'memory_stats'</span>][<span class="string">'stats'</span>][<span class="string">'total_swap'</span>]</span><br><span class="line">        <span class="keyword">elif</span> item == <span class="string">'mem_percent'</span>:</span><br><span class="line">            <span class="keyword">return</span> round(float(stats[<span class="string">'memory_stats'</span>][<span class="string">'stats'</span>][<span class="string">'total_rss'</span>])/float(stats[<span class="string">'memory_stats'</span>][<span class="string">'limit'</span>])*<span class="number">100.0</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_networks</span><span class="params">(self, container, item)</span>:</span></span><br><span class="line">        stats = self.docker_stats(container)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">           stats[<span class="string">'networks'</span>]</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> stats[<span class="string">'networks'</span>][<span class="string">'eth0'</span>] !=[]:</span><br><span class="line">           tx_packets1 = stats[<span class="string">'networks'</span>][<span class="string">'eth0'</span>][<span class="string">'tx_packets'</span>]</span><br><span class="line">           tx_bytes1 = stats[<span class="string">'networks'</span>][<span class="string">'eth0'</span>][<span class="string">'tx_bytes'</span>]</span><br><span class="line">           rx_packets1 = stats[<span class="string">'networks'</span>][<span class="string">'eth0'</span>][<span class="string">'rx_packets'</span>]</span><br><span class="line">           rx_bytes1 = stats[<span class="string">'networks'</span>][<span class="string">'eth0'</span>][<span class="string">'rx_bytes'</span>]</span><br><span class="line">           stats = self.docker_stats(container)</span><br><span class="line">           tx_packets2 = stats[<span class="string">'networks'</span>][<span class="string">'eth0'</span>][<span class="string">'tx_packets'</span>]</span><br><span class="line">           tx_bytes2 = stats[<span class="string">'networks'</span>][<span class="string">'eth0'</span>][<span class="string">'tx_bytes'</span>]</span><br><span class="line">           rx_packets2 = stats[<span class="string">'networks'</span>][<span class="string">'eth0'</span>][<span class="string">'rx_packets'</span>]</span><br><span class="line">           rx_bytes2 = stats[<span class="string">'networks'</span>][<span class="string">'eth0'</span>][<span class="string">'rx_bytes'</span>]</span><br><span class="line">        <span class="keyword">elif</span> stats[<span class="string">'networks'</span>][<span class="string">'bond0'</span>] !=[]:</span><br><span class="line">           tx_packets1 = stats[<span class="string">'networks'</span>][<span class="string">'bond0'</span>][<span class="string">'tx_packets'</span>]</span><br><span class="line">           tx_bytes1 = stats[<span class="string">'networks'</span>][<span class="string">'bond0'</span>][<span class="string">'tx_bytes'</span>]</span><br><span class="line">           rx_packets1 = stats[<span class="string">'networks'</span>][<span class="string">'bond0'</span>][<span class="string">'rx_packets'</span>]</span><br><span class="line">           rx_bytes1 = stats[<span class="string">'networks'</span>][<span class="string">'bond0'</span>][<span class="string">'rx_bytes'</span>]</span><br><span class="line">           stats = self.docker_stats(container)</span><br><span class="line">           tx_packets2 = stats[<span class="string">'networks'</span>][<span class="string">'bond0'</span>][<span class="string">'tx_packets'</span>]</span><br><span class="line">           tx_bytes2 = stats[<span class="string">'networks'</span>][<span class="string">'bond0'</span>][<span class="string">'tx_bytes'</span>]</span><br><span class="line">           rx_packets2 = stats[<span class="string">'networks'</span>][<span class="string">'bond0'</span>][<span class="string">'rx_packets'</span>]</span><br><span class="line">           rx_bytes2 = stats[<span class="string">'networks'</span>][<span class="string">'bond0'</span>][<span class="string">'rx_bytes'</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"networks"</span> <span class="keyword">in</span> stats:</span><br><span class="line">           <span class="keyword">if</span> item == <span class="string">"tx_packets"</span>:</span><br><span class="line">                <span class="keyword">return</span> abs(tx_packets2 - tx_packets1)</span><br><span class="line">           <span class="keyword">elif</span> item == <span class="string">"tx_bytes"</span>:</span><br><span class="line">               <span class="keyword">return</span> abs(tx_bytes2 - tx_bytes1)</span><br><span class="line">           <span class="keyword">elif</span> item == <span class="string">"rx_packets"</span>:</span><br><span class="line">               <span class="keyword">return</span> abs(rx_packets2 - rx_packets1)</span><br><span class="line">           <span class="keyword">elif</span> item == <span class="string">"rx_bytes"</span>:</span><br><span class="line">               <span class="keyword">return</span> abs(rx_bytes2 - rx_bytes1)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_exec</span><span class="params">(self, container, cmd)</span>:</span></span><br><span class="line">        client = docker.from_env()</span><br><span class="line">        thread = <span class="string">"cat /proc/[0-9]*/status |grep Threads:|awk '&#123;sum += $2&#125;;END &#123;print sum&#125;'"</span></span><br><span class="line">        fileopen = <span class="string">"find /proc/[0-9]* -type f 2&gt;/dev/null|wc -l"</span></span><br><span class="line">        <span class="keyword">if</span> cmd == <span class="string">"thread"</span>:</span><br><span class="line">            cmd = thread</span><br><span class="line">        <span class="keyword">elif</span> cmd == <span class="string">"fileopen"</span>:</span><br><span class="line">            cmd = fileopen</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            result = client.containers.get(container).exec_run([<span class="string">'sh'</span>, <span class="string">'-c'</span>, cmd], stdin=<span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">raise</span> Exception</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_run</span><span class="params">(self, dockerimage, containername, cmd)</span>:</span></span><br><span class="line">        client = docker.from_env()</span><br><span class="line">        result = client.containers.run(image=dockerimage,stdin_open=<span class="keyword">True</span>,tty=<span class="keyword">True</span>,command=cmd,name=containername,detach=<span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">docker_blkio</span><span class="params">(self, container, item)</span>:</span></span><br><span class="line">        stats = self.docker_stats(container)</span><br><span class="line">        blkio_bytes_stats = json.dumps(stats[<span class="string">'blkio_stats'</span>][<span class="string">'io_service_bytes_recursive'</span>])</span><br><span class="line">        blkio_ops_stats = json.dumps(stats[<span class="string">'blkio_stats'</span>][<span class="string">'io_serviced_recursive'</span>])</span><br><span class="line">        <span class="keyword">if</span> stats[<span class="string">'blkio_stats'</span>][<span class="string">'io_serviced_recursive'</span>] !=[] <span class="keyword">and</span> stats[<span class="string">'blkio_stats'</span>][<span class="string">'io_serviced_recursive'</span>] !=[]:</span><br><span class="line">           <span class="keyword">if</span> item == <span class="string">"blkio_stats"</span>:</span><br><span class="line">               <span class="keyword">return</span> stats[<span class="string">'blkio_stats'</span>]</span><br><span class="line">           <span class="keyword">elif</span> item == <span class="string">"io_bytes_read"</span>:</span><br><span class="line">               <span class="keyword">return</span> str(str(blkio_bytes_stats)).split(<span class="string">'value\":'</span>)[<span class="number">1</span>].split(<span class="string">","</span>)[<span class="number">0</span>]</span><br><span class="line">           <span class="keyword">elif</span> item == <span class="string">"io_bytes_write"</span>:</span><br><span class="line">               <span class="keyword">return</span> str(str(blkio_bytes_stats)).split(<span class="string">'value\":'</span>)[<span class="number">2</span>].split(<span class="string">","</span>)[<span class="number">0</span>]</span><br><span class="line">           <span class="keyword">elif</span> item == <span class="string">"io_ops_read"</span>:</span><br><span class="line">               <span class="keyword">return</span> str(str(blkio_ops_stats)).split(<span class="string">'value\":'</span>)[<span class="number">1</span>].split(<span class="string">","</span>)[<span class="number">0</span>]</span><br><span class="line">           <span class="keyword">elif</span> item == <span class="string">"io_ops_write"</span>:</span><br><span class="line">               <span class="keyword">return</span> str(str(blkio_ops_stats)).split(<span class="string">'value\":'</span>)[<span class="number">2</span>].split(<span class="string">","</span>)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    dockerService = DockerService()</span><br><span class="line">    <span class="keyword">if</span> len(sys.argv) &lt;= <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">print</span> usage.__doc__</span><br><span class="line">        sys.exit(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">if</span> sys.argv[<span class="number">1</span>] == <span class="string">"docker.version"</span>:</span><br><span class="line">        <span class="keyword">print</span> dockerService.docker_version()</span><br><span class="line">    <span class="keyword">elif</span> sys.argv[<span class="number">1</span>] == <span class="string">"docker.discovery"</span>:</span><br><span class="line">        dockerService.docker_discovery()</span><br><span class="line">    <span class="keyword">elif</span> sys.argv[<span class="number">1</span>] == <span class="string">"docker.up"</span>:</span><br><span class="line">        <span class="keyword">print</span> dockerService.docker_up(sys.argv[<span class="number">2</span>])</span><br><span class="line">    <span class="keyword">elif</span> sys.argv[<span class="number">1</span>] == <span class="string">"docker.mem"</span>:</span><br><span class="line">        <span class="keyword">print</span> dockerService.docker_mem(sys.argv[<span class="number">2</span>], sys.argv[<span class="number">3</span>])</span><br><span class="line">    <span class="keyword">elif</span> sys.argv[<span class="number">1</span>] == <span class="string">"docker.cpu"</span>:</span><br><span class="line">        <span class="keyword">print</span> dockerService.docker_cpu(sys.argv[<span class="number">2</span>])</span><br><span class="line">    <span class="keyword">elif</span> sys.argv[<span class="number">1</span>] == <span class="string">"docker.stats"</span>:</span><br><span class="line">        <span class="keyword">print</span> dockerService.docker_networks(sys.argv[<span class="number">2</span>], sys.argv[<span class="number">3</span>])</span><br><span class="line">    <span class="keyword">elif</span> sys.argv[<span class="number">1</span>] == <span class="string">"docker.exec"</span>:</span><br><span class="line">        <span class="keyword">print</span> dockerService.docker_exec(sys.argv[<span class="number">2</span>], sys.argv[<span class="number">3</span>])</span><br><span class="line">    <span class="keyword">elif</span> sys.argv[<span class="number">1</span>] == <span class="string">"docker.run"</span>:</span><br><span class="line">        <span class="keyword">print</span> dockerService.docker_run(sys.argv[<span class="number">2</span>], sys.argv[<span class="number">3</span>], sys.argv[<span class="number">4</span>])</span><br><span class="line">    <span class="keyword">elif</span> sys.argv[<span class="number">1</span>] == <span class="string">"docker.blkio"</span>:</span><br><span class="line">        <span class="keyword">print</span> dockerService.docker_blkio(sys.argv[<span class="number">2</span>], sys.argv[<span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<p><strong>脚本测试</strong></p>
+<p>查看docker版本号</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ./zabbix_module_docker.py docker.version <span class="comment">#输出docker版本号</span></span><br><span class="line">17.09.0-ce</span><br></pre></td></tr></table></figure>
+<p>运行一个容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ./zabbix_module_docker.py docker.run centos:7 <span class="built_in">test</span>-container /bin/bash <span class="comment">#用centos:7镜像run运行一个名称为test-container的容器</span></span><br><span class="line">&lt;Container: f04ebe73eb&gt;</span><br></pre></td></tr></table></figure>
+<p>Discovery当前物理机上的容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ ./zabbix_module_docker.py docker.discovery <span class="comment">#discovery当前物理机上的容器情况</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="string">"data"</span>:[</span><br><span class="line"></span><br><span class="line">        &#123;</span><br><span class="line">                <span class="string">"&#123;#CONTAINERNAME&#125;"</span>:<span class="string">"test-container"</span>,</span><br><span class="line">                <span class="string">"&#123;#CONTAINERID&#125;"</span>:<span class="string">"f04ebe73eb94305f27a14cee01495cf9fc3f10fd101127956b06d1cd1413d914"</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看容器状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ./zabbix_module_docker.py docker.up <span class="built_in">test</span>-container <span class="comment">#查看test-container容器当前状态，1代表up，0代表退出状态。</span></span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<p>结合zabbix可以用来自动发现实现批量监控docker容器，当然需要配置自定义zabbix监控项，可以通过配置zabbix监控模版关联主机。更详细的配置实现方式就不写了，网上有很多相关教程。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/weixin.jpg" alt="赵光建 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>技术交流，可扫二维码加微信！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="赵光建 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Docker/" <i class="fa fa-tag"></i> Docker</a>
+          
+            <a href="/tags/python/" <i class="fa fa-tag"></i> python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/docker/Docker_question/" rel="next" title="关于Docker的50个问与答">
+                <i class="fa fa-chevron-left"></i> 关于Docker的50个问与答
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/linux_ops/regexr/" rel="prev" title="正则表达式">
+                正则表达式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+    
+    <div id="gitalk-container">
+	</div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="赵光建" />
+            
+              <p class="site-author-name" itemprop="name">赵光建</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zhaogj1987" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:374251609@qq.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://cn.linkedin.com/in/%E5%85%89%E5%BB%BA-%E8%B5%B5-435a03131" target="_blank" title="Linkedin">
+                    
+                      <i class="fa fa-fw fa-linkedin"></i>Linkedin</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+    <div class="links-of-blogroll motion-element links-of-blogroll-block">
+      <div class="links-of-blogroll-title">
+        <!-- modify icon to fire by szw -->
+        <i class="fa fa-history fa-" aria-hidden="true"></i>
+        近期文章
+      </div>
+      <ul class="links-of-blogroll-list">
+        
+        
+          <li>
+            <a href="/linux_ops/linux_base/" title="Linux系统基础知识" target="_blank">Linux系统基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/networks/" title="计算机网络基础知识" target="_blank">计算机网络基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/computer-operating-system/" title="计算机操作系统基础知识" target="_blank">计算机操作系统基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/http/" title="HTTP协议基础知识" target="_blank">HTTP协议基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/regexr/" title="正则表达式" target="_blank">正则表达式</a>
+          </li>
+        
+          <li>
+            <a href="/docker/docker_python-api/" title="Docker Python Api 操作" target="_blank">Docker Python Api 操作</a>
+          </li>
+        
+          <li>
+            <a href="/docker/Docker_question/" title="关于Docker的50个问与答" target="_blank">关于Docker的50个问与答</a>
+          </li>
+        
+          <li>
+            <a href="/docker/Docker_lnmp/" title="Docker 多容器间协作互连范例" target="_blank">Docker 多容器间协作互连范例</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/13_questions_of_shell/" title="shell十五问--shell教程" target="_blank">shell十五问--shell教程</a>
+          </li>
+        
+          <li>
+            <a href="/docker/Docker_Container_Limit/" title="Docker容器资源限制测试" target="_blank">Docker容器资源限制测试</a>
+          </li>
+        
+      </ul>
+    </div>
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-client-for-python"><span class="nav-number">1.</span> <span class="nav-text">Docker-client for python</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简易安装"><span class="nav-number">1.1.</span> <span class="nav-text">简易安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端初始化的三种方法"><span class="nav-number">1.2.</span> <span class="nav-text">客户端初始化的三种方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单测试"><span class="nav-number">1.3.</span> <span class="nav-text">简单测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#查看docker版本号"><span class="nav-number">1.3.1.</span> <span class="nav-text">查看docker版本号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用docker-python-api的方式查看镜像"><span class="nav-number">1.3.2.</span> <span class="nav-text">用docker python api的方式查看镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用docker-python-api的方式pull拉取一个镜像"><span class="nav-number">1.3.3.</span> <span class="nav-text">用docker python api的方式pull拉取一个镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过docker-python-api的方式运行一个容器"><span class="nav-number">1.3.4.</span> <span class="nav-text">通过docker python api的方式运行一个容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过docker-python-api的方式对一个容docker器执行一些操作"><span class="nav-number">1.3.5.</span> <span class="nav-text">通过docker python api的方式对一个容docker器执行一些操作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用python编写一个Docker容器监控脚本"><span class="nav-number">2.</span> <span class="nav-text">用python编写一个Docker容器监控脚本</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+
+&copy; 
+<span itemprop="copyrightYear">2018</span>
+<span class="with-love">
+<i class="fa fa-"></i>
+</span>
+<span class="author" itemprop="copyrightHolder">赵光建</span>
+
+</div>
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65739675";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+          
+      <link rel='stylesheet' href="https://yiyeti.cc/usr/themes/veryse/css/gitalk.css">
+      <script src="https://yiyeti.cc/usr/themes/veryse/css/gitalk.min.js"></script>
+      <script type="text/javascript">
+          var gitalk = new Gitalk({
+            clientID:  '4088ef6619f645cb3647', 
+            clientSecret: 'c2d0a030f1b99a3efd7e6df3d32485ca3ac1af37',
+            id: window.location.pathname,
+            repo: 'gitalk', 
+            owner: 'zhaogj1987', 
+            admin: 'zhaogj1987', 
+            distractionFreeMode: 'true',
+          })
+          gitalk.render('gitalk-container')
+      </script>
+    
+
+  
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

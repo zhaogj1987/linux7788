@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Docker,赵光建,Linux系统运维,Python,Shell编程,k8s,Mesos" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="赵光建的个人站点" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Linux运维工程师，目前在关注和学习Dokcer容器相关领域知识。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="赵光建的个人站点">
+<meta property="og:url" content="https://linux7788.com/page/14/index.html">
+<meta property="og:site_name" content="赵光建的个人站点">
+<meta property="og:description" content="Linux运维工程师，目前在关注和学习Dokcer容器相关领域知识。">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="赵光建的个人站点">
+<meta name="twitter:description" content="Linux运维工程师，目前在关注和学习Dokcer容器相关领域知识。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://linux7788.com/page/14/"/>
+
+
+
+
+
+  <title>赵光建的个人站点</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3e19b46404548192d1448e7c09e36aad";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <script type="text/javascript">
+      var host = "linux7788.com";
+      if ((host == window.location.host) && (window.location.protocol != "https:"))
+          window.location.protocol = "https";
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">赵光建的个人站点</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://linux7788.com/生活记录/2012年/life_record_2012/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="赵光建">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="赵光建的个人站点">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/生活记录/2012年/life_record_2012/" itemprop="url">2012年一些日记记录归档</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2012-12-12T13:35:25+08:00">
+                2012-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/生活记录/" itemprop="url" rel="index">
+                    <span itemprop="name">生活记录</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/生活记录/2012年/" itemprop="url" rel="index">
+                    <span itemprop="name">2012年</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>无意中翻看到了2012年，本科临近毕业时的那段时间相关记录，很有意思。2012年那一年注定是个特殊的年份。现在回想起来发现人生所有经历都是一种财富！</p>
+<p>再次归档整理时间：2018年4月30日</p>
+<h2 id="2012-3-19-22-31"><a href="#2012-3-19-22-31" class="headerlink" title="2012-3-19 22:31"></a>2012-3-19 22:31</h2><h3 id="未来会好的？我好想现在就能看到未来的样子"><a href="#未来会好的？我好想现在就能看到未来的样子" class="headerlink" title="未来会好的？我好想现在就能看到未来的样子"></a>未来会好的？我好想现在就能看到未来的样子</h3><p>专科时开始接触电脑，并慢慢喜欢上电脑了。在帮朋友解决电脑的问题时体验到了少有的成就和自豪。<br>但在专科时学的专业是纺织机电，2010年浑浑噩噩的专科的大学生活就这么结束了。毕业后在一家纺织厂工作，工作后才发现这种生活真心不是自己喜欢和想要的。<br>当时想从事计算机方面的工作，可在寻找工作时发现自己会的只是一些电脑操作的技巧和一张计算机等级二级vb证书，当时想过培训，又怕培训不靠谱。<br>于是参加了一所大学的自考助学（脱产的那种）学习。在自考的同时考取了ccna，今年5月份打算参加软考（网络工程师）。<br>今年7月份所有自考课程就结束了，又要开始重新找工作了。方向定在网络方面。<br>现突然发现自己对电脑的热情不如之前那么浓烈了，归于平淡。考虑更多的是工作和以后的生活还有的是从事计算机那个方向更挣钱。<br>小时有个玩伴初中毕业后在亲戚的带领下去了一家移动电信公司工作，进行室外布线和线路维护。过年回家时听他讲过他的工作但没见过，但人胖了好多，他现在也是我们村在外面打工混的比较好的一个，我叔叔家有个弟弟今年初中毕业后没工作今年也和他去了，看样子工作技术难度或者要求不是太高。我问过弟弟，他说工作时间不固定更多的是电信线路的抢修维护。但他们工资都挺高的，没面试直接上岗一个月也5千左右。<br>对，眼光得放远了看，试着用一些大道理一遍一遍的稳住自己：坚持就是顺利、学历不重要能力更重要、奋斗终会成功的、不浮躁、从基层做起一步一步来。。。。。。。。<br>可有时夜晚还是会经常的习惯性失眠。</p>
+<h2 id="2012-4-27-22-30"><a href="#2012-4-27-22-30" class="headerlink" title="2012-4-27 22:30"></a>2012-4-27 22:30</h2><h3 id="面试归来，一塌糊涂"><a href="#面试归来，一塌糊涂" class="headerlink" title="面试归来，一塌糊涂"></a>面试归来，一塌糊涂</h3><p>今天去面试了，面试职位是网络监控。由于紧张回答问题时语无伦次，表现的好差。很多东西都可以回答出来的看由于当时紧张全忘了。估计这次没戏了。<br>再多的面试技巧，没有扎实的技术基础也是没用的。第一轮面试时问的全是技术问题，到第二轮才问一些职业规划类的问题。</p>
+<p>以前我总是抱怨学校学的知识不实用全理论，指望着到社会上找一家好的公司实习积累点实际经验，抱着以学习的态度寻找公司。<br>可我也同时忘了公司不再是学校，公司需要你为她创造价值，需要你为她做事，而不是需要一个学生来学习参观。</p>
+<h2 id="2012-5-13-20-09"><a href="#2012-5-13-20-09" class="headerlink" title="2012-5-13 20:09"></a>2012-5-13 20:09</h2><h3 id="一个纺织工人的IT之路"><a href="#一个纺织工人的IT之路" class="headerlink" title="一个纺织工人的IT之路"></a>一个纺织工人的IT之路</h3><p>本人2007年上专科时才开始接触电脑，专科时学的是纺织一类的专业。<br>2008年有了自己的第一台笔记本电脑，开始学着自己装操作系统，学着拆装电脑除尘，帮同学解决电脑问题，遇到的一些电脑问题有时我也不会，但我喜欢去百度、google搜索。<br>慢慢的成了班上同学眼中的电脑高手。<br>2010专科毕业后进入一家纺织厂工作过，修理纺织机器，环境很差，第一个月工资1k，两班制12小时，没有星期天，当时内心深处羡慕着那些搞IT的人至少工作环境不会那么差。</p>
+<p>开始思考自己的人生，不想就这样下去。无意中在网上看到了马云、李开复、俞敏洪、史玉柱等一些大佬们的故事和演讲视频。被深深触动。后决心辞职 要做自己喜欢的工作。<br>2010年9月份参加了一所大学的脱产自考助学软件工程的学习，才发现IT有好多方向。<br>期间参加学校CCNA培训，并于2011年10月份通过认证考试。现正在准备软考，一、为了以考促学，二、想通过多考几个证增加就业机会。<br>想过搞开发，可发现自己根本没有什么项目经验，直至现在自己只修改过一些代码，自己根本没有敲打编写出过一款软件出来。于是想专攻网络方向，习惯了逛51cto论坛开始寻找资料，习惯了每天泡图书馆。<br>但同时在论坛中也看到了太多的前辈们对自己的工作以及待遇的抱怨，自己也时不时的在怀疑，在迷茫。<br>今年5月1号以前的专科同学相聚，专科时的那些同学现大多还是在从事着纺织机修的工作，不过工资也从一开始的1k涨到了3.5k。他们聊的依然是自己的工作环境如何差，工资低，同时表示如何如何羡慕着我的以后工作。才发现这个社会每个人都在抱怨着，想改变。过着被别人羡慕的生活，却同时羡慕着别人过的生活。<br>有时与其抱怨不如实际行动，改变自己更容易些。</p>
+<h2 id="2012-9-16-01-40"><a href="#2012-9-16-01-40" class="headerlink" title="2012-9-16 01:40"></a>2012-9-16 01:40</h2><h3 id="乱七八糟、随便写写"><a href="#乱七八糟、随便写写" class="headerlink" title="乱七八糟、随便写写"></a>乱七八糟、随便写写</h3><p>工作了你才能真正的去发现需要学习什么样的技能。目标定位网络系统运维。学网络首先得学TCP/IP网络协议，TCP/IP协议是在Unix上开发出来的，所以想学好网络就得学好Linux，想学好Linux最少的得会用shell、perl等编写脚本吧，会写脚本C是基础啊。计算机端口得清楚吧、常见的网络攻击方式、一些黑客工具得清楚吧。云计算、虚拟化得有所了解吧，想做好运维工作，数据结构得了解、SQL语句得熟练运用吧，CDN得懂吧。常见监控软件Nagios、Cacti、Zabbix等得会用吧，网络数据抓包、网络协议分析sniffer得会吧。好多路由交换协议都是思科搞出来的，努力准备去考个CCIE。英语是一切基础的基础啊。。。。。。。。。该行动了，不能停留在原地徘徊，资料教程是下载了不少，却没有以前的那么心定认真看完过。年龄也大了，却还单着，害怕一个人以后永远一个人。与电脑呆久了发现电脑更亲切人更陌生了。有时担心未来能否过上自己现在想象中的生活？可现在的生活总得有现在的生活状态吧。锻炼身体。</p>
+<h2 id="2010-11-8-20-14"><a href="#2010-11-8-20-14" class="headerlink" title="2010-11-8 20:14"></a>2010-11-8 20:14</h2><h3 id="灵魂与肉身"><a href="#灵魂与肉身" class="headerlink" title="灵魂与肉身"></a>灵魂与肉身</h3><p>我是谁？我为何会思考？如果我现死去我的灵魂是否还会以另一种方式存在！我是我吗？如何证明我是真实存在的！我周围的一切都是真的吗？说不定我现看到的和我感受到的只是某种生物虚幻给我的？也有可能我现活在别人或自己的梦中？</p>
+<p>肉身和灵魂是分开的吗？灵魂是独立于肉身存在的吗？</p>
+<p>如果我们相信肉体和灵魂是分开独立的，那好我们肉身死后灵魂呢？是否还会存在以另一种方式？或投胎重新做人或其他动物什么的？那假如你投胎成为了一头猪可你这时仍保留人的思维和意识。有这种可能性吗？好比把你的灵魂放进了猪的身体里或其他人的体内。因为肉身和灵魂是分开的吗！那么你的灵魂放还进去后还会具有本来那个肉身所具有的思维和意识吗？</p>
+<p>如果我们相信灵魂是独立于肉身存在的，那么我们可以认为灵魂在我们这个肉身没有出现之前就已经存在了？这种存在有可能性吗？如果有那这个灵魂以什么样的形式存在着呢？我现在的这个肉身是不是我的灵魂想象出来的呢？</p>
+<p>如果一个人意志同我一样，智力与我相同，那么我们便是同一个“我”吗？<br>我们可以以各种规定性来定义自我，只是我想知道有怎样的规定性。<br>我们照镜子，拍相片，不停地做心理测试，其实都是想以外在的角度来审视“我”是谁。<br>“每个人都是一个宇宙”，我必须相信，以便可以维系自我的意义并生存下去。</p>
+<p>如果把自我认为是物质的，那么身体不停变化，那么我也早已就不是我?如果把自我认为是连续的意识和感觉，那么当我们睡着觉以后，也就没有了意识没有了感觉，那当第二天到来，又一个新的连续的意识和感觉就又出现了，我也已经就不是我了?</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="赵光建" />
+            
+              <p class="site-author-name" itemprop="name">赵光建</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zhaogj1987" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:374251609@qq.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://cn.linkedin.com/in/%E5%85%89%E5%BB%BA-%E8%B5%B5-435a03131" target="_blank" title="Linkedin">
+                    
+                      <i class="fa fa-fw fa-linkedin"></i>Linkedin</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+    <div class="links-of-blogroll motion-element links-of-blogroll-block">
+      <div class="links-of-blogroll-title">
+        <!-- modify icon to fire by szw -->
+        <i class="fa fa-history fa-" aria-hidden="true"></i>
+        近期文章
+      </div>
+      <ul class="links-of-blogroll-list">
+        
+        
+          <li>
+            <a href="/linux_ops/linux_base/" title="Linux系统基础知识" target="_blank">Linux系统基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/networks/" title="计算机网络基础知识" target="_blank">计算机网络基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/computer-operating-system/" title="计算机操作系统基础知识" target="_blank">计算机操作系统基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/http/" title="HTTP协议基础知识" target="_blank">HTTP协议基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/regexr/" title="正则表达式" target="_blank">正则表达式</a>
+          </li>
+        
+          <li>
+            <a href="/docker/docker_python-api/" title="Docker Python Api 操作" target="_blank">Docker Python Api 操作</a>
+          </li>
+        
+          <li>
+            <a href="/docker/Docker_question/" title="关于Docker的50个问与答" target="_blank">关于Docker的50个问与答</a>
+          </li>
+        
+          <li>
+            <a href="/docker/Docker_lnmp/" title="Docker 多容器间协作互连范例" target="_blank">Docker 多容器间协作互连范例</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/13_questions_of_shell/" title="shell十五问--shell教程" target="_blank">shell十五问--shell教程</a>
+          </li>
+        
+          <li>
+            <a href="/docker/Docker_Container_Limit/" title="Docker容器资源限制测试" target="_blank">Docker容器资源限制测试</a>
+          </li>
+        
+      </ul>
+    </div>
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+
+&copy; 
+<span itemprop="copyrightYear">2018</span>
+<span class="with-love">
+<i class="fa fa-"></i>
+</span>
+<span class="author" itemprop="copyrightHolder">赵光建</span>
+
+</div>
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65739675";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+          
+      <link rel='stylesheet' href="https://yiyeti.cc/usr/themes/veryse/css/gitalk.css">
+      <script src="https://yiyeti.cc/usr/themes/veryse/css/gitalk.min.js"></script>
+      <script type="text/javascript">
+          var gitalk = new Gitalk({
+            clientID:  '4088ef6619f645cb3647', 
+            clientSecret: 'c2d0a030f1b99a3efd7e6df3d32485ca3ac1af37',
+            id: window.location.pathname,
+            repo: 'gitalk', 
+            owner: 'zhaogj1987', 
+            admin: 'zhaogj1987', 
+            distractionFreeMode: 'true',
+          })
+          gitalk.render('gitalk-container')
+      </script>
+    
+
+  
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

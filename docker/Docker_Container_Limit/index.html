@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Docker_Container_Limit,Docker," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="赵光建的个人站点" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Docker容器资源限制测试Docker运行时的容器本质是进程。在Linux中，通过Namespace进行资源隔离，Cgroups进行资源限制。 一、Docker容器Cpu资源限制测试容器资源CPU限制设置测试默认所有的容器对于 CPU 的利用占比都是一样的，-c 或者 –cpu-shares 可以设置 CPU 利用率权重，默认为 1024，可以设置权重为 2 或者更高(单个 CPU 为 1024">
+<meta name="keywords" content="Docker_Container_Limit,Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker容器资源限制测试">
+<meta property="og:url" content="https://linux7788.com/docker/Docker_Container_Limit/index.html">
+<meta property="og:site_name" content="赵光建的个人站点">
+<meta property="og:description" content="Docker容器资源限制测试Docker运行时的容器本质是进程。在Linux中，通过Namespace进行资源隔离，Cgroups进行资源限制。 一、Docker容器Cpu资源限制测试容器资源CPU限制设置测试默认所有的容器对于 CPU 的利用占比都是一样的，-c 或者 –cpu-shares 可以设置 CPU 利用率权重，默认为 1024，可以设置权重为 2 或者更高(单个 CPU 为 1024">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-18T15:32:58.950Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker容器资源限制测试">
+<meta name="twitter:description" content="Docker容器资源限制测试Docker运行时的容器本质是进程。在Linux中，通过Namespace进行资源隔离，Cgroups进行资源限制。 一、Docker容器Cpu资源限制测试容器资源CPU限制设置测试默认所有的容器对于 CPU 的利用占比都是一样的，-c 或者 –cpu-shares 可以设置 CPU 利用率权重，默认为 1024，可以设置权重为 2 或者更高(单个 CPU 为 1024">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://linux7788.com/docker/Docker_Container_Limit/"/>
+
+
+
+
+
+  <title>Docker容器资源限制测试 | 赵光建的个人站点</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3e19b46404548192d1448e7c09e36aad";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <script type="text/javascript">
+      var host = "linux7788.com";
+      if ((host == window.location.host) && (window.location.protocol != "https:"))
+          window.location.protocol = "https";
+  </script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">赵光建的个人站点</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://linux7788.com/docker/Docker_Container_Limit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="赵光建">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="赵光建的个人站点">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Docker容器资源限制测试</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-03T18:10:25+08:00">
+                2017-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统运维/" itemprop="url" rel="index">
+                    <span itemprop="name">系统运维</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统运维/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Docker容器资源限制测试"><a href="#Docker容器资源限制测试" class="headerlink" title="Docker容器资源限制测试"></a>Docker容器资源限制测试</h2><p>Docker运行时的容器本质是进程。在Linux中，通过Namespace进行资源隔离，Cgroups进行资源限制。</p>
+<h3 id="一、Docker容器Cpu资源限制测试"><a href="#一、Docker容器Cpu资源限制测试" class="headerlink" title="一、Docker容器Cpu资源限制测试"></a>一、Docker容器Cpu资源限制测试</h3><h4 id="容器资源CPU限制设置测试"><a href="#容器资源CPU限制设置测试" class="headerlink" title="容器资源CPU限制设置测试"></a>容器资源CPU限制设置测试</h4><p>默认所有的容器对于 CPU 的利用占比都是一样的，-c 或者 –cpu-shares 可以设置 CPU 利用率权重，默认为 1024，可以设置权重为 2 或者更高(单个 CPU 为 1024，两个为 2048，以此类推)。如果设置选项为 0，则系统会忽略该选项并且使用默认值 1024。通过以上设置，只会在 CPU 密集(繁忙)型运行进程时体现出来。当一个 container 空闲时，其它容器都是可以占用 CPU 的。cpu-shares 值为一个相对值，实际 CPU 利用率则取决于系统上运行容器的数量。</p>
+<p>假如一个 1core 的主机运行 3 个 container，其中一个 cpu-shares 设置为 1024，而其它 cpu-shares 被设置成 512。当 3 个容器中的进程尝试使用 100% CPU 的时候「尝试使用 100% CPU 很重要，此时才可以体现设置值」，则设置 1024 的容器会占用 50% 的 CPU 时间。如果又添加一个 cpu-shares 为 1024 的 container，那么两个设置为 1024 的容器 CPU 利用占比为 33%，而另外两个则为 16.5%。简单的算法就是，所有设置的值相加，每个容器的占比就是 CPU 的利用率，如果只有一个容器，那么此时它无论设置 512 或者 1024，CPU 利用率都将是 100%。当然，如果主机是 3core，运行 3 个容器，两个 cpu-shares 设置为 512，一个设置为 1024，则此时每个 container 都能占用其中一个 CPU 为 100%。<br><a id="more"></a></p>
+<h4 id="1-1、通过参数–cpu-shares分配cpu使用权重"><a href="#1-1、通过参数–cpu-shares分配cpu使用权重" class="headerlink" title="1.1、通过参数–cpu-shares分配cpu使用权重"></a>1.1、通过参数–cpu-shares分配cpu使用权重</h4><p>现在运行两个测试 container，一个权重设置为 2，一个权重设置 4，启动命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]<span class="comment"># docker run -it -d --cpu-shares 2 --name 2_cpu centos:7 /bin/bash</span></span><br><span class="line">f3f125f7455974be77e58c0864d045b3b56ae2d007bd9095c47faca50893547c</span><br><span class="line">[root@ok188 ~]<span class="comment"># docker run -it -d --cpu-shares 4 --name 4_cpu centos:7 /bin/bash</span></span><br><span class="line">5e623b55a22ef6d1e41e5978dd1c5d05d743b3a91498697db3b4b9c493f03f8b</span><br></pre></td></tr></table></figure>
+<p>通过压测工具如Stress进行压测，Stress使用实例:</p>
+<ul>
+<li>产生13个cpu进程4个io进程1分钟后停止运行</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]<span class="comment"># stress -c 13 -i 4 --verbose --timeout 1m</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>测试硬盘，通过mkstemp()生成800K大小的文件写入硬盘，对CPU、内存的使用要求很低</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@ok188</span> ~]<span class="meta"># stress -d 1 --hdd-noclean --hdd-bytes 800k</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>产生13个进程，每个进程都反复不停的计算由rand ()产生随机数的平方根</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@ok188</span> ~]<span class="meta"># stress -c 13</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>向磁盘中写入固定大小的文件，这个文件通过调用mkstemp()产生并保存在当前目录下，默认是文件产生后就被执行unlink(清除)操作，但是可以使用–hdd-bytes选项将产生的文件全部保存在当前目录下，这会将你的磁盘空间逐步耗尽</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># 生成小文件</span></span><br><span class="line">[root<span class="symbol">@ok188</span> ~]<span class="meta"># stress -d 1 --hdd-noclean --hdd-bytes 13</span></span><br><span class="line"><span class="meta"># 生成大文件</span></span><br><span class="line">[root<span class="symbol">@ok188</span> ~]<span class="meta"># stress -d 1 --hdd-noclean --hdd-bytes 3G</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>对两个容器同时进行 CPU压测，在宿主机中查看两个容器CPU占用情况<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]# docker stats <span class="number">2</span>_cpu</span><br><span class="line">CONTAINER      CPU %         MEM USAGE / LIMIT     MEM %      NET I/O         BLOCK I/O                 </span><br><span class="line"><span class="number">2</span>_cpu          <span class="number">33.31</span>%        <span class="number">24.34</span>MiB / <span class="number">1.932</span>GiB   <span class="number">1.23</span>%     <span class="number">18.2</span>MB / <span class="number">322</span>kB   <span class="number">49.1</span>MB / <span class="number">27.7</span>MB</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]# docker stats <span class="number">4</span>_cpu</span><br><span class="line">CONTAINER     CPU %         MEM USAGE / LIMIT     MEM %      NET I/O          BLOCK I/O                </span><br><span class="line"><span class="number">4</span>_cpu         <span class="number">65.96</span>%        <span class="number">38.82</span>MiB / <span class="number">1.932</span>GiB   <span class="number">1.96</span>%     <span class="number">18.3</span>MB / <span class="number">451</span>kB    <span class="number">8.19</span>kB / <span class="number">27.7</span>MB</span><br></pre></td></tr></table></figure>
+<p>观察以上结果发现容器名为4_cpu权重比2_cpu大2倍，所以4_cpu可使用的cpu更多。<br>停止压测名为4_cpu的容器, 在宿主机中查看两个容器CPU占用情况<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]# docker stats <span class="number">2</span>_cpu</span><br><span class="line">CONTAINER      CPU %         MEM USAGE / LIMIT     MEM %      NET I/O         BLOCK I/O                 </span><br><span class="line"><span class="number">2</span>_cpu          <span class="number">99.50</span>%        <span class="number">24.34</span>MiB / <span class="number">1.932</span>GiB   <span class="number">1.23</span>%     <span class="number">18.2</span>MB / <span class="number">322</span>kB   <span class="number">49.1</span>MB / <span class="number">27.7</span>MB</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]# docker stats <span class="number">4</span>_cpu</span><br><span class="line">CONTAINER     CPU %         MEM USAGE / LIMIT     MEM %      NET I/O          BLOCK I/O                </span><br><span class="line"><span class="number">4</span>_cpu         <span class="number">0.00</span>%         <span class="number">37.5</span>MiB / <span class="number">1.932</span>GiB   <span class="number">1.90</span>%     <span class="number">18.3</span>MB / <span class="number">452</span>kB    <span class="number">8.19</span>kB / <span class="number">27.7</span>MB</span><br></pre></td></tr></table></figure>
+<p>结论参数cpu-shares 只是设置cpu使用权重，只会在 CPU 密集(繁忙)型运行进程时体现出来。当一个 container 空闲时，其它容器都是可以占用 CPU 的。<br>备注：物理主机为多核的情况下，显示的cpu使用比例有差异，本人测试主机为单核。</p>
+<h4 id="1-2、通过-–cpu-period-amp-–cpu-quota-限制容器的-CPU-使用上限"><a href="#1-2、通过-–cpu-period-amp-–cpu-quota-限制容器的-CPU-使用上限" class="headerlink" title="1.2、通过 –cpu-period &amp; –cpu-quota 限制容器的 CPU 使用上限"></a>1.2、通过 –cpu-period &amp; –cpu-quota 限制容器的 CPU 使用上限</h4><p>默认的 CPU CFS「Completely Fair Scheduler」period 是 100ms。我们可以通过 –cpu-period 值限制容器的 CPU 使用。一般 –cpu-period 配合 –cpu-quota 一起使用。</p>
+<p>为啥把这两个参数放一起呢？因为这两个参数是相互配合的，–cpu-period和–cpu-quota的这种配置叫Ceiling Enforcement Tunable Parameters，–cpu-shares的这种配置叫Relative Shares Tunable Parameters。–cpu-period是用来指定容器对CPU的使用要在多长时间内做一次重新分配，而–cpu-quota是用来指定在这个周期内，最多可以有多少时间用来跑这个容器。跟–cpu-shares不同的是这种配置是指定一个绝对值，而且没有弹性在里面，容器对CPU资源的使用绝对不会超过配置的值。</p>
+<p>设置 cpu-period 为 100000，cpu-quota 为 50000，表示最多可以使用 cpu到50%。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@nsj-13-58 ~]# docker <span class="builtin-name">run</span> -it <span class="attribute">--cpu-period</span>=100000 <span class="attribute">--cpu-quota</span>=50000 --name 0.5_p_cpu centos:7 /bin/bash</span><br></pre></td></tr></table></figure></p>
+<p>压测容器，并查看CPU占用情况：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]# docker stats <span class="number">0.5</span>_p_cpu</span><br><span class="line">CONTAINER       CPU %     MEM USAGE / LIMIT     MEM %         NET I/O             BLOCK I/O</span><br><span class="line"><span class="number">0.5</span>_p_cpu       <span class="number">50.33</span>%    <span class="number">22.12</span>MiB / <span class="number">1.932</span>GiB   <span class="number">1.12</span>%         <span class="number">18.3</span>MB / <span class="number">348</span>kB      <span class="number">524</span>kB / <span class="number">27.7</span>MB</span><br></pre></td></tr></table></figure></p>
+<p>通过以上测试可以得知，–cpu-period 结合 –cpu-quota 配置是固定的，无论宿主机系统 CPU 是闲还是繁忙，如上配置，容器最多只能使用 CPU 到 50%。</p>
+<h3 id="二、Docker容器Memory资源限制测试"><a href="#二、Docker容器Memory资源限制测试" class="headerlink" title="二、Docker容器Memory资源限制测试"></a>二、Docker容器Memory资源限制测试</h3><p>默认启动一个container，对于容器的内存是没有任何限制的。</p>
+<h4 id="2-1、默认启动一个-container，对于容器的内存是没有任何限制的。"><a href="#2-1、默认启动一个-container，对于容器的内存是没有任何限制的。" class="headerlink" title="2.1、默认启动一个 container，对于容器的内存是没有任何限制的。"></a>2.1、默认启动一个 container，对于容器的内存是没有任何限制的。</h4><figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]<span class="comment"># docker run -it -d --name no_limit_memory centos:7 /bin/bash</span></span><br><span class="line">[root@ok188 ~]<span class="comment"># docker stats no_limit_memory</span></span><br><span class="line">CONTAINER           CPU %      MEM USAGE / LIMIT   MEM %      NET I/O             BLOCK I/O</span><br><span class="line">no_limit_memory     0.00%      932KiB / 1.932GiB   0.05%      586B / 0B           8.19kB / 0B         </span><br><span class="line">[root@ok188 ~]<span class="comment"># free -g</span></span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:             <span class="number"> 1 </span>         <span class="number"> 0 </span>         <span class="number"> 0 </span>         <span class="number"> 0 </span>         <span class="number"> 1 </span>          1</span><br><span class="line">Swap:            <span class="number"> 1 </span>         <span class="number"> 0 </span>          1</span><br></pre></td></tr></table></figure>
+<p>MEM  LIMIT显示的是容器宿主机的内存大小，Mem+Swap的总大小</p>
+<h4 id="2-2、通过-m-参数限制内存大小"><a href="#2-2、通过-m-参数限制内存大小" class="headerlink" title="2.2、通过 -m 参数限制内存大小"></a>2.2、通过 -m 参数限制内存大小</h4><p>设置-m值为500Mb，表示容器程序使用内存受限。按照官方文档的理解，如果指定 -m 内存限制时不添加 –memory-swap 选项，则表示容器中程序可以使用 500m内存和500m swap 内存。那么容器里程序可以跑到500m*2=1g后才会被oom给杀死。</p>
+<figure class="highlight julia"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="meta">@ok188</span> ~]<span class="comment"># docker run -it -d -m 500m --name limit_memory_1 centos:7 /bin/bash     </span></span><br><span class="line"><span class="number">21</span>eb95cffa45972603cb0e67b7ee0724d019cd7182fa5668bf07665ddf4f83cc</span><br><span class="line">[root<span class="meta">@ok188</span> ~]<span class="comment"># docker stats limit_memory_1</span></span><br><span class="line">CONTAINER           CPU %       MEM USAGE / LIMIT   MEM %      NET <span class="literal">I</span>/O             BLOCK <span class="literal">I</span>/O</span><br><span class="line">limit_memory_1      <span class="number">0.00</span>%       <span class="number">916</span>KiB / <span class="number">500</span>MiB       <span class="number">0.09</span>%      <span class="number">586</span>B / <span class="number">0</span>B           <span class="number">0</span>B / <span class="number">0</span>B</span><br></pre></td></tr></table></figure>
+<p>在libcontainer源码里<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memory<span class="selector-class">.memsw</span><span class="selector-class">.limit_in_bytes</span></span><br></pre></td></tr></table></figure></p>
+<p>值是被设置成我们指定的内存参数的两倍。</p>
+<p>其中代码如下：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// By default, MemorySwap is set to twice the size of RAM.</span></span><br><span class="line"><span class="comment">// If you want to omit MemorySwap, set it to `-1'.</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">d</span>.c.MemorySwap != -1 &#123;</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">err</span> := writeFile(<span class="keyword">dir</span>, <span class="string">"memory.memsw.limit_in_bytes"</span>, strconv.FormatInt(<span class="keyword">d</span>.c.<span class="keyword">Memory</span>*2, 10)); <span class="keyword">err</span> != nil &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">err</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用压测工具进行压测，当压测值是 memory + swap之和上限时，则容器中的进程会被直接 OOM kill。</p>
+<h4 id="2-3参数–memory-swappiness-0-表示禁用容器-swap-功能。"><a href="#2-3参数–memory-swappiness-0-表示禁用容器-swap-功能。" class="headerlink" title="2.3参数–memory-swappiness=0 表示禁用容器 swap 功能。"></a>2.3参数–memory-swappiness=0 表示禁用容器 swap 功能。</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]# docker <span class="builtin-name">run</span> -it -d -m 500m <span class="attribute">--memory-swappiness</span>=0 --name limit_memory_noswap_1 centos:7 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>使用压测工具进行压测，当压测值是 1G ，则容器中的进程会被直接 OOM kill。查看容器内系统日志：</p>
+<h4 id="2-4指定限制内存大小并且设置-memory-swap-值为-1"><a href="#2-4指定限制内存大小并且设置-memory-swap-值为-1" class="headerlink" title="2.4指定限制内存大小并且设置 memory-swap 值为 -1"></a>2.4指定限制内存大小并且设置 memory-swap 值为 -1</h4><p>表示容器程序使用内存受限，而 swap 空间使用不受限制（宿主 swap 支持使用多少则容器即可使用多少。如果 –memory-swap 设置小于 –memory 则设置不生效，使用默认设置）。–memory-swap -1<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@ok188</span> ~]<span class="meta"># docker run -it -d -m 500m --memory-swap -1  --name limit_memory_2 centos:7 /bin/bash</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="2-5指定限制内存大小并且设置-memory-swap-值"><a href="#2-5指定限制内存大小并且设置-memory-swap-值" class="headerlink" title="2.5指定限制内存大小并且设置 memory-swap 值"></a>2.5指定限制内存大小并且设置 memory-swap 值</h4><p>指定限制内存大小500Mb并且设置 memory-swap 值400Mb当压测值是900Mb时，则容器中的进程会被直接 OOM kill。<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@ok188</span> ~]<span class="meta"># docker run -it -d -m 500m --memory-swap 400m  --name limit_memory_3 centos:7 /bin/bash</span></span><br></pre></td></tr></table></figure></p>
+<p>备注：实际生产环境不推荐使用swap功能，建议直接禁用swap功能。</p>
+<h4 id="2-6-参数–oom-kill-disable-，加上之后则达到限制内存之后也不会被-kill"><a href="#2-6-参数–oom-kill-disable-，加上之后则达到限制内存之后也不会被-kill" class="headerlink" title="2.6 参数–oom-kill-disable ，加上之后则达到限制内存之后也不会被 kill"></a>2.6 参数–oom-kill-disable ，加上之后则达到限制内存之后也不会被 kill</h4><p>正常情况不添加 –oom-kill-disable 容器程序内存使用超过限制后则会直接 OOM kill，加上之后则达到限制内存之后也不会被 kill。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]# docker <span class="builtin-name">run</span> -it -d -m 500m --oom-kill-<span class="builtin-name">disable</span> --name limit_memory_4 centos:7 /bin/bash</span><br></pre></td></tr></table></figure></p>
+<p>==注意如果是以下的这种没有对容器作任何资源限制的情况，添加 –oom-kill-disable 选项就比较危险了：==</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@ok188 ~]# docker <span class="builtin-name">run</span> -it -d --oom-kill-<span class="builtin-name">disable</span> --name limit_memory_5 centos:7 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>因为此时容器内存没有限制，使用的上限值是物理内存的上限值。 并且不会被 oom kill，此时系统则会 kill 系统进程用于释放内存。</p>
+<h3 id="后记：目前-Docker-支持的资源限制选项"><a href="#后记：目前-Docker-支持的资源限制选项" class="headerlink" title="后记：目前 Docker 支持的资源限制选项"></a>后记：目前 Docker 支持的资源限制选项</h3><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-m, –memory=””</td>
+<td>Memory limit (format: <number>[<unit>]). Number is a positive integer. Unit can be one of b, k, m, or g. Minimum is 4M.  </unit></number></td>
+</tr>
+<tr>
+<td>–memory-swap=””</td>
+<td>Total memory limit (memory + swap, format: <number>[<unit>]). Number is a positive integer. Unit can be one of b, k, m, or g.</unit></number></td>
+</tr>
+<tr>
+<td>–memory-reservation=””</td>
+<td>Memory soft limit (format: <number>[<unit>]). Number is a positive integer. Unit can be one of b, k, m, or g.</unit></number></td>
+</tr>
+<tr>
+<td>–kernel-memory=””</td>
+<td>Kernel memory limit (format: <number>[<unit>]). Number is a positive integer. Unit can be one of b, k, m, or g. Minimum is 4M.</unit></number></td>
+</tr>
+<tr>
+<td>-c, –cpu-shares=0</td>
+<td>CPU shares (relative weight)</td>
+</tr>
+<tr>
+<td>–cpu-period=0</td>
+<td>Limit the CPU CFS (Completely Fair Scheduler) period</td>
+</tr>
+<tr>
+<td>–cpuset-cpus=””</td>
+<td>CPUs in which to allow execution (0-3, 0,1)</td>
+</tr>
+<tr>
+<td>–cpuset-mems=””</td>
+<td>Memory nodes (MEMs) in which to allow execution (0-3, 0,1). Only effective on NUMA systems.</td>
+</tr>
+<tr>
+<td>–cpu-quota=0</td>
+<td>Limit the CPU CFS (Completely Fair Scheduler) quota</td>
+</tr>
+<tr>
+<td>–blkio-weight=0</td>
+<td>Block IO weight (relative weight) accepts a weight value between 10 and 1000.</td>
+</tr>
+<tr>
+<td>–blkio-weight-device=””</td>
+<td>Block IO weight (relative device weight, format: DEVICE_NAME:WEIGHT)</td>
+</tr>
+<tr>
+<td>–device-read-bps=””</td>
+<td>Limit read rate from a device (format: <device-path>:<number>[<unit>]). Number is a positive integer. Unit can be one of kb, mb, or gb.</unit></number></device-path></td>
+</tr>
+<tr>
+<td>–device-write-bps=””</td>
+<td>Limit write rate to a device (format: <device-path>:<number>[<unit>]). Number is a positive integer. Unit can be one of kb, mb, or gb.</unit></number></device-path></td>
+</tr>
+<tr>
+<td>–device-read-iops=””</td>
+<td>Limit read rate (IO per second) from a device (format: <device-path>:<number>). Number is a positive integer.</number></device-path></td>
+</tr>
+<tr>
+<td>–device-write-iops=””</td>
+<td>Limit write rate (IO per second) to a device (format: <device-path>:<number>). Number is a positive integer.</number></device-path></td>
+</tr>
+<tr>
+<td>–oom-kill-disable=false</td>
+<td>Whether to disable OOM Killer for the container or not.</td>
+</tr>
+<tr>
+<td>–memory-swappiness=””</td>
+<td>Tune a container’s memory swappiness behavior. Accepts an integer between 0 and 100.</td>
+</tr>
+<tr>
+<td>–shm-size=””</td>
+<td>Size of /dev/shm. The format is <number><unit>. number must be greater than 0. Unit is optional and can be b (bytes), k (kilobytes), m (megabytes), or g (gigabytes). If you omit the unit, the system uses bytes. If you omit the size entirely, the system uses 64m.</unit></number></td>
+</tr>
+</tbody>
+</table>
+<h5 id="附Docker容器限制源码路径："><a href="#附Docker容器限制源码路径：" class="headerlink" title="附Docker容器限制源码路径："></a>附Docker容器限制源码路径：</h5><p><a href="https://github.com/opencontainers/runc/tree/master/libcontainer/cgroups/fs" target="_blank" rel="noopener">github.com/opencontainers/runc/libcontainer/cgroups/fs</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/weixin.jpg" alt="赵光建 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>技术交流，可扫二维码加微信！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="赵光建 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Docker-Container-Limit/" <i class="fa fa-tag"></i> Docker_Container_Limit</a>
+          
+            <a href="/tags/Docker/" <i class="fa fa-tag"></i> Docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/linux_ops/linux_Chrony/" rel="next" title="Linux系统下校时服务Chrony使用">
+                <i class="fa fa-chevron-left"></i> Linux系统下校时服务Chrony使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/linux_ops/13_questions_of_shell/" rel="prev" title="shell十五问--shell教程">
+                shell十五问--shell教程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+    
+    <div id="gitalk-container">
+	</div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="赵光建" />
+            
+              <p class="site-author-name" itemprop="name">赵光建</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zhaogj1987" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:374251609@qq.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://cn.linkedin.com/in/%E5%85%89%E5%BB%BA-%E8%B5%B5-435a03131" target="_blank" title="Linkedin">
+                    
+                      <i class="fa fa-fw fa-linkedin"></i>Linkedin</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+    <div class="links-of-blogroll motion-element links-of-blogroll-block">
+      <div class="links-of-blogroll-title">
+        <!-- modify icon to fire by szw -->
+        <i class="fa fa-history fa-" aria-hidden="true"></i>
+        近期文章
+      </div>
+      <ul class="links-of-blogroll-list">
+        
+        
+          <li>
+            <a href="/linux_ops/linux_base/" title="Linux系统基础知识" target="_blank">Linux系统基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/networks/" title="计算机网络基础知识" target="_blank">计算机网络基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/computer-operating-system/" title="计算机操作系统基础知识" target="_blank">计算机操作系统基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/http/" title="HTTP协议基础知识" target="_blank">HTTP协议基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/regexr/" title="正则表达式" target="_blank">正则表达式</a>
+          </li>
+        
+          <li>
+            <a href="/docker/docker_python-api/" title="Docker Python Api 操作" target="_blank">Docker Python Api 操作</a>
+          </li>
+        
+          <li>
+            <a href="/docker/Docker_question/" title="关于Docker的50个问与答" target="_blank">关于Docker的50个问与答</a>
+          </li>
+        
+          <li>
+            <a href="/docker/Docker_lnmp/" title="Docker 多容器间协作互连范例" target="_blank">Docker 多容器间协作互连范例</a>
+          </li>
+        
+          <li>
+            <a href="/linux_ops/13_questions_of_shell/" title="shell十五问--shell教程" target="_blank">shell十五问--shell教程</a>
+          </li>
+        
+          <li>
+            <a href="/docker/Docker_Container_Limit/" title="Docker容器资源限制测试" target="_blank">Docker容器资源限制测试</a>
+          </li>
+        
+      </ul>
+    </div>
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker容器资源限制测试"><span class="nav-number">1.</span> <span class="nav-text">Docker容器资源限制测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Docker容器Cpu资源限制测试"><span class="nav-number">1.1.</span> <span class="nav-text">一、Docker容器Cpu资源限制测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#容器资源CPU限制设置测试"><span class="nav-number">1.1.1.</span> <span class="nav-text">容器资源CPU限制设置测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1、通过参数–cpu-shares分配cpu使用权重"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.1、通过参数–cpu-shares分配cpu使用权重</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2、通过-–cpu-period-amp-–cpu-quota-限制容器的-CPU-使用上限"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.2、通过 –cpu-period &amp; –cpu-quota 限制容器的 CPU 使用上限</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Docker容器Memory资源限制测试"><span class="nav-number">1.2.</span> <span class="nav-text">二、Docker容器Memory资源限制测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1、默认启动一个-container，对于容器的内存是没有任何限制的。"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1、默认启动一个 container，对于容器的内存是没有任何限制的。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2、通过-m-参数限制内存大小"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2、通过 -m 参数限制内存大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3参数–memory-swappiness-0-表示禁用容器-swap-功能。"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3参数–memory-swappiness=0 表示禁用容器 swap 功能。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4指定限制内存大小并且设置-memory-swap-值为-1"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4指定限制内存大小并且设置 memory-swap 值为 -1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5指定限制内存大小并且设置-memory-swap-值"><span class="nav-number">1.2.5.</span> <span class="nav-text">2.5指定限制内存大小并且设置 memory-swap 值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-参数–oom-kill-disable-，加上之后则达到限制内存之后也不会被-kill"><span class="nav-number">1.2.6.</span> <span class="nav-text">2.6 参数–oom-kill-disable ，加上之后则达到限制内存之后也不会被 kill</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后记：目前-Docker-支持的资源限制选项"><span class="nav-number">1.3.</span> <span class="nav-text">后记：目前 Docker 支持的资源限制选项</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#附Docker容器限制源码路径："><span class="nav-number">1.3.0.1.</span> <span class="nav-text">附Docker容器限制源码路径：</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+
+&copy; 
+<span itemprop="copyrightYear">2018</span>
+<span class="with-love">
+<i class="fa fa-"></i>
+</span>
+<span class="author" itemprop="copyrightHolder">赵光建</span>
+
+</div>
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=65739675";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+          
+      <link rel='stylesheet' href="https://yiyeti.cc/usr/themes/veryse/css/gitalk.css">
+      <script src="https://yiyeti.cc/usr/themes/veryse/css/gitalk.min.js"></script>
+      <script type="text/javascript">
+          var gitalk = new Gitalk({
+            clientID:  '4088ef6619f645cb3647', 
+            clientSecret: 'c2d0a030f1b99a3efd7e6df3d32485ca3ac1af37',
+            id: window.location.pathname,
+            repo: 'gitalk', 
+            owner: 'zhaogj1987', 
+            admin: 'zhaogj1987', 
+            distractionFreeMode: 'true',
+          })
+          gitalk.render('gitalk-container')
+      </script>
+    
+
+  
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
